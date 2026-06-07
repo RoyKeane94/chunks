@@ -1,0 +1,107 @@
+import json
+
+from django import forms
+from django.core.exceptions import ValidationError
+from django.db.models import Count
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.text import slugify
+
+from .models import Episode
+from .services import ingest_episode
+
+
+def validate_transcript_file(file):
+    if not file.name.lower().endswith((".pdf", ".txt")):
+        raise ValidationError("Upload a PDF or TXT file.")
+
+
+class UploadForm(forms.Form):
+    title = forms.CharField(max_length=255)
+    guest = forms.CharField(max_length=255)
+    date = forms.DateField(required=False, widget=forms.DateInput(attrs={"type": "date"}))
+    transcript_file = forms.FileField(
+        validators=[validate_transcript_file],
+        widget=forms.FileInput(attrs={"accept": ".pdf,.txt"}),
+    )
+
+
+def episode_list(request):
+    episodes = Episode.objects.annotate(chunk_count=Count("chunks")).order_by("-created_at")
+    return render(request, "transcripts/episode_list.html", {"episodes": episodes})
+
+
+def episode_detail(request, episode_id):
+    episode = get_object_or_404(Episode, pk=episode_id)
+    chunks = episode.chunks.all()
+    return render(
+        request,
+        "transcripts/episode_detail.html",
+        {"episode": episode, "chunks": chunks},
+    )
+
+
+def episode_download_json(request, episode_id):
+    episode = get_object_or_404(Episode, pk=episode_id)
+    data = {
+        "episode": {
+            "id": episode.id,
+            "title": episode.title,
+            "guest": episode.guest,
+            "date": episode.date.isoformat() if episode.date else None,
+            "created_at": episode.created_at.isoformat(),
+        },
+        "chunks": [
+            {
+                "chunk_index": chunk.chunk_index,
+                "content": chunk.content,
+                "token_estimate": chunk.token_estimate,
+                "embedding_model": chunk.embedding_model,
+                "embedding": [float(x) for x in chunk.embedding],
+                "created_at": chunk.created_at.isoformat(),
+            }
+            for chunk in episode.chunks.all()
+        ],
+    }
+    filename = f"{slugify(episode.title) or 'episode'}-{episode.id}.json"
+    response = HttpResponse(json.dumps(data, indent=2), content_type="application/json")
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
+    return response
+
+
+def episode_delete(request, episode_id):
+    episode = get_object_or_404(Episode, pk=episode_id)
+    if request.method == "POST":
+        if episode.pdf_file:
+            episode.pdf_file.delete(save=False)
+        episode.delete()
+    return redirect("episode_list")
+
+
+def upload(request):
+    if request.method == "POST":
+        form = UploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            episode = Episode.objects.create(
+                title=form.cleaned_data["title"],
+                guest=form.cleaned_data["guest"],
+                date=form.cleaned_data.get("date"),
+                pdf_file=form.cleaned_data["transcript_file"],
+            )
+            ingest_report = ingest_episode(episode.id)
+            request.session["ingest_report"] = ingest_report
+            return redirect("upload_confirm", episode_id=episode.id)
+    else:
+        form = UploadForm()
+
+    return render(request, "transcripts/upload.html", {"form": form})
+
+
+def upload_confirm(request, episode_id):
+    episode = get_object_or_404(Episode, pk=episode_id)
+    ingest_report = request.session.pop("ingest_report", None)
+    return render(
+        request,
+        "transcripts/upload_confirm.html",
+        {"episode": episode, "report": ingest_report},
+    )

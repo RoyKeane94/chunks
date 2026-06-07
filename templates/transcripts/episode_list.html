@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}library — Chunks{% endblock %}
+
+{% block content %}
+    <p class="eyebrow">library</p>
+    <h1>episodes</h1>
+
+    {% if episodes %}
+        <div class="card">
+            <ul class="episode-list">
+                {% for episode in episodes %}
+                    <li class="episode-item">
+                        <a href="{% url 'episode_detail' episode.id %}" class="episode-link">
+                            <span class="episode-title">{{ episode.title }}</span>
+                            <span class="episode-meta">
+                                {{ episode.guest }}
+                                {% if episode.date %}· {{ episode.date }}{% endif %}
+                                · <span class="tag">{{ episode.chunk_count }} chunk{{ episode.chunk_count|pluralize }}</span>
+                            </span>
+                        </a>
+                        <div class="episode-actions">
+                            <a href="{% url 'episode_download' episode.id %}" class="action-btn" aria-label="Download JSON">
+                                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                                    <path d="M7 2v7M4.5 6.5 7 9l2.5-2.5M3 11h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </a>
+                            <form
+                                method="post"
+                                action="{% url 'episode_delete' episode.id %}"
+                                class="episode-delete-form"
+                                onsubmit="return confirm('Delete this episode?')"
+                            >
+                                {% csrf_token %}
+                                <button type="submit" class="action-btn" aria-label="Delete episode">
+                                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                                        <path d="M2 4h10M5 4V2.5h4V4M5.5 6v4.5M8.5 6v4.5M3 4l.5 7.5h7L11 4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </button>
+                            </form>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="btn-row">
+            <a href="{% url 'upload' %}" class="btn btn-ghost">Upload episode</a>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No episodes yet.</p>
+            <div class="btn-row" style="justify-content: center;">
+                <a href="{% url 'upload' %}" class="btn btn-primary">Upload and ingest →</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,7 @@
+django
+psycopg2-binary
+pgvector
+pdfplumber
+openai
+numpy
+python-dotenv

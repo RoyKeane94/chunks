@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}{{ episode.title }} — Chunks{% endblock %}
+
+{% block content %}
+    <a href="{% url 'episode_list' %}" class="back-link">← library</a>
+
+    <p class="eyebrow">episode</p>
+    <h1>{{ episode.title }}</h1>
+
+    <p class="episode-meta" style="margin: -16px 0 20px;">
+        {{ episode.guest }}
+        {% if episode.date %}· {{ episode.date }}{% endif %}
+        · <span class="tag">{{ chunks|length }} chunk{{ chunks|length|pluralize }}</span>
+    </p>
+
+    <div class="btn-row" style="margin-top: 0; margin-bottom: 28px;">
+        <a href="{% url 'episode_download' episode.id %}" class="btn btn-ghost">Download JSON</a>
+    </div>
+
+    {% if chunks %}
+        <div class="card">
+            <ul class="chunk-list">
+                {% for chunk in chunks %}
+                    <li class="chunk-item">
+                        <div class="chunk-meta">
+                            #{{ chunk.chunk_index }} · {{ chunk.token_estimate }} tokens · {{ chunk.embedding_model }}
+                        </div>
+                        <p class="chunk-content">{{ chunk.content }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <p>No chunks for this episode.</p>
+        </div>
+    {% endif %}
+{% endblock %}

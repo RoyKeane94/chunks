@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Chunks{% endblock %}</title>
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="any">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon-32.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,400;0,500;1,400&family=Syne:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #fffdf5;
+            --white: #ffffff;
+            --ink: #0f0e0c;
+            --ink-2: #2c2a26;
+            --ink-soft: #5c5852;
+            --faint: #a8a49e;
+            --border: #ede9df;
+            --border-2: #ddd8ce;
+            --yellow: #f0c832;
+            --yellow-deep: #d4aa18;
+            --yellow-soft: #fdf8d8;
+            --yellow-border: #e8d86a;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink-2);
+            font-family: "DM Mono", monospace;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.6;
+        }
+
+        a { color: inherit; text-decoration: none; }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 52px;
+            padding: 0 24px;
+            background: var(--white);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: Syne, sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .nav-logo-icon {
+            width: 22px;
+            height: 22px;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .nav-link {
+            font-size: 13px;
+            color: var(--ink-soft);
+            padding: 6px 12px;
+            border-radius: 7px;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover { color: var(--ink); }
+
+        .nav-link.active {
+            background: var(--yellow-soft);
+            border-color: var(--yellow-border);
+            color: var(--ink);
+        }
+
+        .page {
+            padding: 56px 24px 80px;
+        }
+
+        .content {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 11px;
+            color: var(--faint);
+        }
+
+        .back-link:hover { color: var(--ink-soft); }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--faint);
+        }
+
+        h1 {
+            margin: 0 0 28px;
+            font-family: Syne, sans-serif;
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--ink);
+            line-height: 1.2;
+        }
+
+        h2 {
+            margin: 32px 0 12px;
+            font-family: Syne, sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--ink);
+        }
+
+        .card {
+            background: var(--white);
+            border: 1px solid var(--border-2);
+            border-radius: 10px;
+            padding: 28px;
+        }
+
+        .card + .card { margin-top: 16px; }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn {
+            display: inline-block;
+            font-family: "DM Mono", monospace;
+            font-size: 13px;
+            padding: 10px 20px;
+            border-radius: 7px;
+            border: 1px solid var(--border-2);
+            cursor: pointer;
+            background: transparent;
+            color: var(--ink-soft);
+        }
+
+        .btn-primary {
+            background: var(--yellow);
+            border-color: var(--yellow-deep);
+            color: var(--ink);
+        }
+
+        .btn-primary:hover { border-color: var(--ink); }
+
+        .btn-ghost:hover {
+            border-color: var(--ink-soft);
+            color: var(--ink);
+        }
+
+        .field {
+            margin-bottom: 20px;
+        }
+
+        .field:last-of-type { margin-bottom: 0; }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+        }
+
+        .field input[type="text"],
+        .field input[type="date"],
+        .field input[type="file"] {
+            width: 100%;
+            font-family: "DM Mono", monospace;
+            font-size: 13px;
+            color: var(--ink-2);
+            background: var(--bg);
+            border: 1px solid var(--border-2);
+            border-radius: 7px;
+            padding: 10px 12px;
+        }
+
+        .field input:focus {
+            outline: none;
+            border-color: var(--yellow);
+            background: var(--yellow-soft);
+        }
+
+        .field .errorlist {
+            margin: 6px 0 0;
+            padding: 0;
+            list-style: none;
+            font-size: 11px;
+            color: var(--yellow-deep);
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 500;
+            color: var(--yellow-deep);
+            background: var(--yellow-soft);
+            border: 1px solid var(--yellow-border);
+            border-radius: 4px;
+            padding: 2px 8px;
+        }
+
+        .episode-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .episode-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .episode-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .episode-item:first-child { padding-top: 0; }
+
+        .episode-link {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .episode-link:hover .episode-title {
+            color: var(--ink-soft);
+        }
+
+        .episode-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .episode-delete-form {
+            margin: 0;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 7px;
+            color: var(--faint);
+            cursor: pointer;
+        }
+
+        .action-btn:hover {
+            color: var(--ink-soft);
+            border-color: var(--border-2);
+        }
+
+        .episode-title {
+            display: block;
+            color: var(--ink);
+            margin-bottom: 4px;
+        }
+
+        .episode-meta {
+            font-size: 11px;
+            color: var(--faint);
+        }
+
+        .empty-state {
+            text-align: center;
+            color: var(--faint);
+            padding: 12px 0 8px;
+        }
+
+        .success-hero {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .success-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            margin-bottom: 20px;
+            background: var(--yellow);
+            border: 1px solid var(--yellow-deep);
+            border-radius: 12px;
+            font-size: 22px;
+            color: var(--ink);
+        }
+
+        .stat-pill {
+            display: inline-block;
+            margin-bottom: 24px;
+            font-family: Syne, sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--ink);
+            background: var(--yellow-soft);
+            border: 1px solid var(--yellow-border);
+            border-radius: 7px;
+            padding: 8px 16px;
+        }
+
+        .log-dl {
+            margin: 0;
+        }
+
+        .log-dl dt {
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+            margin-top: 16px;
+        }
+
+        .log-dl dt:first-child { margin-top: 0; }
+
+        .log-dl dd {
+            margin: 4px 0 0;
+            font-size: 13px;
+            color: var(--ink-2);
+        }
+
+        .chunk-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .chunk-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .chunk-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .chunk-item.merged {
+            border-left: 2px solid var(--yellow-deep);
+            padding-left: 12px;
+            margin-left: -12px;
+        }
+
+        .chunk-meta {
+            font-size: 11px;
+            color: var(--faint);
+            margin-bottom: 8px;
+        }
+
+        .chunk-content {
+            margin: 0;
+            font-size: 13px;
+            color: var(--ink-2);
+            line-height: 1.7;
+            word-wrap: break-word;
+        }
+
+        .merge-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .merge-item {
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 13px;
+            color: var(--ink-2);
+        }
+
+        .merge-item:last-child { border-bottom: none; }
+
+        .no-merges {
+            font-size: 13px;
+            color: var(--faint);
+            margin: 0;
+        }
+
+        .muted {
+            font-size: 13px;
+            color: var(--faint);
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <nav class="nav">
+        <a href="{% url 'episode_list' %}" class="nav-logo">
+            <img src="{% static 'img/favicon-32.png' %}" alt="" class="nav-logo-icon" width="22" height="22">
+            Chunks
+        </a>
+        <div class="nav-links">
+            <a href="{% url 'episode_list' %}" class="nav-link{% if request.resolver_match.url_name == 'episode_list' or request.resolver_match.url_name == 'episode_detail' %} active{% endif %}">library</a>
+            <a href="{% url 'upload' %}" class="nav-link{% if request.resolver_match.url_name == 'upload' %} active{% endif %}">upload</a>
+        </div>
+    </nav>
+
+    <main class="page">
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</body>
+</html>

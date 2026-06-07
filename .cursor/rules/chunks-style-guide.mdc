@@ -1,0 +1,60 @@
+---
+description: Chunks UI style guide for templates and frontend work
+globs: templates/**/*.html
+alwaysApply: false
+---
+
+# Chunks Style Guide
+
+## Colours (CSS variables)
+
+| Token | Hex | Use |
+|---|---|---|
+| `--bg` | `#fffdf5` | Page background |
+| `--white` | `#ffffff` | Cards, nav, inputs |
+| `--ink` | `#0f0e0c` | Headings, primary text |
+| `--ink-2` | `#2c2a26` | Body text |
+| `--ink-soft` | `#5c5852` | Labels, secondary text |
+| `--faint` | `#a8a49e` | Placeholders, metadata, eyebrows |
+| `--border` | `#ede9df` | Default borders, dividers |
+| `--border-2` | `#ddd8ce` | Input borders, stronger dividers |
+| `--yellow` | `#f0c832` | Primary action, active states, logo dot |
+| `--yellow-deep` | `#d4aa18` | Button borders, hover, strong accents |
+| `--yellow-soft` | `#fdf8d8` | Active card backgrounds, tag fills |
+| `--yellow-border` | `#e8d86a` | Tag and badge borders |
+
+**Rule:** Yellow is earned — one yellow element per view (primary button, active nav item, or key badge). Never decorate with it.
+
+## Typography
+
+- **Syne 800** — logo, page titles (28px), nav logo (18px), stat numbers (22px)
+- **DM Mono** — all body/UI (14px/400), labels/tags/eyebrows (10–11px/500), inputs (13px), metadata (11px)
+- Eyebrows: all-caps, 2px letter-spacing, `--faint`
+- **Never** Inter, Roboto, or system fonts
+
+## Layout
+
+- Page padding-top: `56px`; content max-width: `640px` centred
+- Card padding: `28px`; form field gap: `20px`; list item padding: `16px 0`; nav height: `52px`
+
+## Components
+
+- **Nav** — white, `1px --border` bottom; logo left, links right; active link = `--yellow-soft` fill + `--yellow-border` border
+- **Cards** — white, `1px --border-2`, `10px` radius, `28px` padding, no shadows
+- **Primary button** — `--yellow` fill, `--yellow-deep` border, `--ink` text; one per page; arrow `→` on label
+- **Ghost button** — transparent, `--border-2` border, `--ink-soft` text; no arrow
+- **Inputs** — `--bg` fill, `--border-2` border; focus: `--yellow` border + `--yellow-soft` fill
+- **Tags** — `--yellow-soft` fill, `--yellow-border` border, `--yellow-deep` text
+- **Back link** — `←` prefix, `--faint`, hover `--ink-soft`
+
+## Page patterns
+
+- **Upload** — back link → eyebrow `NEW EPISODE` → h1 → card + form → primary `Upload and ingest →`
+- **Upload complete** — success icon → eyebrow `INGESTION COMPLETE` → h1 (title) → stat pill → primary `View all episodes →`
+- **Episode list** — eyebrow `LIBRARY` → h1 → card list → ghost `Upload episode`; empty state = faint text + primary CTA
+
+## Voice
+
+Short, functional, lowercase. Examples: `No episodes yet.` · `Upload and ingest →` · eyebrows in caps.
+
+Extend `templates/base.html` for shared styles. Do not introduce new colour tokens or font families.

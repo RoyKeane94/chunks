@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}{{ episode.title }} — Chunks{% endblock %}
+
+{% block content %}
+    <div class="success-hero">
+        <div class="success-icon">✓</div>
+        <p class="eyebrow">ingestion complete</p>
+        <h1>{{ episode.title }}</h1>
+        {% if report %}
+            <div class="stat-pill">{{ report.final_chunk_count }} chunk{{ report.final_chunk_count|pluralize }}</div>
+        {% endif %}
+        <div class="btn-row" style="justify-content: center;">
+            <a href="{% url 'episode_list' %}" class="btn btn-primary">View all episodes →</a>
+        </div>
+    </div>
+
+    {% if report %}
+        <div class="card">
+            <dl class="log-dl">
+                <dt>text extracted</dt>
+                <dd>{{ report.raw_character_count|floatformat:0 }} characters from file</dd>
+
+                <dt>cleaning</dt>
+                <dd>{{ report.character_count|floatformat:0 }} characters after clean</dd>
+
+                <dt>sentence chunking</dt>
+                <dd>
+                    {{ report.raw_chunk_count }} raw chunk{{ report.raw_chunk_count|pluralize }}
+                    · max {{ report.settings.chunk_max_tokens }} tokens
+                    · {{ report.settings.chunk_overlap_sentences }} sentence overlap
+                </dd>
+
+                <dt>semantic merge</dt>
+                <dd>
+                    {{ report.merges|length }} merge{{ report.merges|length|pluralize }}
+                    → {{ report.final_chunk_count }} final chunk{{ report.final_chunk_count|pluralize }}
+                    · threshold {{ report.settings.semantic_threshold }}
+                    · max {{ report.settings.semantic_max_merged_tokens }} tokens
+                    · {{ report.settings.embedding_model }}
+                </dd>
+            </dl>
+        </div>
+
+        <h2>merge log</h2>
+        <div class="card">
+            {% if report.merges %}
+                <ul class="merge-list">
+                    {% for merge in report.merges %}
+                        <li class="merge-item">
+                            merged raw chunk {{ merge.raw_index_a }} + {{ merge.raw_index_b }}
+                            · similarity {{ merge.similarity }}
+                            · {{ merge.combined_tokens }} tokens combined
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p class="no-merges">No chunks were merged — all raw chunks were kept separate.</p>
+            {% endif %}
+        </div>
+
+        <h2>raw chunks ({{ report.raw_chunk_count }})</h2>
+        <div class="card">
+            <ul class="chunk-list">
+                {% for chunk in report.raw_chunks %}
+                    <li class="chunk-item">
+                        <div class="chunk-meta">#{{ chunk.index }} · {{ chunk.tokens }} tokens</div>
+                        <p class="chunk-content">{{ chunk.content }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <h2>final chunks ({{ report.final_chunk_count }})</h2>
+        <div class="card">
+            <ul class="chunk-list">
+                {% for chunk in report.final_chunks %}
+                    <li class="chunk-item{% if chunk.merged %} merged{% endif %}">
+                        <div class="chunk-meta">
+                            #{{ chunk.index }} · {{ chunk.tokens }} tokens
+                            {% if chunk.merged %}
+                                · merged from raw {{ chunk.raw_indices|join:", " }}
+                            {% else %}
+                                · from raw {{ chunk.raw_indices.0 }}
+                            {% endif %}
+                        </div>
+                        <p class="chunk-content">{{ chunk.content }}</p>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="btn-row">
+            <a href="{% url 'upload' %}" class="btn btn-ghost">Upload episode</a>
+        </div>
+    {% else %}
+        <p class="muted">Ingest log unavailable — refresh may have cleared the session.</p>
+    {% endif %}
+{% endblock %}
