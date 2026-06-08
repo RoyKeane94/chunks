@@ -2,6 +2,7 @@ import logging
 import os
 import re
 import time
+from datetime import datetime
 
 import numpy as np
 import pdfplumber
@@ -37,10 +38,79 @@ def parse_txt(filepath):
     return text
 
 
-def parse_transcript(filepath):
+def _parse_episode_date(value):
+    if not value:
+        return None
+    for fmt in ("%d.%m.%Y", "%Y-%m-%d", "%m/%d/%Y"):
+        try:
+            return datetime.strptime(value, fmt).date()
+        except ValueError:
+            continue
+    logger.warning("could not parse date: %s", value)
+    return None
+
+
+def parse_structured_transcript(text):
+    result = {
+        "title": "",
+        "guest": "",
+        "date": None,
+        "body": text,
+        "has_metadata": False,
+    }
+    lines = text.splitlines()
+    if not lines or not lines[0].startswith("Title:"):
+        return result
+
+    result["has_metadata"] = True
+    body_start = None
+
+    for index, line in enumerate(lines):
+        if line.startswith("Title:"):
+            result["title"] = line.split(":", 1)[1].strip()
+        elif line.startswith("Guest:"):
+            result["guest"] = line.split(":", 1)[1].strip()
+        elif line.startswith("Date:"):
+            result["date"] = _parse_episode_date(line.split(":", 1)[1].strip())
+        elif re.match(r"^─+$", line.strip()):
+            cursor = index + 1
+            while cursor < len(lines) and not lines[cursor].strip():
+                cursor += 1
+            body_start = cursor
+            break
+
+    if body_start is None:
+        for index, line in enumerate(lines):
+            if index > 0 and not line.strip() and lines[index - 1].startswith("Episode:"):
+                cursor = index + 1
+                while cursor < len(lines) and not lines[cursor].strip():
+                    cursor += 1
+                body_start = cursor
+                break
+
+    if body_start is not None:
+        result["body"] = "\n".join(lines[body_start:]).strip()
+
+    return result
+
+
+def read_transcript_text(filepath):
     if filepath.lower().endswith(".txt"):
-        return parse_txt(filepath)
+        content = parse_txt(filepath)
+        parsed = parse_structured_transcript(content)
+        if parsed["has_metadata"]:
+            logger.info(
+                "parsed transcript metadata — title: %s, guest: %s",
+                parsed["title"],
+                parsed["guest"],
+            )
+            return parsed["body"]
+        return content
     return parse_pdf(filepath)
+
+
+def parse_transcript(filepath):
+    return read_transcript_text(filepath)
 
 
 def clean_text(text):
@@ -209,14 +279,15 @@ def semantic_merge(chunks):
     return list(zip(merged_chunks, merged_embeddings)), {"merges": merges, "groups": groups}
 
 
-def ingest_episode(episode_id):
+def ingest_episode(episode_id, raw_text=None):
     episode = Episode.objects.get(pk=episode_id)
     started = time.monotonic()
     logger.info("——— ingest start — episode %s: %s ———", episode.id, episode.title)
 
     logger.info("[1/5] reading transcript file")
     step_start = time.monotonic()
-    raw_text = parse_transcript(episode.pdf_file.path)
+    if raw_text is None:
+        raw_text = read_transcript_text(episode.pdf_file.path)
     logger.info("[1/5] done (%.1fs)", time.monotonic() - step_start)
 
     logger.info("[2/5] cleaning transcript")
@@ -290,3 +361,53 @@ def ingest_episode(episode_id):
             for index, ((content, _embedding), group) in enumerate(zip(merged, merge_log["groups"]))
         ],
     }
+
+
+def ingest_bulk_files(files):
+    max_files = settings.BULK_UPLOAD_MAX_FILES
+    if len(files) > max_files:
+        raise ValueError(f"Bulk upload limited to {max_files} files per batch.")
+
+    results = {"succeeded": [], "failed": [], "total": len(files)}
+
+    for index, uploaded_file in enumerate(files, start=1):
+        filename = uploaded_file.name
+        logger.info("bulk upload %s/%s — %s", index, len(files), filename)
+        try:
+            if not filename.lower().endswith(".txt"):
+                raise ValueError("Only .txt files are supported for bulk upload.")
+
+            content = uploaded_file.read().decode("utf-8").strip()
+            parsed = parse_structured_transcript(content)
+
+            if not parsed["has_metadata"]:
+                raise ValueError("Missing Title:/Guest:/Date: header block.")
+            if not parsed["title"]:
+                raise ValueError("Title is missing from file header.")
+            if not parsed["guest"]:
+                raise ValueError("Guest is missing from file header.")
+
+            uploaded_file.seek(0)
+            episode = Episode.objects.create(
+                title=parsed["title"][:255],
+                guest=parsed["guest"][:255],
+                date=parsed["date"],
+                pdf_file=uploaded_file,
+            )
+            report = ingest_episode(episode.id, raw_text=parsed["body"])
+            results["succeeded"].append({
+                "filename": filename,
+                "episode_id": episode.id,
+                "title": episode.title,
+                "guest": episode.guest,
+                "date": episode.date.isoformat() if episode.date else None,
+                "final_chunk_count": report["final_chunk_count"],
+            })
+        except Exception as exc:
+            logger.exception("bulk upload failed for %s", filename)
+            results["failed"].append({
+                "filename": filename,
+                "error": str(exc),
+            })
+
+    return results

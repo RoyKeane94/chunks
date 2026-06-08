@@ -2,13 +2,16 @@ import json
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.db.models import Count
+from django.core.paginator import Paginator
+from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 
+from django.conf import settings
+
 from .models import Episode
-from .services import ingest_episode
+from .services import ingest_bulk_files, ingest_episode
 
 
 def validate_transcript_file(file):
@@ -26,9 +29,20 @@ class UploadForm(forms.Form):
     )
 
 
+EPISODES_PER_PAGE = 20
+
+
 def episode_list(request):
+    query = request.GET.get("q", "").strip()
     episodes = Episode.objects.annotate(chunk_count=Count("chunks")).order_by("-created_at")
-    return render(request, "transcripts/episode_list.html", {"episodes": episodes})
+    if query:
+        episodes = episodes.filter(Q(title__icontains=query) | Q(guest__icontains=query))
+    page_obj = Paginator(episodes, EPISODES_PER_PAGE).get_page(request.GET.get("page"))
+    return render(
+        request,
+        "transcripts/episode_list.html",
+        {"page_obj": page_obj, "query": query},
+    )
 
 
 def episode_detail(request, episode_id):
@@ -104,4 +118,38 @@ def upload_confirm(request, episode_id):
         request,
         "transcripts/upload_confirm.html",
         {"episode": episode, "report": ingest_report},
+    )
+
+
+def bulk_upload(request):
+    max_files = settings.BULK_UPLOAD_MAX_FILES
+    error = None
+
+    if request.method == "POST":
+        files = request.FILES.getlist("transcript_files")
+        if not files:
+            error = "Select at least one .txt file."
+        elif len(files) > max_files:
+            error = f"Maximum {max_files} files per batch. Upload in smaller groups."
+        else:
+            try:
+                results = ingest_bulk_files(files)
+                request.session["bulk_upload_results"] = results
+                return redirect("bulk_upload_confirm")
+            except ValueError as exc:
+                error = str(exc)
+
+    return render(
+        request,
+        "transcripts/bulk_upload.html",
+        {"max_files": max_files, "error": error},
+    )
+
+
+def bulk_upload_confirm(request):
+    results = request.session.pop("bulk_upload_results", None)
+    return render(
+        request,
+        "transcripts/bulk_upload_confirm.html",
+        {"results": results},
     )

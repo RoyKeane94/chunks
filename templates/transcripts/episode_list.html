@@ -2,24 +2,163 @@
 
 {% block title %}library — Chunks{% endblock %}
 
-{% block content %}
-    <p class="eyebrow">library</p>
-    <h1>episodes</h1>
+{% block extra_head %}
+    <style>
+        .library-search {
+            margin-bottom: 16px;
+        }
 
-    {% if episodes %}
-        <div class="card">
-            <ul class="episode-list">
-                {% for episode in episodes %}
-                    <li class="episode-item">
+        .library-search input {
+            width: 100%;
+            font-family: "DM Mono", monospace;
+            font-size: 15px;
+            color: var(--ink);
+            background: var(--white);
+            border: 1px solid var(--border-2);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .library-search input:focus {
+            outline: none;
+            border-color: var(--yellow);
+            background: var(--yellow-soft);
+        }
+
+        .library-search input::placeholder {
+            color: var(--faint);
+        }
+
+        .library-card {
+            background: var(--white);
+            border: 1px solid var(--border-2);
+            border-radius: 10px;
+            padding: 2px 14px 2px 16px;
+        }
+
+        .library-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .library-item:last-child {
+            border-bottom: none;
+        }
+
+        .library-item.is-hidden {
+            display: none;
+        }
+
+        .library-title {
+            display: block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.25;
+        }
+
+        .library-meta {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: var(--faint);
+            line-height: 1.25;
+            margin-top: 1px;
+        }
+
+        .library-badge {
+            display: inline-block;
+            margin-left: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--ink);
+            background: var(--yellow);
+            border: none;
+            border-radius: 3px;
+            padding: 1px 7px;
+            vertical-align: baseline;
+        }
+
+        .library-actions {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
+        .library-empty {
+            display: none;
+            text-align: center;
+            color: var(--faint);
+            padding: 16px 0;
+            font-size: 13px;
+        }
+
+        .library-empty.is-visible {
+            display: block;
+        }
+
+        .library-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--faint);
+        }
+
+        .library-pagination a {
+            color: var(--ink-soft);
+            padding: 6px 10px;
+            border: 1px solid var(--border-2);
+            border-radius: 7px;
+        }
+
+        .library-pagination a:hover {
+            color: var(--ink);
+            border-color: var(--ink-soft);
+        }
+
+        .library-pagination .is-disabled {
+            visibility: hidden;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="library-search">
+        <input
+            type="search"
+            id="library-search"
+            placeholder="search episodes…"
+            value="{{ query }}"
+            autocomplete="off"
+            autofocus
+        >
+    </div>
+
+    {% if page_obj.paginator.count %}
+        <div class="library-card">
+            <ul class="episode-list" id="library-list">
+                {% for episode in page_obj %}
+                    <li
+                        class="library-item"
+                        data-search="{{ episode.title|lower }} {{ episode.guest|lower }}"
+                    >
                         <a href="{% url 'episode_detail' episode.id %}" class="episode-link">
-                            <span class="episode-title">{{ episode.title }}</span>
-                            <span class="episode-meta">
-                                {{ episode.guest }}
-                                {% if episode.date %}· {{ episode.date }}{% endif %}
-                                · <span class="tag">{{ episode.chunk_count }} chunk{{ episode.chunk_count|pluralize }}</span>
+                            <span class="library-title">{{ episode.title }}</span>
+                            <span class="library-meta">
+                                {{ episode.guest }}{% if episode.date %} · {{ episode.date }}{% endif %}
+                                <span class="library-badge">{{ episode.chunk_count }} chunks</span>
                             </span>
                         </a>
-                        <div class="episode-actions">
+                        <div class="library-actions">
                             <a href="{% url 'episode_download' episode.id %}" class="action-btn" aria-label="Download JSON">
                                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
                                     <path d="M7 2v7M4.5 6.5 7 9l2.5-2.5M3 11h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -43,8 +182,29 @@
                 {% endfor %}
             </ul>
         </div>
+
+        {% if page_obj.paginator.num_pages > 1 %}
+            <nav class="library-pagination" aria-label="Episode pages">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">← prev</a>
+                {% else %}
+                    <span class="is-disabled">← prev</span>
+                {% endif %}
+                <span>{{ page_obj.start_index }}–{{ page_obj.end_index }} of {{ page_obj.paginator.count }}</span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if query %}&amp;q={{ query|urlencode }}{% endif %}">next →</a>
+                {% else %}
+                    <span class="is-disabled">next →</span>
+                {% endif %}
+            </nav>
+        {% endif %}
+
         <div class="btn-row">
             <a href="{% url 'upload' %}" class="btn btn-ghost">Upload episode</a>
+        </div>
+    {% elif query %}
+        <div class="empty-state">
+            <p>No episodes match your search.</p>
         </div>
     {% else %}
         <div class="empty-state">
@@ -54,4 +214,29 @@
             </div>
         </div>
     {% endif %}
+
+    <script>
+        (function () {
+            const input = document.getElementById("library-search");
+            if (!input) return;
+
+            let timeout;
+            input.addEventListener("input", function () {
+                clearTimeout(timeout);
+                timeout = setTimeout(function () {
+                    const q = input.value.trim();
+                    const url = new URL(window.location.href);
+                    if (q) {
+                        url.searchParams.set("q", q);
+                    } else {
+                        url.searchParams.delete("q");
+                    }
+                    url.searchParams.delete("page");
+                    if (url.search !== window.location.search) {
+                        window.location = url;
+                    }
+                }, 300);
+            });
+        })();
+    </script>
 {% endblock %}

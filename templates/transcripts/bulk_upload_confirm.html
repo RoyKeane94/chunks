@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}bulk upload complete — Chunks{% endblock %}
+
+{% block content %}
+    <div class="success-hero">
+        <div class="success-icon">✓</div>
+        <p class="eyebrow">bulk ingestion complete</p>
+        {% if results %}
+            <h1>{{ results.succeeded|length }} of {{ results.total }} ingested</h1>
+            {% if results.failed %}
+                <p class="muted">{{ results.failed|length }} failed</p>
+            {% endif %}
+        {% else %}
+            <h1>bulk upload</h1>
+        {% endif %}
+        <div class="btn-row" style="justify-content: center;">
+            <a href="{% url 'episode_list' %}" class="btn btn-primary">View all episodes →</a>
+        </div>
+    </div>
+
+    {% if results %}
+        {% if results.succeeded %}
+            <h2>ingested ({{ results.succeeded|length }})</h2>
+            <div class="card">
+                <ul class="episode-list">
+                    {% for item in results.succeeded %}
+                        <li class="episode-item">
+                            <a href="{% url 'episode_detail' item.episode_id %}" class="episode-link">
+                                <span class="episode-title">{{ item.title }}</span>
+                                <span class="episode-meta">
+                                    {{ item.guest }}
+                                    {% if item.date %}· {{ item.date }}{% endif %}
+                                    · <span class="tag">{{ item.final_chunk_count }} chunk{{ item.final_chunk_count|pluralize }}</span>
+                                </span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        {% if results.failed %}
+            <h2>failed ({{ results.failed|length }})</h2>
+            <div class="card">
+                <ul class="merge-list">
+                    {% for item in results.failed %}
+                        <li class="merge-item">
+                            {{ item.filename }} — {{ item.error }}
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
+        <div class="btn-row">
+            <a href="{% url 'bulk_upload' %}" class="btn btn-ghost">Upload another batch</a>
+        </div>
+    {% else %}
+        <p class="muted">Bulk upload results unavailable — refresh may have cleared the session.</p>
+    {% endif %}
+{% endblock %}

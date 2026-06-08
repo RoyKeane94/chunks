@@ -1,39 +1,198 @@
 {% extends "base.html" %}
+{% load transcript_extras %}
 
 {% block title %}{{ episode.title }} — Chunks{% endblock %}
 
+{% block extra_head %}
+    <style>
+        .content {
+            max-width: none;
+            width: 75%;
+        }
+
+        .detail-top {
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-back {
+            display: inline-block;
+            margin-bottom: 10px;
+            font-size: 12px;
+            color: var(--faint);
+        }
+
+        .detail-back:hover {
+            color: var(--ink-soft);
+        }
+
+        .detail-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .detail-top h1 {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        .detail-meta {
+            margin: 4px 0 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            color: var(--faint);
+        }
+
+        .detail-download {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            flex-shrink: 0;
+            font-family: "DM Mono", monospace;
+            font-size: 12px;
+            color: var(--ink-soft);
+            padding: 7px 12px;
+            border: 1px solid var(--border-2);
+            border-radius: 7px;
+            white-space: nowrap;
+        }
+
+        .detail-download:hover {
+            color: var(--ink);
+            border-color: var(--ink-soft);
+        }
+
+        .detail-chunks {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .detail-chunk-card {
+            background: var(--white);
+            border: 1px solid var(--border-2);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        .detail-chunk-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 10px;
+            color: var(--faint);
+        }
+
+        .detail-chunk-meta .index {
+            font-family: "DM Mono", monospace;
+        }
+
+        .detail-chunk-meta .tokens {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+        }
+
+        .detail-chunk-toggle {
+            margin-left: auto;
+            padding: 0 4px;
+            border: none;
+            background: none;
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            color: var(--faint);
+            cursor: pointer;
+        }
+
+        .detail-chunk-toggle:hover {
+            color: var(--ink-soft);
+        }
+
+        .detail-chunk-extra {
+            display: none;
+            font-family: "DM Mono", monospace;
+            font-size: 9px;
+            color: var(--faint);
+            margin-bottom: 6px;
+        }
+
+        .detail-chunk-extra.is-open {
+            display: block;
+        }
+
+        .detail-chunk-text {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--ink-2);
+        }
+    </style>
+{% endblock %}
+
 {% block content %}
-    <a href="{% url 'episode_list' %}" class="back-link">← library</a>
-
-    <p class="eyebrow">episode</p>
-    <h1>{{ episode.title }}</h1>
-
-    <p class="episode-meta" style="margin: -16px 0 20px;">
-        {{ episode.guest }}
-        {% if episode.date %}· {{ episode.date }}{% endif %}
-        · <span class="tag">{{ chunks|length }} chunk{{ chunks|length|pluralize }}</span>
-    </p>
-
-    <div class="btn-row" style="margin-top: 0; margin-bottom: 28px;">
-        <a href="{% url 'episode_download' episode.id %}" class="btn btn-ghost">Download JSON</a>
+    <div class="detail-top">
+        <a href="{% url 'episode_list' %}" class="detail-back">← library</a>
+        <div class="detail-header-row">
+            <div>
+                <h1>{{ episode.title }}</h1>
+                <p class="detail-meta">
+                    {{ episode.guest }}{% if episode.date %} · {{ episode.date }}{% endif %}
+                    · {{ chunks|length }} chunks
+                </p>
+            </div>
+            <a href="{% url 'episode_download' episode.id %}" class="detail-download">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                    <path d="M7 2v7M4.5 6.5 7 9l2.5-2.5M3 11h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                json
+            </a>
+        </div>
     </div>
 
     {% if chunks %}
-        <div class="card">
-            <ul class="chunk-list">
-                {% for chunk in chunks %}
-                    <li class="chunk-item">
-                        <div class="chunk-meta">
-                            #{{ chunk.chunk_index }} · {{ chunk.token_estimate }} tokens · {{ chunk.embedding_model }}
-                        </div>
-                        <p class="chunk-content">{{ chunk.content }}</p>
-                    </li>
-                {% endfor %}
-            </ul>
+        <div class="detail-chunks">
+            {% for chunk in chunks %}
+                <article class="detail-chunk-card">
+                    <div class="detail-chunk-meta">
+                        <span class="index">#{{ chunk.chunk_index }}</span>
+                        <span class="tokens">{{ chunk.token_estimate }} tokens</span>
+                        <button
+                            type="button"
+                            class="detail-chunk-toggle"
+                            data-target="chunk-extra-{{ chunk.id }}"
+                            aria-expanded="false"
+                        >details</button>
+                    </div>
+                    <div class="detail-chunk-extra" id="chunk-extra-{{ chunk.id }}">
+                        {{ chunk.embedding_model }}
+                    </div>
+                    <p class="detail-chunk-text">{{ chunk.content|strip_markdown }}</p>
+                </article>
+            {% endfor %}
         </div>
     {% else %}
         <div class="empty-state">
             <p>No chunks for this episode.</p>
         </div>
     {% endif %}
+
+    <script>
+        (function () {
+            document.querySelectorAll(".detail-chunk-toggle").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    const panel = document.getElementById(button.dataset.target);
+                    if (!panel) return;
+                    const open = panel.classList.toggle("is-open");
+                    button.setAttribute("aria-expanded", open ? "true" : "false");
+                    button.textContent = open ? "hide" : "details";
+                });
+            });
+        })();
+    </script>
 {% endblock %}

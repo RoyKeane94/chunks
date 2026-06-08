@@ -23,6 +23,7 @@ SEMANTIC_CHUNK_THRESHOLD = float(os.environ.get("SEMANTIC_CHUNK_THRESHOLD", "0.8
 SEMANTIC_MAX_MERGED_TOKENS = int(os.environ.get("SEMANTIC_MAX_MERGED_TOKENS", "400"))
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
 OPENAI_TIMEOUT = int(os.environ.get("OPENAI_TIMEOUT", "120"))
+BULK_UPLOAD_MAX_FILES = int(os.environ.get("BULK_UPLOAD_MAX_FILES", "25"))
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 INSTALLED_APPS = [
