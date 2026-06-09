@@ -11,7 +11,7 @@ from django.utils.text import slugify
 from django.conf import settings
 
 from .models import Episode
-from .services import ingest_bulk_files, ingest_episode
+from .services import get_retrieval_config, ingest_bulk_files, ingest_episode, retrieve_similar_chunks
 
 
 def validate_transcript_file(file):
@@ -42,6 +42,33 @@ def episode_list(request):
         request,
         "transcripts/episode_list.html",
         {"page_obj": page_obj, "query": query},
+    )
+
+
+def retrieve(request):
+    query = request.GET.get("q", "").strip()
+    results = []
+    error = None
+
+    if query:
+        try:
+            results = retrieve_similar_chunks(query)
+        except ValueError as exc:
+            error = str(exc)
+        except Exception as exc:
+            error = f"Retrieval failed: {exc}"
+
+    threshold, top_k = get_retrieval_config()
+    return render(
+        request,
+        "transcripts/retrieve.html",
+        {
+            "query": query,
+            "results": results,
+            "threshold": threshold,
+            "top_k": top_k,
+            "error": error,
+        },
     )
 
 

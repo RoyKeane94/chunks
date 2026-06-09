@@ -126,11 +126,28 @@
         }
 
         .detail-chunk-text {
-            margin: 0;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             font-size: 14px;
             line-height: 1.6;
             color: var(--ink-2);
+        }
+
+        .detail-chunk-text .chunk-paragraph {
+            margin: 0 0 12px;
+        }
+
+        .detail-chunk-text .chunk-paragraph:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-chunk-text .chunk-section {
+            margin: 16px 0 8px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .detail-chunk-text .chunk-section:first-child {
+            margin-top: 0;
         }
     </style>
 {% endblock %}
@@ -172,7 +189,7 @@
                     <div class="detail-chunk-extra" id="chunk-extra-{{ chunk.id }}">
                         {{ chunk.embedding_model }}
                     </div>
-                    <p class="detail-chunk-text">{{ chunk.content|strip_markdown }}</p>
+                    <div class="detail-chunk-text">{{ chunk.content|format_chunk }}</div>
                 </article>
             {% endfor %}
         </div>

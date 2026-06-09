@@ -7,7 +7,9 @@ from datetime import datetime
 import numpy as np
 import pdfplumber
 from django.conf import settings
+from django.db import connection
 from openai import OpenAI
+from pgvector.django import CosineDistance
 
 from .models import Chunk, Episode
 
@@ -113,37 +115,116 @@ def parse_transcript(filepath):
     return read_transcript_text(filepath)
 
 
+_ARTIFACT_PATTERN = re.compile(r"©|Copyright|Page \d+ of \d+|Colossus|Invest Like the Best")
+
+
+def _is_artifact_line(line):
+    stripped = line.strip()
+    if len(stripped) < 4:
+        return True
+    return bool(_ARTIFACT_PATTERN.search(stripped))
+
+
+_BLOCK_START_PATTERN = re.compile(
+    r"^(?:#{1,6}\s+|\*\*[^*]+:\*\*|[A-Z][a-z]+:\s)"
+)
+_SECTION_TITLE_PATTERN = re.compile(r"^(?:[A-Z][a-z]+(?:\s+)){1,12}[A-Z][a-z]+\s*$")
+
+
+def _is_block_start(line):
+    stripped = line.strip()
+    if _BLOCK_START_PATTERN.match(stripped):
+        return True
+    if _SECTION_TITLE_PATTERN.match(stripped) and not stripped.endswith((".", "!", "?", ":", ",")):
+        return True
+    return False
+
+
+def _split_paragraphs(text):
+    paragraphs = re.split(r"\n\s*\n", text.strip())
+    return [paragraph.strip() for paragraph in paragraphs if paragraph.strip()]
+
+
 def clean_text(text):
-    lines = text.split("\n")
-    cleaned = []
+    cleaned_paragraphs = []
+    current_lines = []
     removed = 0
-    for line in lines:
+
+    def flush():
+        if current_lines:
+            cleaned_paragraphs.append(" ".join(current_lines))
+            current_lines.clear()
+
+    for line in text.split("\n"):
         stripped = line.strip()
-        if len(stripped) < 4:
+        if not stripped:
+            flush()
+            continue
+        if _is_artifact_line(stripped):
             removed += 1
             continue
-        if re.search(r"©|Copyright|Page \d+ of \d+|Colossus|Invest Like the Best", stripped):
-            removed += 1
-            continue
-        cleaned.append(line)
-    result = "\n".join(cleaned)
+        if current_lines and _is_block_start(stripped):
+            flush()
+        current_lines.append(stripped)
+
+    flush()
+
+    result = "\n\n".join(cleaned_paragraphs)
     logger.info(
-        "cleaned %s → %s characters (%s lines removed)",
+        "cleaned %s → %s characters (%s lines removed, %s paragraphs)",
         len(text),
         len(result),
         removed,
+        len(cleaned_paragraphs),
     )
     return result
 
 
 def _split_sentences(text):
-    parts = re.split(r"(?<=[.!?])\s+", text.strip())
+    parts = re.split(r"(?<=[.!?])[ \t]+", text.strip())
     return [part.strip() for part in parts if part.strip()]
 
 
+def _iter_sentences(text):
+    for paragraph_index, paragraph in enumerate(_split_paragraphs(text)):
+        for sentence in _split_sentences(paragraph):
+            yield paragraph_index, sentence
+
+
+def _join_sentences(sentence_items):
+    parts = []
+    previous_paragraph = None
+
+    for paragraph_index, sentence in sentence_items:
+        if previous_paragraph is not None and paragraph_index != previous_paragraph:
+            parts.append("\n\n")
+        elif parts:
+            parts.append(" ")
+        parts.append(sentence)
+        previous_paragraph = paragraph_index
+
+    return "".join(parts)
+
+
+def _join_chunks(left, right):
+    left = left.rstrip()
+    right = right.lstrip()
+    if not left:
+        return right
+    if not right:
+        return left
+    if left.endswith((".", "!", "?")) and (
+        right.startswith("#")
+        or right.startswith("**")
+        or right[0].isupper()
+    ):
+        return f"{left}\n\n{right}"
+    return f"{left} {right}"
+
+
 def chunk_text(text):
-    sentences = _split_sentences(text)
-    if not sentences:
+    sentence_items = list(_iter_sentences(text))
+    if not sentence_items:
         return []
 
     max_tokens = settings.CHUNK_MAX_TOKENS
@@ -151,27 +232,27 @@ def chunk_text(text):
     chunks = []
     start = 0
 
-    while start < len(sentences):
+    while start < len(sentence_items):
         current = []
         token_count = 0
         idx = start
 
-        while idx < len(sentences):
-            sentence = sentences[idx]
+        while idx < len(sentence_items):
+            paragraph_index, sentence = sentence_items[idx]
             sentence_tokens = estimate_tokens(sentence)
             if current and token_count + sentence_tokens > max_tokens:
                 break
-            current.append(sentence)
+            current.append((paragraph_index, sentence))
             token_count += sentence_tokens
             idx += 1
 
         if not current:
-            current.append(sentences[start])
+            current.append(sentence_items[start])
             idx = start + 1
 
-        chunks.append(" ".join(current))
+        chunks.append(_join_sentences(current))
 
-        if idx >= len(sentences):
+        if idx >= len(sentence_items):
             break
 
         next_start = max(idx - overlap, start + 1)
@@ -179,7 +260,7 @@ def chunk_text(text):
 
     logger.info(
         "chunked %s sentences → %s raw chunks (max %s tokens, overlap %s)",
-        len(sentences),
+        len(sentence_items),
         len(chunks),
         max_tokens,
         overlap,
@@ -245,7 +326,7 @@ def semantic_merge(chunks):
                 "similarity": round(similarity, 3),
                 "combined_tokens": combined_tokens,
             })
-            current_text = f"{current_text} {chunks[i]}"
+            current_text = _join_chunks(current_text, chunks[i])
             current_embedding = _normalize((current_embedding + embeddings[i]) / 2)
             current_tokens = combined_tokens
             current_indices.append(i)
@@ -361,6 +442,62 @@ def ingest_episode(episode_id, raw_text=None):
             for index, ((content, _embedding), group) in enumerate(zip(merged, merge_log["groups"]))
         ],
     }
+
+
+def get_retrieval_config():
+    threshold = float(
+        os.environ.get("RETRIEVAL_SIMILARITY_THRESHOLD")
+        or settings.RETRIEVAL_SIMILARITY_THRESHOLD
+    )
+    top_k = int(
+        os.environ.get("RETRIEVAL_TOP_K")
+        or settings.RETRIEVAL_TOP_K
+    )
+    return threshold, top_k
+
+
+def retrieve_similar_chunks(query_text):
+    query_text = query_text.strip()
+    if not query_text:
+        return []
+
+    if connection.vendor != "postgresql":
+        raise ValueError("Retrieval requires PostgreSQL with pgvector.")
+
+    threshold, top_k = get_retrieval_config()
+    max_distance = 1 - threshold
+
+    query_embedding = _embed_texts([query_text])[0].tolist()
+    logger.info(
+        "retrieval search — threshold %.2f, top_k %s, query length %s",
+        threshold,
+        top_k,
+        len(query_text),
+    )
+
+    chunks = (
+        Chunk.objects.select_related("episode")
+        .annotate(distance=CosineDistance("embedding", query_embedding))
+        .filter(distance__lt=max_distance)
+        .order_by("distance")[:top_k]
+    )
+
+    results = []
+    for chunk in chunks:
+        similarity = 1 - chunk.distance
+        results.append({
+            "chunk": chunk,
+            "similarity": round(similarity, 4),
+        })
+        logger.info(
+            "retrieval hit — score %.3f, episode %s, chunk #%s",
+            similarity,
+            chunk.episode.title,
+            chunk.chunk_index,
+        )
+
+    logger.info("retrieval complete — %s/%s chunks above threshold", len(results), top_k)
+    return results
 
 
 def ingest_bulk_files(files):

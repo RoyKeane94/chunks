@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% load transcript_extras %}
+
+{% block title %}retrieve — Chunks{% endblock %}
+
+{% block extra_head %}
+    <style>
+        .content {
+            max-width: none;
+            width: 75%;
+        }
+
+        .retrieve-search {
+            margin-bottom: 20px;
+        }
+
+        .retrieve-search form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .retrieve-search input {
+            flex: 1;
+            font-family: "DM Mono", monospace;
+            font-size: 15px;
+            color: var(--ink);
+            background: var(--white);
+            border: 1px solid var(--border-2);
+            border-radius: 10px;
+            padding: 14px 16px;
+        }
+
+        .retrieve-search input:focus {
+            outline: none;
+            border-color: var(--yellow);
+            background: var(--yellow-soft);
+        }
+
+        .retrieve-search input::placeholder {
+            color: var(--faint);
+        }
+
+        .retrieve-search button {
+            flex-shrink: 0;
+            font-family: "DM Mono", monospace;
+            font-size: 13px;
+            padding: 10px 18px;
+            border-radius: 7px;
+            border: 1px solid var(--yellow-deep);
+            background: var(--yellow);
+            color: var(--ink);
+            cursor: pointer;
+        }
+
+        .retrieve-search button:hover {
+            border-color: var(--ink);
+        }
+
+        .retrieve-config {
+            margin: 0 0 16px;
+            font-size: 11px;
+            color: var(--faint);
+        }
+
+        .retrieve-config strong {
+            font-weight: 500;
+            color: var(--ink-soft);
+        }
+
+        .retrieve-error {
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            font-size: 13px;
+            color: var(--ink-2);
+            background: #fff0f0;
+            border: 1px solid #f0c8c8;
+            border-radius: 8px;
+        }
+
+        .retrieve-results {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .retrieve-card {
+            background: var(--white);
+            border: 1px solid var(--border-2);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+
+        .retrieve-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .retrieve-score {
+            flex-shrink: 0;
+            font-family: "DM Mono", monospace;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--ink);
+            background: var(--yellow-soft);
+            border: 1px solid var(--yellow-border);
+            border-radius: 5px;
+            padding: 3px 8px;
+        }
+
+        .retrieve-episode {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.3;
+        }
+
+        .retrieve-episode a:hover {
+            color: var(--ink-soft);
+        }
+
+        .retrieve-meta {
+            margin-top: 2px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 12px;
+            color: var(--faint);
+        }
+
+        .retrieve-chunk-text {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--ink-2);
+        }
+
+        .retrieve-chunk-text .chunk-paragraph {
+            margin: 0 0 12px;
+        }
+
+        .retrieve-chunk-text .chunk-paragraph:last-child {
+            margin-bottom: 0;
+        }
+
+        .retrieve-chunk-text .chunk-section {
+            margin: 16px 0 8px;
+            font-weight: 600;
+            color: var(--ink);
+        }
+
+        .retrieve-chunk-text .chunk-section:first-child {
+            margin-top: 0;
+        }
+
+        .retrieve-empty {
+            text-align: center;
+            color: var(--faint);
+            padding: 24px 0;
+            font-size: 13px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="retrieve-search">
+        <form method="get" action="{% url 'retrieve' %}">
+            <input
+                type="search"
+                name="q"
+                value="{{ query }}"
+                placeholder="search across all chunks…"
+                autocomplete="off"
+                autofocus
+            >
+            <button type="submit">search</button>
+        </form>
+    </div>
+
+    {% if query %}
+        <p class="retrieve-config">
+            threshold <strong>{{ threshold }}</strong>
+            · top <strong>{{ top_k }}</strong>
+            · {{ results|length }} result{{ results|length|pluralize }}
+        </p>
+    {% endif %}
+
+    {% if error %}
+        <p class="retrieve-error">{{ error }}</p>
+    {% endif %}
+
+    {% if query and not error %}
+        {% if results %}
+            <div class="retrieve-results">
+                {% for result in results %}
+                    <article class="retrieve-card">
+                        <div class="retrieve-card-header">
+                            <div>
+                                <div class="retrieve-episode">
+                                    <a href="{% url 'episode_detail' result.chunk.episode.id %}">{{ result.chunk.episode.title }}</a>
+                                </div>
+                                <div class="retrieve-meta">
+                                    {{ result.chunk.episode.guest }}{% if result.chunk.episode.date %} · {{ result.chunk.episode.date }}{% endif %}
+                                    · chunk #{{ result.chunk.chunk_index }}
+                                </div>
+                            </div>
+                            <span class="retrieve-score">{{ result.similarity }}</span>
+                        </div>
+                        <div class="retrieve-chunk-text">{{ result.chunk.content|format_chunk }}</div>
+                    </article>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="retrieve-empty">
+                <p>No chunks cleared the similarity threshold ({{ threshold }}).</p>
+            </div>
+        {% endif %}
+    {% endif %}
+{% endblock %}

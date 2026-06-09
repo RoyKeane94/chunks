@@ -24,6 +24,8 @@ SEMANTIC_MAX_MERGED_TOKENS = int(os.environ.get("SEMANTIC_MAX_MERGED_TOKENS", "4
 EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
 OPENAI_TIMEOUT = int(os.environ.get("OPENAI_TIMEOUT", "120"))
 BULK_UPLOAD_MAX_FILES = int(os.environ.get("BULK_UPLOAD_MAX_FILES", "25"))
+RETRIEVAL_TOP_K = int(os.environ.get("RETRIEVAL_TOP_K", "10"))
+RETRIEVAL_SIMILARITY_THRESHOLD = float(os.environ.get("RETRIEVAL_SIMILARITY_THRESHOLD", "0.70"))
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 INSTALLED_APPS = [
