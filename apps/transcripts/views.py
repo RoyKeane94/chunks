@@ -34,7 +34,13 @@ EPISODES_PER_PAGE = 20
 
 def episode_list(request):
     query = request.GET.get("q", "").strip()
-    episodes = Episode.objects.annotate(chunk_count=Count("chunks")).order_by("-created_at")
+    episodes = Episode.objects.annotate(
+        chunk_count=Count("chunks"),
+        layered_chunk_count=Count(
+            "chunks",
+            filter=Q(chunks__extracted_at__isnull=False),
+        ),
+    ).order_by("-created_at")
     if query:
         episodes = episodes.filter(Q(title__icontains=query) | Q(guest__icontains=query))
     page_obj = Paginator(episodes, EPISODES_PER_PAGE).get_page(request.GET.get("page"))
@@ -74,7 +80,11 @@ def retrieve(request):
 
 def episode_detail(request, episode_id):
     episode = get_object_or_404(Episode, pk=episode_id)
-    chunks = episode.chunks.all()
+    chunks = episode.chunks.prefetch_related(
+        "propositions",
+        "claims",
+        "atomic_phrases",
+    ).all()
     return render(
         request,
         "transcripts/episode_detail.html",
@@ -98,6 +108,7 @@ def episode_download_json(request, episode_id):
                 "content": chunk.content,
                 "token_estimate": chunk.token_estimate,
                 "embedding_model": chunk.embedding_model,
+                "embedded_at": chunk.embedded_at.isoformat() if chunk.embedded_at else None,
                 "embedding": [float(x) for x in chunk.embedding],
                 "created_at": chunk.created_at.isoformat(),
             }

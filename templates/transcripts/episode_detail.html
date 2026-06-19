@@ -78,51 +78,54 @@
             background: var(--white);
             border: 1px solid var(--border-2);
             border-radius: 8px;
-            padding: 12px 14px;
+            overflow: hidden;
         }
 
-        .detail-chunk-meta {
+        .detail-chunk-card.is-open {
+            border-color: var(--yellow-deep);
+        }
+
+        .detail-chunk-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 8px;
-            font-size: 10px;
-            color: var(--faint);
-        }
-
-        .detail-chunk-meta .index {
-            font-family: "DM Mono", monospace;
-        }
-
-        .detail-chunk-meta .tokens {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-        }
-
-        .detail-chunk-toggle {
-            margin-left: auto;
-            padding: 0 4px;
+            width: 100%;
+            padding: 12px 14px;
             border: none;
-            background: none;
-            font-family: "DM Mono", monospace;
+            background: transparent;
+            text-align: left;
+            cursor: pointer;
             font-size: 10px;
             color: var(--faint);
-            cursor: pointer;
         }
 
-        .detail-chunk-toggle:hover {
+        .detail-chunk-header:hover {
+            background: var(--yellow-soft);
+        }
+
+        .detail-chunk-header .index {
+            font-family: "DM Mono", monospace;
             color: var(--ink-soft);
         }
 
-        .detail-chunk-extra {
-            display: none;
-            font-family: "DM Mono", monospace;
-            font-size: 9px;
-            color: var(--faint);
-            margin-bottom: 6px;
+        .detail-chunk-header .tokens {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
         }
 
-        .detail-chunk-extra.is-open {
-            display: block;
+        .detail-chunk-header .layer-counts {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            color: var(--faint);
+        }
+
+        .detail-chunk-header .expand-label {
+            margin-left: auto;
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            color: var(--ink-soft);
+        }
+
+        .detail-chunk-body {
+            padding: 0 14px 12px;
         }
 
         .detail-chunk-text {
@@ -148,6 +151,83 @@
 
         .detail-chunk-text .chunk-section:first-child {
             margin-top: 0;
+        }
+
+        .detail-chunk-layers {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .detail-chunk-card.is-open .detail-chunk-layers {
+            display: block;
+        }
+
+        .detail-layers-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        @media (max-width: 900px) {
+            .detail-layers-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .detail-layer-column {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+
+        .detail-layer-heading {
+            margin: 0 0 8px;
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            font-weight: 500;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--ink-soft);
+        }
+
+        .detail-layer-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .detail-layer-item {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .detail-layer-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .detail-layer-content {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 13px;
+            line-height: 1.45;
+            color: var(--ink-2);
+        }
+
+        .detail-layer-source {
+            margin-top: 4px;
+            font-family: "DM Mono", monospace;
+            font-size: 10px;
+            line-height: 1.4;
+            color: var(--faint);
+        }
+
+        .detail-layers-empty {
+            font-size: 13px;
+            color: var(--faint);
+            margin: 0;
         }
     </style>
 {% endblock %}
@@ -175,21 +255,89 @@
     {% if chunks %}
         <div class="detail-chunks">
             {% for chunk in chunks %}
-                <article class="detail-chunk-card">
-                    <div class="detail-chunk-meta">
+                <article class="detail-chunk-card" id="chunk-card-{{ chunk.id }}">
+                    <button
+                        type="button"
+                        class="detail-chunk-header"
+                        aria-expanded="false"
+                        aria-controls="chunk-layers-{{ chunk.id }}"
+                    >
                         <span class="index">#{{ chunk.chunk_index }}</span>
                         <span class="tokens">{{ chunk.token_estimate }} tokens</span>
-                        <button
-                            type="button"
-                            class="detail-chunk-toggle"
-                            data-target="chunk-extra-{{ chunk.id }}"
-                            aria-expanded="false"
-                        >details</button>
+                        {% if chunk.extracted_at %}
+                            <span class="layer-counts">
+                                {{ chunk.propositions.all|length }} prop
+                                · {{ chunk.claims.all|length }} claims
+                                · {{ chunk.atomic_phrases.all|length }} phrases
+                            </span>
+                        {% endif %}
+                        <span class="expand-label">layers</span>
+                    </button>
+                    <div class="detail-chunk-body">
+                        <div class="detail-chunk-text">{{ chunk.content|format_chunk }}</div>
+                        <div class="detail-chunk-layers" id="chunk-layers-{{ chunk.id }}">
+                            {% if chunk.extracted_at %}
+                                <div class="detail-layers-grid">
+                                    <div class="detail-layer-column">
+                                        <h3 class="detail-layer-heading">
+                                            Propositions ({{ chunk.propositions.all|length }})
+                                        </h3>
+                                        {% if chunk.propositions.all %}
+                                            <ul class="detail-layer-list">
+                                                {% for item in chunk.propositions.all %}
+                                                    <li class="detail-layer-item">
+                                                        <div class="detail-layer-content">{{ item.content }}</div>
+                                                        <div class="detail-layer-source">{{ item.source_text }}</div>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p class="detail-layers-empty">None</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="detail-layer-column">
+                                        <h3 class="detail-layer-heading">
+                                            Claims ({{ chunk.claims.all|length }})
+                                        </h3>
+                                        {% if chunk.claims.all %}
+                                            <ul class="detail-layer-list">
+                                                {% for item in chunk.claims.all %}
+                                                    <li class="detail-layer-item">
+                                                        <div class="detail-layer-content">{{ item.content }}</div>
+                                                        <div class="detail-layer-source">{{ item.source_text }}</div>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p class="detail-layers-empty">None</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="detail-layer-column">
+                                        <h3 class="detail-layer-heading">
+                                            Phrases ({{ chunk.atomic_phrases.all|length }})
+                                        </h3>
+                                        {% if chunk.atomic_phrases.all %}
+                                            <ul class="detail-layer-list">
+                                                {% for item in chunk.atomic_phrases.all %}
+                                                    <li class="detail-layer-item">
+                                                        <div class="detail-layer-content">{{ item.content }}</div>
+                                                        <div class="detail-layer-source">{{ item.source_text }}</div>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% else %}
+                                            <p class="detail-layers-empty">None</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% else %}
+                                <p class="detail-layers-empty">
+                                    Layers not extracted yet. Run
+                                    <code>python manage.py extract_chunk_layers</code>.
+                                </p>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="detail-chunk-extra" id="chunk-extra-{{ chunk.id }}">
-                        {{ chunk.embedding_model }}
-                    </div>
-                    <div class="detail-chunk-text">{{ chunk.content|format_chunk }}</div>
                 </article>
             {% endfor %}
         </div>
@@ -201,13 +349,13 @@
 
     <script>
         (function () {
-            document.querySelectorAll(".detail-chunk-toggle").forEach(function (button) {
+            document.querySelectorAll(".detail-chunk-header").forEach(function (button) {
                 button.addEventListener("click", function () {
-                    const panel = document.getElementById(button.dataset.target);
-                    if (!panel) return;
-                    const open = panel.classList.toggle("is-open");
+                    const card = button.closest(".detail-chunk-card");
+                    if (!card) return;
+                    const open = card.classList.toggle("is-open");
                     button.setAttribute("aria-expanded", open ? "true" : "false");
-                    button.textContent = open ? "hide" : "details";
+                    button.querySelector(".expand-label").textContent = open ? "hide" : "layers";
                 });
             });
         })();

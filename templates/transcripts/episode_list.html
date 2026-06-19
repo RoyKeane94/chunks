@@ -83,6 +83,19 @@
             vertical-align: baseline;
         }
 
+        .library-badge-layered {
+            font-weight: 500;
+            color: var(--ink-soft);
+            background: var(--bg);
+            border: 1px solid var(--border-2);
+        }
+
+        .library-badge-layered.is-complete {
+            color: var(--ink);
+            background: var(--yellow-soft);
+            border-color: var(--yellow-border);
+        }
+
         .library-actions {
             display: flex;
             align-items: center;
@@ -156,6 +169,15 @@
                             <span class="library-meta">
                                 {{ episode.guest }}{% if episode.date %} · {{ episode.date }}{% endif %}
                                 <span class="library-badge">{{ episode.chunk_count }} chunks</span>
+                                {% if episode.layered_chunk_count %}
+                                    {% if episode.layered_chunk_count == episode.chunk_count %}
+                                        <span class="library-badge library-badge-layered is-complete">layered</span>
+                                    {% else %}
+                                        <span class="library-badge library-badge-layered">
+                                            {{ episode.layered_chunk_count }}/{{ episode.chunk_count }} layered
+                                        </span>
+                                    {% endif %}
+                                {% endif %}
                             </span>
                         </a>
                         <div class="library-actions">

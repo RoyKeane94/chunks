@@ -8,6 +8,7 @@ import numpy as np
 import pdfplumber
 from django.conf import settings
 from django.db import connection
+from django.utils import timezone
 from openai import OpenAI
 from pgvector.django import CosineDistance
 
@@ -289,6 +290,13 @@ def _embed_texts(texts):
     return embeddings
 
 
+def embed_texts_as_lists(texts):
+    """Return embeddings as lists of floats for pgvector storage."""
+    if not texts:
+        return []
+    return [embedding.tolist() for embedding in _embed_texts(texts)]
+
+
 def _normalize(vector):
     norm = np.linalg.norm(vector)
     if norm == 0:
@@ -398,6 +406,7 @@ def ingest_episode(episode_id, raw_text=None):
             token_estimate=estimate_tokens(content),
             embedding=embedding.tolist(),
             embedding_model=settings.EMBEDDING_MODEL,
+            embedded_at=timezone.now(),
         )
         if (index + 1) % 25 == 0 or index + 1 == len(merged):
             logger.info("[5/5] saved %s/%s chunks", index + 1, len(merged))
