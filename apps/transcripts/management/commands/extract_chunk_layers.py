@@ -17,6 +17,22 @@ MAX_CHUNK_RETRIES = 3
 class Command(BaseCommand):
     help = "Extract proposition, claim, and atomic phrase layers for chunks."
 
+    def _bad_span_q(self):
+        """Layer rows with unset spans from legacy runs (both start and end are zero)."""
+        return (
+            Q(propositions__start_char=0, propositions__end_char=0)
+            | Q(claims__start_char=0, claims__end_char=0)
+            | Q(atomic_phrases__start_char=0, atomic_phrases__end_char=0)
+        )
+
+    def _write_line(self, message="", style=None):
+        """Write a line and flush so piped output (tee) matches interactive output."""
+        if style:
+            self.stdout.write(style(message))
+        else:
+            self.stdout.write(message)
+        self.stdout.flush()
+
     def add_arguments(self, parser):
         parser.add_argument(
             "--episode-id",
@@ -38,8 +54,8 @@ class Command(BaseCommand):
             "--reextract-zero-spans",
             action="store_true",
             help=(
-                "Re-extract only chunks that have layers but missing char spans "
-                "(start_char=0 from an older run)."
+                "Re-extract chunks that have layer rows with unset char spans "
+                "(start_char=0 and end_char=0 from an older run)."
             ),
         )
         parser.add_argument(
@@ -75,7 +91,7 @@ class Command(BaseCommand):
             self._print_status(options["episode_id"])
             return
 
-        self.stdout.write(
+        self._write_line(
             f"Processing {total} chunk(s) with {workers} worker(s)..."
         )
 
@@ -108,15 +124,14 @@ class Command(BaseCommand):
                     elif result == "skipped":
                         skipped += 1
 
-        self.stdout.write(
-            self.style.SUCCESS(
-                f"Done — processed {processed} chunk(s), skipped {skipped} already extracted."
-            )
+        self._write_line(
+            f"Done — processed {processed} chunk(s), skipped {skipped} already extracted.",
+            style=self.style.SUCCESS,
         )
 
     def _run_chunk_with_retries(self, chunk_id, index, total, options):
         chunk = Chunk.objects.select_related("episode").get(pk=chunk_id)
-        self.stdout.write(
+        self._write_line(
             f"[{index}/{total}] chunk {chunk.id} "
             f"(episode {chunk.episode_id}, index {chunk.chunk_index})"
         )
@@ -132,12 +147,11 @@ class Command(BaseCommand):
                 if chunk_attempt >= MAX_CHUNK_RETRIES - 1:
                     raise
                 wait = min(2 ** chunk_attempt, 30)
-                self.stdout.write(
-                    self.style.WARNING(
-                        f"  chunk {chunk.id}: DB connection lost ({exc}) — "
-                        f"retrying in {wait}s "
-                        f"(attempt {chunk_attempt + 2}/{MAX_CHUNK_RETRIES})"
-                    )
+                self._write_line(
+                    f"  chunk {chunk.id}: DB connection lost ({exc}) — "
+                    f"retrying in {wait}s "
+                    f"(attempt {chunk_attempt + 2}/{MAX_CHUNK_RETRIES})",
+                    style=self.style.WARNING,
                 )
                 time.sleep(wait)
 
@@ -154,9 +168,9 @@ class Command(BaseCommand):
 
     def _needs_span_reextract(self, chunk):
         return (
-            chunk.propositions.filter(start_char=0).exists()
-            or chunk.claims.filter(start_char=0).exists()
-            or chunk.atomic_phrases.filter(start_char=0).exists()
+            chunk.propositions.filter(start_char=0, end_char=0).exists()
+            or chunk.claims.filter(start_char=0, end_char=0).exists()
+            or chunk.atomic_phrases.filter(start_char=0, end_char=0).exists()
         )
 
     def _process_chunk(self, chunk, options):
@@ -164,11 +178,11 @@ class Command(BaseCommand):
 
         if options["reextract_zero_spans"]:
             if not self._needs_span_reextract(chunk):
-                self.stdout.write(f"  chunk {chunk.id}: skipped (char spans already set)")
+                self._write_line(f"  chunk {chunk.id}: skipped (char spans already set)")
                 return False
         elif not options["force"]:
             if self._is_already_extracted(chunk):
-                self.stdout.write(f"  chunk {chunk.id}: skipped (already extracted)")
+                self._write_line(f"  chunk {chunk.id}: skipped (already extracted)")
                 return False
 
         if options["force"] or options["reextract_zero_spans"]:
@@ -181,7 +195,7 @@ class Command(BaseCommand):
                 chunk.propositions.all().delete()
                 chunk.claims.all().delete()
                 chunk.atomic_phrases.all().delete()
-                self.stdout.write(f"  chunk {chunk.id}: cleared {deleted} existing layer row(s)")
+                self._write_line(f"  chunk {chunk.id}: cleared {deleted} existing layer row(s)")
 
         extracted, dropped = extract_layers_for_chunk(chunk)
         extracted, redundant_dropped = save_extraction(
@@ -192,16 +206,16 @@ class Command(BaseCommand):
         claim_count = len(extracted["claims"])
         phrase_count = len(extracted["phrases"])
 
-        self.stdout.write(
+        self._write_line(
             f"  chunk {chunk.id}: saved {prop_count} proposition(s), "
             f"{claim_count} claim(s), {phrase_count} phrase(s)"
         )
         if dropped:
-            self.stdout.write(
+            self._write_line(
                 f"  chunk {chunk.id}: dropped {dropped} item(s) with no locatable source span"
             )
         if redundant_dropped:
-            self.stdout.write(
+            self._write_line(
                 f"  chunk {chunk.id}: dropped {redundant_dropped} redundant claim(s)"
             )
 
@@ -227,11 +241,7 @@ class Command(BaseCommand):
             return chunks
 
         if reextract_zero_spans:
-            return chunks.filter(
-                Q(propositions__start_char=0)
-                | Q(claims__start_char=0)
-                | Q(atomic_phrases__start_char=0)
-            ).distinct()
+            return chunks.filter(self._bad_span_q()).distinct()
 
         return self._with_layer_counts(chunks).filter(
             extracted_at__isnull=True,
@@ -260,17 +270,15 @@ class Command(BaseCommand):
         )
         pending_count = pending.count()
 
-        bad_spans = chunks.filter(
-            Q(propositions__start_char=0)
-            | Q(claims__start_char=0)
-            | Q(atomic_phrases__start_char=0)
-        ).distinct()
+        bad_spans = chunks.filter(self._bad_span_q()).distinct()
         bad_count = bad_spans.count()
 
         self.stdout.write(f"Total chunks:     {total}")
         self.stdout.write(f"Extracted:        {done_count}")
         self.stdout.write(f"Pending:          {pending_count}")
-        self.stdout.write(f"Need re-extract:  {bad_count} (layers exist but start_char=0)")
+        self.stdout.write(
+            f"Need re-extract:  {bad_count} (layer rows with start_char=0 and end_char=0)"
+        )
         self.stdout.write(f"Default workers:  {settings.EXTRACT_CHUNK_WORKERS}")
 
         if done_count:
