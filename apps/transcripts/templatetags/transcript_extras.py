@@ -118,6 +118,32 @@ def strip_markdown(text):
     return mark_safe(_strip_markdown_text(text))
 
 
+@register.simple_tag
+def format_chunk_highlight(text, start=None, end=None):
+    if start is None or end is None:
+        return _format_chunk_html(text)
+    try:
+        start = int(start)
+        end = int(end)
+    except (TypeError, ValueError):
+        return _format_chunk_html(text)
+    if end <= start or (start == 0 and end == 0):
+        return _format_chunk_html(text)
+
+    text = str(text)
+    start = max(0, min(start, len(text)))
+    end = max(start, min(end, len(text)))
+
+    before = escape(text[:start])
+    highlighted = escape(text[start:end])
+    after = escape(text[end:])
+    return mark_safe(
+        f'<p class="chunk-paragraph">{before}'
+        f'<mark class="retrieve-highlight">{highlighted}</mark>'
+        f"{after}</p>"
+    )
+
+
 @register.filter
 def format_chunk(text):
     return _format_chunk_html(text)

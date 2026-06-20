@@ -240,7 +240,7 @@
                 <h1>{{ episode.title }}</h1>
                 <p class="detail-meta">
                     {{ episode.guest }}{% if episode.date %} · {{ episode.date }}{% endif %}
-                    · {{ chunks|length }} chunks
+                    · {{ episode.chunk_count }} chunks
                 </p>
             </div>
             <a href="{% url 'episode_download' episode.id %}" class="detail-download">
@@ -266,9 +266,9 @@
                         <span class="tokens">{{ chunk.token_estimate }} tokens</span>
                         {% if chunk.extracted_at %}
                             <span class="layer-counts">
-                                {{ chunk.propositions.all|length }} prop
-                                · {{ chunk.claims.all|length }} claims
-                                · {{ chunk.atomic_phrases.all|length }} phrases
+                                {{ chunk.proposition_count }} prop
+                                · {{ chunk.claim_count }} claims
+                                · {{ chunk.phrase_count }} phrases
                             </span>
                         {% endif %}
                         <span class="expand-label">layers</span>
@@ -280,9 +280,9 @@
                                 <div class="detail-layers-grid">
                                     <div class="detail-layer-column">
                                         <h3 class="detail-layer-heading">
-                                            Propositions ({{ chunk.propositions.all|length }})
+                                            Propositions ({{ chunk.proposition_count }})
                                         </h3>
-                                        {% if chunk.propositions.all %}
+                                        {% if chunk.proposition_count %}
                                             <ul class="detail-layer-list">
                                                 {% for item in chunk.propositions.all %}
                                                     <li class="detail-layer-item">
@@ -297,9 +297,9 @@
                                     </div>
                                     <div class="detail-layer-column">
                                         <h3 class="detail-layer-heading">
-                                            Claims ({{ chunk.claims.all|length }})
+                                            Claims ({{ chunk.claim_count }})
                                         </h3>
-                                        {% if chunk.claims.all %}
+                                        {% if chunk.claim_count %}
                                             <ul class="detail-layer-list">
                                                 {% for item in chunk.claims.all %}
                                                     <li class="detail-layer-item">
@@ -314,9 +314,9 @@
                                     </div>
                                     <div class="detail-layer-column">
                                         <h3 class="detail-layer-heading">
-                                            Phrases ({{ chunk.atomic_phrases.all|length }})
+                                            Phrases ({{ chunk.phrase_count }})
                                         </h3>
-                                        {% if chunk.atomic_phrases.all %}
+                                        {% if chunk.phrase_count %}
                                             <ul class="detail-layer-list">
                                                 {% for item in chunk.atomic_phrases.all %}
                                                     <li class="detail-layer-item">

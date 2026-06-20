@@ -154,6 +154,24 @@
             margin-top: 0;
         }
 
+        .retrieve-highlight {
+            background: var(--yellow-soft);
+            border-radius: 2px;
+            padding: 0 1px;
+        }
+
+        .retrieve-match {
+            margin: 0 0 8px;
+            font-family: "DM Mono", monospace;
+            font-size: 11px;
+            color: var(--faint);
+        }
+
+        .retrieve-match strong {
+            color: var(--ink-soft);
+            font-weight: 500;
+        }
+
         .retrieve-empty {
             text-align: center;
             color: var(--faint);
@@ -181,6 +199,7 @@
     {% if query %}
         <p class="retrieve-config">
             threshold <strong>{{ threshold }}</strong>
+            · phrases <strong>{{ phrase_threshold }}</strong>
             · top <strong>{{ top_k }}</strong>
             · {{ results|length }} result{{ results|length|pluralize }}
         </p>
@@ -207,13 +226,25 @@
                             </div>
                             <span class="retrieve-score">{{ result.similarity }}</span>
                         </div>
-                        <div class="retrieve-chunk-text">{{ result.chunk.content|format_chunk }}</div>
+                        {% if result.matched_content %}
+                            <p class="retrieve-match">
+                                matched <strong>{{ result.matched_layer }}</strong>
+                                · {{ result.matched_content }}
+                            </p>
+                        {% elif result.matched_layer != "chunk" %}
+                            <p class="retrieve-match">
+                                matched <strong>{{ result.matched_layer }}</strong>
+                            </p>
+                        {% endif %}
+                        <div class="retrieve-chunk-text">
+                            {% format_chunk_highlight result.chunk.content result.highlight_start result.highlight_end %}
+                        </div>
                     </article>
                 {% endfor %}
             </div>
         {% else %}
             <div class="retrieve-empty">
-                <p>No chunks cleared the similarity threshold ({{ threshold }}).</p>
+                <p>No chunks cleared the similarity thresholds ({{ threshold }} / phrases {{ phrase_threshold }}).</p>
             </div>
         {% endif %}
     {% endif %}

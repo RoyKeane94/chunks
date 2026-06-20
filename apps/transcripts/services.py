@@ -10,7 +10,6 @@ from django.conf import settings
 from django.db import connection
 from django.utils import timezone
 from openai import OpenAI
-from pgvector.django import CosineDistance
 
 from .models import Chunk, Episode
 
@@ -454,59 +453,15 @@ def ingest_episode(episode_id, raw_text=None):
 
 
 def get_retrieval_config():
-    threshold = float(
-        os.environ.get("RETRIEVAL_SIMILARITY_THRESHOLD")
-        or settings.RETRIEVAL_SIMILARITY_THRESHOLD
-    )
-    top_k = int(
-        os.environ.get("RETRIEVAL_TOP_K")
-        or settings.RETRIEVAL_TOP_K
-    )
-    return threshold, top_k
+    from apps.transcripts.retrieval import get_retrieval_config as _get_retrieval_config
+
+    return _get_retrieval_config()
 
 
 def retrieve_similar_chunks(query_text):
-    query_text = query_text.strip()
-    if not query_text:
-        return []
+    from apps.transcripts.retrieval import retrieve_similar_chunks as _retrieve
 
-    if connection.vendor != "postgresql":
-        raise ValueError("Retrieval requires PostgreSQL with pgvector.")
-
-    threshold, top_k = get_retrieval_config()
-    max_distance = 1 - threshold
-
-    query_embedding = _embed_texts([query_text])[0].tolist()
-    logger.info(
-        "retrieval search — threshold %.2f, top_k %s, query length %s",
-        threshold,
-        top_k,
-        len(query_text),
-    )
-
-    chunks = (
-        Chunk.objects.select_related("episode")
-        .annotate(distance=CosineDistance("embedding", query_embedding))
-        .filter(distance__lt=max_distance)
-        .order_by("distance")[:top_k]
-    )
-
-    results = []
-    for chunk in chunks:
-        similarity = 1 - chunk.distance
-        results.append({
-            "chunk": chunk,
-            "similarity": round(similarity, 4),
-        })
-        logger.info(
-            "retrieval hit — score %.3f, episode %s, chunk #%s",
-            similarity,
-            chunk.episode.title,
-            chunk.chunk_index,
-        )
-
-    logger.info("retrieval complete — %s/%s chunks above threshold", len(results), top_k)
-    return results
+    return _retrieve(query_text, _embed_texts)
 
 
 def ingest_bulk_files(files):

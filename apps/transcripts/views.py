@@ -1,16 +1,15 @@
 import json
 
 from django import forms
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
-from django.db.models import Count, Q
+from django.db.models import Count, Prefetch, Q
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 
-from django.conf import settings
-
-from .models import Episode
+from .models import AtomicPhrase, Claim, Episode, Proposition
 from .services import get_retrieval_config, ingest_bulk_files, ingest_episode, retrieve_similar_chunks
 
 
@@ -30,17 +29,40 @@ class UploadForm(forms.Form):
 
 
 EPISODES_PER_PAGE = 20
+EPISODE_LIST_FIELDS = ("id", "title", "guest", "date", "created_at")
+LAYER_LIST_FIELDS = ("id", "chunk_id", "content", "source_text")
+CHUNK_DETAIL_FIELDS = (
+    "id",
+    "episode_id",
+    "content",
+    "chunk_index",
+    "token_estimate",
+    "extracted_at",
+)
+CHUNK_DOWNLOAD_FIELDS = (
+    "chunk_index",
+    "content",
+    "token_estimate",
+    "embedding_model",
+    "embedded_at",
+    "embedding",
+    "created_at",
+)
 
 
 def episode_list(request):
     query = request.GET.get("q", "").strip()
-    episodes = Episode.objects.annotate(
-        chunk_count=Count("chunks"),
-        layered_chunk_count=Count(
-            "chunks",
-            filter=Q(chunks__extracted_at__isnull=False),
-        ),
-    ).order_by("-created_at")
+    episodes = (
+        Episode.objects.only(*EPISODE_LIST_FIELDS)
+        .annotate(
+            chunk_count=Count("chunks"),
+            layered_chunk_count=Count(
+                "chunks",
+                filter=Q(chunks__extracted_at__isnull=False),
+            ),
+        )
+        .order_by("-created_at")
+    )
     if query:
         episodes = episodes.filter(Q(title__icontains=query) | Q(guest__icontains=query))
     page_obj = Paginator(episodes, EPISODES_PER_PAGE).get_page(request.GET.get("page"))
@@ -64,7 +86,7 @@ def retrieve(request):
         except Exception as exc:
             error = f"Retrieval failed: {exc}"
 
-    threshold, top_k = get_retrieval_config()
+    threshold, phrase_threshold, top_k = get_retrieval_config()
     return render(
         request,
         "transcripts/retrieve.html",
@@ -72,6 +94,7 @@ def retrieve(request):
             "query": query,
             "results": results,
             "threshold": threshold,
+            "phrase_threshold": phrase_threshold,
             "top_k": top_k,
             "error": error,
         },
@@ -79,12 +102,37 @@ def retrieve(request):
 
 
 def episode_detail(request, episode_id):
-    episode = get_object_or_404(Episode, pk=episode_id)
-    chunks = episode.chunks.prefetch_related(
-        "propositions",
-        "claims",
-        "atomic_phrases",
-    ).all()
+    layer_prefetches = (
+        Prefetch(
+            "propositions",
+            queryset=Proposition.objects.only(*LAYER_LIST_FIELDS).defer("embedding"),
+        ),
+        Prefetch(
+            "claims",
+            queryset=Claim.objects.only(*LAYER_LIST_FIELDS).defer("embedding"),
+        ),
+        Prefetch(
+            "atomic_phrases",
+            queryset=AtomicPhrase.objects.only(*LAYER_LIST_FIELDS).defer("embedding"),
+        ),
+    )
+    episode = get_object_or_404(
+        Episode.objects.annotate(chunk_count=Count("chunks")).only(
+            "id", "title", "guest", "date"
+        ),
+        pk=episode_id,
+    )
+    chunks = (
+        episode.chunks.defer("embedding")
+        .only(*CHUNK_DETAIL_FIELDS)
+        .annotate(
+            proposition_count=Count("propositions"),
+            claim_count=Count("claims"),
+            phrase_count=Count("atomic_phrases"),
+        )
+        .prefetch_related(*layer_prefetches)
+        .order_by("chunk_index")
+    )
     return render(
         request,
         "transcripts/episode_detail.html",
@@ -93,7 +141,10 @@ def episode_detail(request, episode_id):
 
 
 def episode_download_json(request, episode_id):
-    episode = get_object_or_404(Episode, pk=episode_id)
+    episode = get_object_or_404(
+        Episode.objects.only("id", "title", "guest", "date", "created_at"),
+        pk=episode_id,
+    )
     data = {
         "episode": {
             "id": episode.id,
@@ -112,7 +163,9 @@ def episode_download_json(request, episode_id):
                 "embedding": [float(x) for x in chunk.embedding],
                 "created_at": chunk.created_at.isoformat(),
             }
-            for chunk in episode.chunks.all()
+            for chunk in episode.chunks.only(*CHUNK_DOWNLOAD_FIELDS).order_by("chunk_index").iterator(
+                chunk_size=100
+            )
         ],
     }
     filename = f"{slugify(episode.title) or 'episode'}-{episode.id}.json"
@@ -150,7 +203,10 @@ def upload(request):
 
 
 def upload_confirm(request, episode_id):
-    episode = get_object_or_404(Episode, pk=episode_id)
+    episode = get_object_or_404(
+        Episode.objects.only("id", "title", "guest", "date"),
+        pk=episode_id,
+    )
     ingest_report = request.session.pop("ingest_report", None)
     return render(
         request,
