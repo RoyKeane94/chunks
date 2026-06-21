@@ -4,6 +4,13 @@
 
 {% block extra_head %}
     <style>
+        .error-note {
+            margin: 0 0 16px;
+            font-size: 13px;
+            color: var(--yellow-deep);
+            line-height: 1.5;
+        }
+
         .loading-overlay {
             display: none;
             position: fixed;
@@ -84,6 +91,9 @@
     <div class="card">
         <form id="upload-form" method="post" enctype="multipart/form-data">
             {% csrf_token %}
+            {% if form.non_field_errors %}
+                <p class="error-note">{{ form.non_field_errors }}</p>
+            {% endif %}
 
             <div class="field">
                 <label for="{{ form.title.id_for_label }}">title</label>

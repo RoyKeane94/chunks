@@ -7,6 +7,7 @@ class Episode(models.Model):
     guest = models.CharField(max_length=255)
     date = models.DateField(null=True, blank=True)
     pdf_file = models.FileField(upload_to="pdfs/")
+    content_hash = models.CharField(max_length=64, unique=True, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

@@ -1,6 +1,8 @@
 import logging
+import hashlib
 import os
 import re
+import tempfile
 import time
 from datetime import datetime
 
@@ -178,6 +180,59 @@ def clean_text(text):
         len(cleaned_paragraphs),
     )
     return result
+
+
+def hash_transcript_content(raw_text: str) -> str:
+    """SHA-256 of cleaned transcript body (same normalization as ingest)."""
+    return hashlib.sha256(clean_text(raw_text).encode("utf-8")).hexdigest()
+
+
+def read_uploaded_transcript(uploaded_file) -> str:
+    """Read raw transcript text from an uploaded PDF or TXT before saving."""
+    name = uploaded_file.name.lower()
+    if name.endswith(".txt"):
+        content = uploaded_file.read().decode("utf-8").strip()
+        uploaded_file.seek(0)
+        parsed = parse_structured_transcript(content)
+        if parsed["has_metadata"]:
+            return parsed["body"]
+        return content
+    if name.endswith(".pdf"):
+        with tempfile.NamedTemporaryFile(suffix=".pdf") as tmp:
+            for chunk in uploaded_file.chunks():
+                tmp.write(chunk)
+            tmp.flush()
+            uploaded_file.seek(0)
+            return parse_pdf(tmp.name)
+    raise ValueError("Upload a PDF or TXT file.")
+
+
+def find_episode_by_content_hash(content_hash: str):
+    return Episode.objects.filter(content_hash=content_hash).first()
+
+
+def backfill_episode_content_hashes():
+    """Set content_hash on episodes uploaded before hashing existed."""
+    updated = 0
+    skipped = 0
+    for episode in Episode.objects.filter(content_hash__isnull=True).iterator():
+        try:
+            raw_text = read_transcript_text(episode.pdf_file.path)
+            content_hash = hash_transcript_content(raw_text)
+            if Episode.objects.filter(content_hash=content_hash).exclude(pk=episode.pk).exists():
+                logger.warning(
+                    "backfill skip episode %s — same content hash as another episode",
+                    episode.id,
+                )
+                skipped += 1
+                continue
+            episode.content_hash = content_hash
+            episode.save(update_fields=["content_hash"])
+            updated += 1
+        except Exception as exc:
+            logger.warning("backfill failed episode %s: %s", episode.id, exc)
+            skipped += 1
+    return updated, skipped
 
 
 def _split_sentences(text):
@@ -381,6 +436,10 @@ def ingest_episode(episode_id, raw_text=None):
     logger.info("[2/5] cleaning transcript")
     step_start = time.monotonic()
     text = clean_text(raw_text)
+    content_hash = hashlib.sha256(text.encode("utf-8")).hexdigest()
+    if episode.content_hash != content_hash:
+        episode.content_hash = content_hash
+        episode.save(update_fields=["content_hash"])
     logger.info("[2/5] done (%.1fs)", time.monotonic() - step_start)
 
     logger.info("[3/5] chunking text")
@@ -488,12 +547,21 @@ def ingest_bulk_files(files):
             if not parsed["guest"]:
                 raise ValueError("Guest is missing from file header.")
 
+            content_hash = hash_transcript_content(parsed["body"])
+            existing = find_episode_by_content_hash(content_hash)
+            if existing:
+                raise ValueError(
+                    f"Duplicate transcript — already in library as «{existing.title}» "
+                    f"(episode {existing.id})"
+                )
+
             uploaded_file.seek(0)
             episode = Episode.objects.create(
                 title=parsed["title"][:255],
                 guest=parsed["guest"][:255],
                 date=parsed["date"],
                 pdf_file=uploaded_file,
+                content_hash=content_hash,
             )
             report = ingest_episode(episode.id, raw_text=parsed["body"])
             results["succeeded"].append({

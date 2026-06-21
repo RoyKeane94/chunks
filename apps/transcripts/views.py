@@ -10,7 +10,15 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.text import slugify
 
 from .models import AtomicPhrase, Claim, Episode, Proposition
-from .services import get_retrieval_config, ingest_bulk_files, ingest_episode, retrieve_similar_chunks
+from .services import (
+    find_episode_by_content_hash,
+    get_retrieval_config,
+    hash_transcript_content,
+    ingest_bulk_files,
+    ingest_episode,
+    read_uploaded_transcript,
+    retrieve_similar_chunks,
+)
 
 
 def validate_transcript_file(file):
@@ -187,15 +195,27 @@ def upload(request):
     if request.method == "POST":
         form = UploadForm(request.POST, request.FILES)
         if form.is_valid():
-            episode = Episode.objects.create(
-                title=form.cleaned_data["title"],
-                guest=form.cleaned_data["guest"],
-                date=form.cleaned_data.get("date"),
-                pdf_file=form.cleaned_data["transcript_file"],
-            )
-            ingest_report = ingest_episode(episode.id)
-            request.session["ingest_report"] = ingest_report
-            return redirect("upload_confirm", episode_id=episode.id)
+            transcript_file = form.cleaned_data["transcript_file"]
+            raw_text = read_uploaded_transcript(transcript_file)
+            content_hash = hash_transcript_content(raw_text)
+            existing = find_episode_by_content_hash(content_hash)
+            if existing:
+                form.add_error(
+                    None,
+                    f"This transcript is already in the library as «{existing.title}» "
+                    f"(episode {existing.id}).",
+                )
+            else:
+                episode = Episode.objects.create(
+                    title=form.cleaned_data["title"],
+                    guest=form.cleaned_data["guest"],
+                    date=form.cleaned_data.get("date"),
+                    pdf_file=transcript_file,
+                    content_hash=content_hash,
+                )
+                ingest_report = ingest_episode(episode.id, raw_text=raw_text)
+                request.session["ingest_report"] = ingest_report
+                return redirect("upload_confirm", episode_id=episode.id)
     else:
         form = UploadForm()
 
