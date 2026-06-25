@@ -2,33 +2,11 @@
 
 {% block title %}bulk upload — Chunks{% endblock %}
 
-{% block extra_head %}
-    <style>
-        .format-note {
-            margin: 0 0 20px;
-            font-size: 11px;
-            color: var(--faint);
-            line-height: 1.6;
-        }
-
-        .format-note code {
-            font-size: 11px;
-            color: var(--ink-soft);
-        }
-
-        .error-note {
-            margin: 0 0 20px;
-            font-size: 11px;
-            color: var(--yellow-deep);
-        }
-    </style>
-{% endblock %}
-
 {% block content %}
     <a href="{% url 'upload' %}" class="back-link">← upload</a>
 
     <p class="eyebrow">bulk ingest</p>
-    <h1>upload transcripts</h1>
+    <h1 class="page-title">upload transcripts</h1>
 
     <p class="format-note">
         Each .txt file must start with a metadata header:<br>

@@ -3,234 +3,7 @@
 
 {% block title %}{{ episode.title }} — Chunks{% endblock %}
 
-{% block extra_head %}
-    <style>
-        .content {
-            max-width: none;
-            width: 75%;
-        }
-
-        .detail-top {
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .detail-back {
-            display: inline-block;
-            margin-bottom: 10px;
-            font-size: 12px;
-            color: var(--faint);
-        }
-
-        .detail-back:hover {
-            color: var(--ink-soft);
-        }
-
-        .detail-header-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-        }
-
-        .detail-top h1 {
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: 20px;
-            font-weight: 600;
-            line-height: 1.3;
-        }
-
-        .detail-meta {
-            margin: 4px 0 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: 13px;
-            color: var(--faint);
-        }
-
-        .detail-download {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            flex-shrink: 0;
-            font-family: "DM Mono", monospace;
-            font-size: 12px;
-            color: var(--ink-soft);
-            padding: 7px 12px;
-            border: 1px solid var(--border-2);
-            border-radius: 7px;
-            white-space: nowrap;
-        }
-
-        .detail-download:hover {
-            color: var(--ink);
-            border-color: var(--ink-soft);
-        }
-
-        .detail-chunks {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .detail-chunk-card {
-            background: var(--white);
-            border: 1px solid var(--border-2);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .detail-chunk-card.is-open {
-            border-color: var(--yellow-deep);
-        }
-
-        .detail-chunk-header {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            padding: 12px 14px;
-            border: none;
-            background: transparent;
-            text-align: left;
-            cursor: pointer;
-            font-size: 10px;
-            color: var(--faint);
-        }
-
-        .detail-chunk-header:hover {
-            background: var(--yellow-soft);
-        }
-
-        .detail-chunk-header .index {
-            font-family: "DM Mono", monospace;
-            color: var(--ink-soft);
-        }
-
-        .detail-chunk-header .tokens {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-        }
-
-        .detail-chunk-header .layer-counts {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            color: var(--faint);
-        }
-
-        .detail-chunk-header .expand-label {
-            margin-left: auto;
-            font-family: "DM Mono", monospace;
-            font-size: 10px;
-            color: var(--ink-soft);
-        }
-
-        .detail-chunk-body {
-            padding: 0 14px 12px;
-        }
-
-        .detail-chunk-text {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: 14px;
-            line-height: 1.6;
-            color: var(--ink-2);
-        }
-
-        .detail-chunk-text .chunk-paragraph {
-            margin: 0 0 12px;
-        }
-
-        .detail-chunk-text .chunk-paragraph:last-child {
-            margin-bottom: 0;
-        }
-
-        .detail-chunk-text .chunk-section {
-            margin: 16px 0 8px;
-            font-weight: 600;
-            color: var(--ink);
-        }
-
-        .detail-chunk-text .chunk-section:first-child {
-            margin-top: 0;
-        }
-
-        .detail-chunk-layers {
-            display: none;
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid var(--border);
-        }
-
-        .detail-chunk-card.is-open .detail-chunk-layers {
-            display: block;
-        }
-
-        .detail-layers-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-        }
-
-        @media (max-width: 900px) {
-            .detail-layers-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .detail-layer-column {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 10px 12px;
-        }
-
-        .detail-layer-heading {
-            margin: 0 0 8px;
-            font-family: "DM Mono", monospace;
-            font-size: 10px;
-            font-weight: 500;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            color: var(--ink-soft);
-        }
-
-        .detail-layer-list {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .detail-layer-item {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .detail-layer-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .detail-layer-content {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: 13px;
-            line-height: 1.45;
-            color: var(--ink-2);
-        }
-
-        .detail-layer-source {
-            margin-top: 4px;
-            font-family: "DM Mono", monospace;
-            font-size: 10px;
-            line-height: 1.4;
-            color: var(--faint);
-        }
-
-        .detail-layers-empty {
-            font-size: 13px;
-            color: var(--faint);
-            margin: 0;
-        }
-    </style>
-{% endblock %}
+{% block content_class %}page-section content-wide{% endblock %}
 
 {% block content %}
     <div class="detail-top">
@@ -292,7 +65,7 @@
                                                 {% endfor %}
                                             </ul>
                                         {% else %}
-                                            <p class="detail-layers-empty">None</p>
+                                            <p class="muted">None</p>
                                         {% endif %}
                                     </div>
                                     <div class="detail-layer-column">
@@ -309,7 +82,7 @@
                                                 {% endfor %}
                                             </ul>
                                         {% else %}
-                                            <p class="detail-layers-empty">None</p>
+                                            <p class="muted">None</p>
                                         {% endif %}
                                     </div>
                                     <div class="detail-layer-column">
@@ -326,12 +99,12 @@
                                                 {% endfor %}
                                             </ul>
                                         {% else %}
-                                            <p class="detail-layers-empty">None</p>
+                                            <p class="muted">None</p>
                                         {% endif %}
                                     </div>
                                 </div>
                             {% else %}
-                                <p class="detail-layers-empty">
+                                <p class="muted">
                                     Layers not extracted yet. Run
                                     <code>python manage.py extract_chunk_layers</code>.
                                 </p>
