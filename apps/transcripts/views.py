@@ -19,6 +19,7 @@ from .services import (
     read_uploaded_transcript,
     retrieve_similar_chunks,
 )
+from .templatetags.transcript_extras import build_retrieve_snippet
 
 
 def validate_transcript_file(file):
@@ -88,13 +89,23 @@ def retrieve(request):
 
     if query:
         try:
-            results = retrieve_similar_chunks(query)
+            raw_results = retrieve_similar_chunks(query)
+            results = []
+            for result in raw_results:
+                snippet = build_retrieve_snippet(
+                    result["chunk"].content,
+                    result.get("highlight_start"),
+                    result.get("highlight_end"),
+                    result.get("matched_content"),
+                    result.get("matched_layer"),
+                )
+                results.append({**result, "snippet": snippet})
         except ValueError as exc:
             error = str(exc)
         except Exception as exc:
             error = f"Retrieval failed: {exc}"
 
-    threshold, phrase_threshold, top_k = get_retrieval_config()
+    threshold, phrase_threshold, top_k, _layer_limit = get_retrieval_config()
     return render(
         request,
         "transcripts/retrieve.html",

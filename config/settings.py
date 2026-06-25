@@ -34,12 +34,14 @@ RETRIEVAL_SIMILARITY_THRESHOLD = float(os.environ.get("RETRIEVAL_SIMILARITY_THRE
 RETRIEVAL_PHRASE_SIMILARITY_THRESHOLD = float(
     os.environ.get("RETRIEVAL_PHRASE_SIMILARITY_THRESHOLD", "0.85")
 )
+RETRIEVAL_LAYER_LIMIT = int(os.environ.get("RETRIEVAL_LAYER_LIMIT", "200"))
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.postgres",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",

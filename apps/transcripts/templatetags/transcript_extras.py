@@ -118,6 +118,67 @@ def strip_markdown(text):
     return mark_safe(_strip_markdown_text(text))
 
 
+def _sentence_bounds(text, start, end):
+    before = text[:start]
+    sent_start = 0
+    for match in re.finditer(r"[.!?]\s+", before):
+        sent_start = match.end()
+    after = text[end:]
+    sentence_end_match = re.search(r"[.!?](?:\s+|$)", after)
+    sent_end = end + (sentence_end_match.end() if sentence_end_match else len(after))
+    return sent_start, min(sent_end, len(text))
+
+
+def build_retrieve_snippet(content, highlight_start, highlight_end, matched_content, matched_layer):
+    """
+    Collapsed retrieve card: bold quote (highlight) + gray sentence/context line.
+    """
+    content = str(content)
+    matched_content = (matched_content or "").strip()
+    has_highlight = False
+    quote = ""
+    sentence = ""
+
+    if highlight_start is not None and highlight_end is not None:
+        try:
+            start = int(highlight_start)
+            end = int(highlight_end)
+            if end > start and not (start == 0 and end == 0):
+                start = max(0, min(start, len(content)))
+                end = max(start, min(end, len(content)))
+                has_highlight = True
+                quote = _strip_markdown_text(content[start:end]).strip()
+                sent_start, sent_end = _sentence_bounds(content, start, end)
+                sentence = _strip_markdown_text(content[sent_start:sent_end]).strip()
+        except (TypeError, ValueError):
+            pass
+
+    if not quote:
+        stripped = _strip_markdown_text(content)
+        blocks = _split_display_blocks(stripped)
+        quote = blocks[0] if blocks else stripped[:280]
+        if len(quote) > 280:
+            quote = quote[:277].rstrip() + "…"
+        if matched_content:
+            sentence = matched_content
+        elif len(blocks) > 1:
+            sentence = blocks[1]
+        else:
+            remainder = stripped[len(blocks[0]) if blocks else 0:].strip()
+            sentence = remainder[:220] + ("…" if len(remainder) > 220 else "") if remainder else ""
+
+    if has_highlight and matched_content and matched_content != quote:
+        context = matched_content
+    else:
+        context = sentence if sentence and sentence != quote else ""
+
+    return {
+        "quote": quote,
+        "context": context,
+        "has_highlight": has_highlight,
+    }
+
+
 @register.simple_tag
 def format_chunk_highlight(text, start=None, end=None):
     if start is None or end is None:

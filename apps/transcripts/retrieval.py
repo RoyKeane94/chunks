@@ -27,19 +27,25 @@ def get_retrieval_config():
         os.environ.get("RETRIEVAL_TOP_K")
         or settings.RETRIEVAL_TOP_K
     )
-    return threshold, phrase_threshold, top_k
+    layer_limit = int(
+        os.environ.get("RETRIEVAL_LAYER_LIMIT")
+        or settings.RETRIEVAL_LAYER_LIMIT
+    )
+    return threshold, phrase_threshold, top_k, layer_limit
 
 
-def _layer_hits(model, query_embedding, max_distance, layer_name, extra_fields=()):
+def _layer_hits(model, query_embedding, max_distance, layer_name, layer_limit, extra_fields=()):
+    # ORDER BY distance LIMIT — uses HNSW index; threshold applied in Python.
     rows = (
         model.objects.annotate(distance=CosineDistance("embedding", query_embedding))
-        .filter(distance__lte=max_distance)
         .order_by("distance")
-        .values_list("id", "chunk_id", "distance", *extra_fields)
+        .values_list("id", "chunk_id", "distance", *extra_fields)[:layer_limit]
     )
     hits = []
     for row in rows:
         item_id, chunk_id, distance = row[:3]
+        if distance > max_distance:
+            continue
         extra = row[3:]
         hit = {
             "layer": layer_name,
@@ -54,9 +60,9 @@ def _layer_hits(model, query_embedding, max_distance, layer_name, extra_fields=(
     return hits
 
 
-def search_layers(query_embedding, threshold, phrase_threshold, top_k):
+def search_layers(query_embedding, threshold, phrase_threshold, top_k, layer_limit):
     """
-    Search chunk, proposition, claim, and phrase embeddings in parallel.
+    Search chunk, proposition, claim, and phrase embeddings.
     Phrases use phrase_threshold; other layers use threshold.
     Returns up to top_k chunks (best hit per chunk, ordered by similarity).
     """
@@ -67,11 +73,12 @@ def search_layers(query_embedding, threshold, phrase_threshold, top_k):
 
     for row in (
         Chunk.objects.annotate(distance=CosineDistance("embedding", query_embedding))
-        .filter(distance__lte=layer_max_distance)
         .order_by("distance")
-        .values_list("id", "distance")
+        .values_list("id", "distance")[:layer_limit]
     ):
         chunk_id, distance = row
+        if distance > layer_max_distance:
+            continue
         candidates.append({
             "layer": "chunk",
             "distance": distance,
@@ -87,6 +94,7 @@ def search_layers(query_embedding, threshold, phrase_threshold, top_k):
         query_embedding,
         layer_max_distance,
         "proposition",
+        layer_limit,
         ("start_char", "end_char", "content"),
     )
     for hit in proposition_hits:
@@ -100,6 +108,7 @@ def search_layers(query_embedding, threshold, phrase_threshold, top_k):
         query_embedding,
         layer_max_distance,
         "claim",
+        layer_limit,
         ("start_char", "end_char", "content"),
     )
     for hit in claim_hits:
@@ -113,6 +122,7 @@ def search_layers(query_embedding, threshold, phrase_threshold, top_k):
         query_embedding,
         phrase_max_distance,
         "phrase",
+        layer_limit,
         ("start_char", "end_char", "content"),
     )
     for hit in phrase_hits:
@@ -153,18 +163,22 @@ def retrieve_similar_chunks(query_text, embed_fn):
     if connection.vendor != "postgresql":
         raise ValueError("Retrieval requires PostgreSQL with pgvector.")
 
-    threshold, phrase_threshold, top_k = get_retrieval_config()
+    threshold, phrase_threshold, top_k, layer_limit = get_retrieval_config()
     query_embedding = embed_fn([query_text])[0].tolist()
 
     logger.info(
-        "retrieval search — threshold %.2f, phrase threshold %.2f, top_k %s, query length %s",
+        "retrieval search — threshold %.2f, phrase threshold %.2f, top_k %s, "
+        "layer_limit %s, query length %s",
         threshold,
         phrase_threshold,
         top_k,
+        layer_limit,
         len(query_text),
     )
 
-    merged = search_layers(query_embedding, threshold, phrase_threshold, top_k)
+    merged = search_layers(
+        query_embedding, threshold, phrase_threshold, top_k, layer_limit
+    )
     if not merged:
         logger.info("retrieval complete — 0/%s chunks above threshold", top_k)
         return []

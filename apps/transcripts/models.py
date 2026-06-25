@@ -1,5 +1,5 @@
 from django.db import models
-from pgvector.django import VectorField
+from pgvector.django import HnswIndex, VectorField
 
 
 class Episode(models.Model):
@@ -28,6 +28,15 @@ class Chunk(models.Model):
 
     class Meta:
         ordering = ["chunk_index"]
+        indexes = [
+            HnswIndex(
+                fields=["embedding"],
+                name="chunk_embedding_hnsw_idx",
+                opclasses=["vector_cosine_ops"],
+                m=8,
+                ef_construction=32,
+            ),
+        ]
 
     def __str__(self):
         return f"{self.episode.title} — chunk {self.chunk_index}"
@@ -45,6 +54,17 @@ class Proposition(models.Model):
     extraction_model = models.CharField(max_length=64, default="gpt-4o-mini")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            HnswIndex(
+                fields=["embedding"],
+                name="proposition_embedding_hnsw_idx",
+                opclasses=["vector_cosine_ops"],
+                m=8,
+                ef_construction=32,
+            ),
+        ]
+
     def __str__(self):
         return f"{self.chunk} — proposition: {self.content[:60]}"
 
@@ -61,6 +81,17 @@ class Claim(models.Model):
     extraction_model = models.CharField(max_length=64, default="gpt-4o-mini")
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            HnswIndex(
+                fields=["embedding"],
+                name="claim_embedding_hnsw_idx",
+                opclasses=["vector_cosine_ops"],
+                m=8,
+                ef_construction=32,
+            ),
+        ]
+
     def __str__(self):
         return f"{self.chunk} — claim: {self.content[:60]}"
 
@@ -76,6 +107,17 @@ class AtomicPhrase(models.Model):
     embedded_at = models.DateTimeField(null=True, blank=True)
     extraction_model = models.CharField(max_length=64, default="gpt-4o-mini")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            HnswIndex(
+                fields=["embedding"],
+                name="phrase_embedding_hnsw_idx",
+                opclasses=["vector_cosine_ops"],
+                m=8,
+                ef_construction=32,
+            ),
+        ]
 
     def __str__(self):
         return f"{self.chunk} — phrase: {self.content[:60]}"

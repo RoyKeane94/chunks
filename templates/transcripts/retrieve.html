@@ -10,19 +10,25 @@
             width: 75%;
         }
 
-        .retrieve-search {
-            margin-bottom: 20px;
+        .retrieve-hero {
+            margin: 0 0 20px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--ink);
+            line-height: 1.2;
         }
 
         .retrieve-search form {
             display: flex;
             gap: 10px;
+            margin-bottom: 12px;
         }
 
         .retrieve-search input {
             flex: 1;
-            font-family: "DM Mono", monospace;
-            font-size: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 16px;
             color: var(--ink);
             background: var(--white);
             border: 1px solid var(--border-2);
@@ -32,8 +38,8 @@
 
         .retrieve-search input:focus {
             outline: none;
-            border-color: var(--yellow);
-            background: var(--yellow-soft);
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
         }
 
         .retrieve-search input::placeholder {
@@ -42,22 +48,23 @@
 
         .retrieve-search button {
             flex-shrink: 0;
-            font-family: "DM Mono", monospace;
-            font-size: 13px;
-            padding: 10px 18px;
-            border-radius: 7px;
-            border: 1px solid var(--yellow-deep);
-            background: var(--yellow);
-            color: var(--ink);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 0 22px;
+            border-radius: 10px;
+            border: none;
+            background: #2563eb;
+            color: #fff;
             cursor: pointer;
         }
 
         .retrieve-search button:hover {
-            border-color: var(--ink);
+            background: #1d4ed8;
         }
 
         .retrieve-config {
-            margin: 0 0 16px;
+            margin: 0 0 20px;
             font-size: 11px;
             color: var(--faint);
         }
@@ -80,14 +87,14 @@
         .retrieve-results {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .retrieve-card {
             background: var(--white);
             border: 1px solid var(--border-2);
-            border-radius: 8px;
-            padding: 12px 14px;
+            border-radius: 10px;
+            padding: 16px 18px;
         }
 
         .retrieve-card-header {
@@ -95,30 +102,18 @@
             align-items: flex-start;
             justify-content: space-between;
             gap: 12px;
-            margin-bottom: 8px;
+            margin-bottom: 14px;
         }
 
-        .retrieve-score {
-            flex-shrink: 0;
-            font-family: "DM Mono", monospace;
-            font-size: 12px;
-            font-weight: 500;
-            color: var(--ink);
-            background: var(--yellow-soft);
-            border: 1px solid var(--yellow-border);
-            border-radius: 5px;
-            padding: 3px 8px;
-        }
-
-        .retrieve-episode {
+        .retrieve-title {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
             color: var(--ink);
             line-height: 1.3;
         }
 
-        .retrieve-episode a:hover {
+        .retrieve-title a:hover {
             color: var(--ink-soft);
         }
 
@@ -129,7 +124,105 @@
             color: var(--faint);
         }
 
-        .retrieve-chunk-text {
+        .retrieve-score {
+            flex-shrink: 0;
+            font-family: "DM Mono", monospace;
+            font-size: 12px;
+            color: var(--ink-soft);
+        }
+
+        .retrieve-quote {
+            margin: 0 0 8px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 17px;
+            font-weight: 600;
+            line-height: 1.45;
+            color: var(--ink);
+        }
+
+        .retrieve-context {
+            margin: 0 0 12px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: var(--ink-soft);
+        }
+
+        .retrieve-layer {
+            display: inline-block;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            font-size: 11px;
+            font-weight: 500;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+
+        .retrieve-layer.layer-phrase {
+            background: #e0f2fe;
+            color: #0369a1;
+        }
+
+        .retrieve-layer.layer-claim {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .retrieve-layer.layer-proposition {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .retrieve-layer.layer-chunk {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .retrieve-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 12px;
+        }
+
+        .retrieve-toggle {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            color: var(--ink-soft);
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .retrieve-toggle:hover {
+            color: var(--ink);
+        }
+
+        .retrieve-episode-link {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            color: var(--ink-soft);
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .retrieve-episode-link:hover {
+            color: var(--ink);
+        }
+
+        .retrieve-chunk-full {
+            display: none;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid var(--border);
+        }
+
+        .retrieve-card.is-chunk-open .retrieve-chunk-full {
+            display: block;
+        }
+
+        .retrieve-chunk-full .retrieve-chunk-text {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
             font-size: 14px;
             line-height: 1.6;
@@ -150,26 +243,10 @@
             color: var(--ink);
         }
 
-        .retrieve-chunk-text .chunk-section:first-child {
-            margin-top: 0;
-        }
-
         .retrieve-highlight {
             background: var(--yellow-soft);
             border-radius: 2px;
-            padding: 0 1px;
-        }
-
-        .retrieve-match {
-            margin: 0 0 8px;
-            font-family: "DM Mono", monospace;
-            font-size: 11px;
-            color: var(--faint);
-        }
-
-        .retrieve-match strong {
-            color: var(--ink-soft);
-            font-weight: 500;
+            padding: 0 2px;
         }
 
         .retrieve-empty {
@@ -182,17 +259,19 @@
 {% endblock %}
 
 {% block content %}
+    <h1 class="retrieve-hero">Ask anything.</h1>
+
     <div class="retrieve-search">
         <form method="get" action="{% url 'retrieve' %}">
             <input
                 type="search"
                 name="q"
                 value="{{ query }}"
-                placeholder="search across all chunks…"
+                placeholder="Early days of fundraising"
                 autocomplete="off"
                 autofocus
             >
-            <button type="submit">search</button>
+            <button type="submit">Search</button>
         </form>
     </div>
 
@@ -213,31 +292,47 @@
         {% if results %}
             <div class="retrieve-results">
                 {% for result in results %}
-                    <article class="retrieve-card">
+                    <article class="retrieve-card" id="retrieve-card-{{ result.chunk.id }}">
                         <div class="retrieve-card-header">
                             <div>
-                                <div class="retrieve-episode">
+                                <div class="retrieve-title">
                                     <a href="{% url 'episode_detail' result.chunk.episode.id %}">{{ result.chunk.episode.title }}</a>
                                 </div>
                                 <div class="retrieve-meta">
-                                    {{ result.chunk.episode.guest }}{% if result.chunk.episode.date %} · {{ result.chunk.episode.date }}{% endif %}
-                                    · chunk #{{ result.chunk.chunk_index }}
+                                    {{ result.chunk.episode.guest }} · #{{ result.chunk.chunk_index }}
                                 </div>
                             </div>
                             <span class="retrieve-score">{{ result.similarity }}</span>
                         </div>
-                        {% if result.matched_content %}
-                            <p class="retrieve-match">
-                                matched <strong>{{ result.matched_layer }}</strong>
-                                · {{ result.matched_content }}
-                            </p>
-                        {% elif result.matched_layer != "chunk" %}
-                            <p class="retrieve-match">
-                                matched <strong>{{ result.matched_layer }}</strong>
-                            </p>
+
+                        <p class="retrieve-quote">{{ result.snippet.quote }}</p>
+                        {% if result.snippet.context %}
+                            <p class="retrieve-context">{{ result.snippet.context }}</p>
                         {% endif %}
-                        <div class="retrieve-chunk-text">
-                            {% format_chunk_highlight result.chunk.content result.highlight_start result.highlight_end %}
+
+                        <span class="retrieve-layer layer-{{ result.matched_layer }}">{{ result.matched_layer }}</span>
+
+                        <div class="retrieve-actions">
+                            <button
+                                type="button"
+                                class="retrieve-toggle"
+                                data-chunk-toggle
+                                aria-expanded="false"
+                            >
+                                Show full chunk
+                            </button>
+                            <a
+                                href="{% url 'episode_detail' result.chunk.episode.id %}#chunk-card-{{ result.chunk.id }}"
+                                class="retrieve-episode-link"
+                            >
+                                View episode
+                            </a>
+                        </div>
+
+                        <div class="retrieve-chunk-full">
+                            <div class="retrieve-chunk-text">
+                                {% format_chunk_highlight result.chunk.content result.highlight_start result.highlight_end %}
+                            </div>
                         </div>
                     </article>
                 {% endfor %}
@@ -248,4 +343,18 @@
             </div>
         {% endif %}
     {% endif %}
+
+    <script>
+        (function () {
+            document.querySelectorAll("[data-chunk-toggle]").forEach(function (button) {
+                button.addEventListener("click", function () {
+                    const card = button.closest(".retrieve-card");
+                    if (!card) return;
+                    const open = card.classList.toggle("is-chunk-open");
+                    button.setAttribute("aria-expanded", open ? "true" : "false");
+                    button.textContent = open ? "Hide chunk" : "Show full chunk";
+                });
+            });
+        })();
+    </script>
 {% endblock %}
