@@ -1,0 +1,3928 @@
+{
+  "episode_id": 42,
+  "episode_title": "Celebrating Heretics",
+  "old_extraction_model": "gpt-4o-mini",
+  "new_extraction_model": "gpt-4.1-mini",
+  "generated_at": "2026-06-27T19:29:27",
+  "chunk_count": 10,
+  "lookback": {
+    "initiated": false,
+    "flagged_count": 0,
+    "llm_calls": 0,
+    "resolved_count": 0,
+    "still_unresolved_count": 0,
+    "still_unresolved": []
+  },
+  "totals": {
+    "old": {
+      "propositions": 34,
+      "claims": 30,
+      "phrases": 56
+    },
+    "new": {
+      "propositions": 30,
+      "claims": 44,
+      "phrases": 95
+    },
+    "delta": {
+      "propositions": -4,
+      "claims": 14,
+      "phrases": 39
+    }
+  },
+  "chunks": [
+    {
+      "chunk_id": 4038,
+      "chunk_index": 0,
+      "content_preview": "## Introduction **Patrick:** My guest today is Shyam Sankar, the CTO of Palantir Technologies. I think you'll find by listening to Shyam that the business itself, their mission and how they built i…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "Shyam Sankar is the CTO of Palantir Technologies, and his life and worldview are fascinating.",
+            "source_text": "My guest today is Shyam Sankar, the CTO of Palantir Technologies. I think you'll find by listening to Shyam that the business itself, their mission and how they built it, and indeed him and his life, are completely fascinating.",
+            "start_char": 29,
+            "end_char": 256
+          },
+          {
+            "content": "The conversation covers the need to reindustrialize the United States after decades of offshoring production.",
+            "source_text": "This need to reindustrialize the United States after decades of moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores.",
+            "start_char": 339,
+            "end_char": 540
+          },
+          {
+            "content": "The discussion includes the history of heretics who have designed solutions that contributed to global success.",
+            "source_text": "We talk about the history of heretics, people who have against the odds designed solutions that have driven so much of our success around the world.",
+            "start_char": 541,
+            "end_char": 689
+          }
+        ],
+        "claims": [
+          {
+            "content": "Shyam Sankar's worldview is personally interesting to Patrick.",
+            "source_text": "I find personally the most interesting.",
+            "start_char": 299,
+            "end_char": 338
+          },
+          {
+            "content": "The United States has moved much of its production off of its own shores.",
+            "source_text": "after decades of moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores.",
+            "start_char": 386,
+            "end_char": 540
+          },
+          {
+            "content": "Heretics have designed solutions that have driven success around the world.",
+            "source_text": "people who have against the odds designed solutions that have driven so much of our success around the world.",
+            "start_char": 580,
+            "end_char": 689
+          }
+        ],
+        "phrases": [
+          {
+            "content": "Shyam Sankar",
+            "source_text": "Shyam Sankar",
+            "start_char": 47,
+            "end_char": 59
+          },
+          {
+            "content": "CTO of Palantir Technologies",
+            "source_text": "the CTO of Palantir Technologies",
+            "start_char": 61,
+            "end_char": 93
+          },
+          {
+            "content": "reindustrialize the United States",
+            "source_text": "reindustrialize the United States",
+            "start_char": 352,
+            "end_char": 385
+          },
+          {
+            "content": "offshoring production",
+            "source_text": "moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores",
+            "start_char": 403,
+            "end_char": 539
+          },
+          {
+            "content": "history of heretics",
+            "source_text": "the history of heretics",
+            "start_char": 555,
+            "end_char": 578
+          },
+          {
+            "content": "solutions that have driven success",
+            "source_text": "designed solutions that have driven so much of our success around the world",
+            "start_char": 613,
+            "end_char": 688
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 3,
+          "phrases": 6
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "Shyam Sankar is the CTO of Palantir Technologies.",
+            "source_text": "My guest today is Shyam Sankar, the CTO of Palantir Technologies.",
+            "start_char": 29,
+            "end_char": 94
+          },
+          {
+            "content": "Shyam Sankar discusses the need to reindustrialize the United States after decades of moving production and innovation offshore.",
+            "source_text": "This need to reindustrialize the United States after decades of moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores.",
+            "start_char": 339,
+            "end_char": 540
+          },
+          {
+            "content": "Shyam Sankar talks about the history of heretics who designed solutions that have driven much of the world's success.",
+            "source_text": "We talk about the history of heretics, people who have against the odds designed solutions that have driven so much of our success around the world.",
+            "start_char": 541,
+            "end_char": 689
+          }
+        ],
+        "claims": [
+          {
+            "content": "Shyam Sankar's worldview is personally interesting to Patrick.",
+            "source_text": "We talk about his entire worldview, which I find personally the most interesting.",
+            "start_char": 257,
+            "end_char": 338
+          },
+          {
+            "content": "The conversation covers Shyam Sankar's life and the business mission of Palantir Technologies.",
+            "source_text": "I think you'll find by listening to Shyam that the business itself, their mission and how they built it, and indeed him and his life, are completely fascinating.",
+            "start_char": 95,
+            "end_char": 256
+          }
+        ],
+        "phrases": [
+          {
+            "content": "Shyam Sankar",
+            "source_text": "My guest today is Shyam Sankar",
+            "start_char": 29,
+            "end_char": 59
+          },
+          {
+            "content": "CTO of Palantir Technologies",
+            "source_text": "Shyam Sankar, the CTO of Palantir Technologies",
+            "start_char": 47,
+            "end_char": 93
+          },
+          {
+            "content": "reindustrialize the United States",
+            "source_text": "This need to reindustrialize the United States",
+            "start_char": 339,
+            "end_char": 385
+          },
+          {
+            "content": "moving production offshore",
+            "source_text": "decades of moving so much of our production",
+            "start_char": 392,
+            "end_char": 435
+          },
+          {
+            "content": "learning of how to innovate and make things",
+            "source_text": "our learning of how to innovate and make things",
+            "start_char": 469,
+            "end_char": 516
+          },
+          {
+            "content": "history of heretics",
+            "source_text": "the history of heretics",
+            "start_char": 555,
+            "end_char": 578
+          },
+          {
+            "content": "designed solutions",
+            "source_text": "designed solutions that have driven so much of our success",
+            "start_char": 613,
+            "end_char": 671
+          },
+          {
+            "content": "worldview",
+            "source_text": "his entire worldview",
+            "start_char": 271,
+            "end_char": 291
+          },
+          {
+            "content": "business mission",
+            "source_text": "the business itself, their mission",
+            "start_char": 142,
+            "end_char": 176
+          },
+          {
+            "content": "conversation with Shyam Sankar",
+            "source_text": "Please enjoy my conversation with Shyam Sankar",
+            "start_char": 690,
+            "end_char": 736
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 2,
+          "phrases": 10
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 3,
+          "delta": 0,
+          "added": [
+            {
+              "content": "Shyam Sankar discusses the need to reindustrialize the United States after decades of moving production and innovation offshore.",
+              "source_text": "This need to reindustrialize the United States after decades of moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores.",
+              "start_char": 339,
+              "end_char": 540
+            },
+            {
+              "content": "Shyam Sankar is the CTO of Palantir Technologies.",
+              "source_text": "My guest today is Shyam Sankar, the CTO of Palantir Technologies.",
+              "start_char": 29,
+              "end_char": 94
+            },
+            {
+              "content": "Shyam Sankar talks about the history of heretics who designed solutions that have driven much of the world's success.",
+              "source_text": "We talk about the history of heretics, people who have against the odds designed solutions that have driven so much of our success around the world.",
+              "start_char": 541,
+              "end_char": 689
+            }
+          ],
+          "removed": [
+            {
+              "content": "Shyam Sankar is the CTO of Palantir Technologies, and his life and worldview are fascinating.",
+              "source_text": "My guest today is Shyam Sankar, the CTO of Palantir Technologies. I think you'll find by listening to Shyam that the business itself, their mission and how they built it, and indeed him and his life, are completely fascinating.",
+              "start_char": 29,
+              "end_char": 256
+            },
+            {
+              "content": "The conversation covers the need to reindustrialize the United States after decades of offshoring production.",
+              "source_text": "This need to reindustrialize the United States after decades of moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores.",
+              "start_char": 339,
+              "end_char": 540
+            },
+            {
+              "content": "The discussion includes the history of heretics who have designed solutions that contributed to global success.",
+              "source_text": "We talk about the history of heretics, people who have against the odds designed solutions that have driven so much of our success around the world.",
+              "start_char": 541,
+              "end_char": 689
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 2,
+          "delta": -1,
+          "added": [
+            {
+              "content": "The conversation covers Shyam Sankar's life and the business mission of Palantir Technologies.",
+              "source_text": "I think you'll find by listening to Shyam that the business itself, their mission and how they built it, and indeed him and his life, are completely fascinating.",
+              "start_char": 95,
+              "end_char": 256
+            }
+          ],
+          "removed": [
+            {
+              "content": "Heretics have designed solutions that have driven success around the world.",
+              "source_text": "people who have against the odds designed solutions that have driven so much of our success around the world.",
+              "start_char": 580,
+              "end_char": 689
+            },
+            {
+              "content": "The United States has moved much of its production off of its own shores.",
+              "source_text": "after decades of moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores.",
+              "start_char": 386,
+              "end_char": 540
+            }
+          ],
+          "unchanged_count": 1,
+          "source_span_changed": [
+            {
+              "content": "Shyam Sankar's worldview is personally interesting to Patrick.",
+              "old_source_text": "I find personally the most interesting.",
+              "new_source_text": "We talk about his entire worldview, which I find personally the most interesting."
+            }
+          ]
+        },
+        "phrases": {
+          "old_count": 6,
+          "new_count": 10,
+          "delta": 4,
+          "added": [
+            {
+              "content": "business mission",
+              "source_text": "the business itself, their mission",
+              "start_char": 142,
+              "end_char": 176
+            },
+            {
+              "content": "conversation with Shyam Sankar",
+              "source_text": "Please enjoy my conversation with Shyam Sankar",
+              "start_char": 690,
+              "end_char": 736
+            },
+            {
+              "content": "designed solutions",
+              "source_text": "designed solutions that have driven so much of our success",
+              "start_char": 613,
+              "end_char": 671
+            },
+            {
+              "content": "learning of how to innovate and make things",
+              "source_text": "our learning of how to innovate and make things",
+              "start_char": 469,
+              "end_char": 516
+            },
+            {
+              "content": "moving production offshore",
+              "source_text": "decades of moving so much of our production",
+              "start_char": 392,
+              "end_char": 435
+            },
+            {
+              "content": "worldview",
+              "source_text": "his entire worldview",
+              "start_char": 271,
+              "end_char": 291
+            }
+          ],
+          "removed": [
+            {
+              "content": "offshoring production",
+              "source_text": "moving so much of our production and as he would argue, therefore our learning of how to innovate and make things, off of our own shores",
+              "start_char": 403,
+              "end_char": 539
+            },
+            {
+              "content": "solutions that have driven success",
+              "source_text": "designed solutions that have driven so much of our success around the world",
+              "start_char": 613,
+              "end_char": 688
+            }
+          ],
+          "unchanged_count": 4,
+          "source_span_changed": [
+            {
+              "content": "CTO of Palantir Technologies",
+              "old_source_text": "the CTO of Palantir Technologies",
+              "new_source_text": "Shyam Sankar, the CTO of Palantir Technologies"
+            },
+            {
+              "content": "Shyam Sankar",
+              "old_source_text": "Shyam Sankar",
+              "new_source_text": "My guest today is Shyam Sankar"
+            },
+            {
+              "content": "reindustrialize the United States",
+              "old_source_text": "reindustrialize the United States",
+              "new_source_text": "This need to reindustrialize the United States"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4039,
+      "chunk_index": 1,
+      "content_preview": "Please enjoy my conversation with Shyam Sankar. ## Great Heretics Through History **Patrick:** Shyam, I think the most fun place for me to begin, because it's an area that you're interested in that…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "Shyam Sankar discusses American military figures he refers to as heretics, including Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+            "source_text": "Shyam, I think the most fun place for me to begin, because it's an area that you're interested in that I'm fascinated by, is a history of people in American military lore who you call heretics. You refer to them as heretics, people like Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+            "start_char": 95,
+            "end_char": 421
+          },
+          {
+            "content": "John Boyd invented the OODA loop, which is considered one of the great biographies of a military figure.",
+            "source_text": "John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read.",
+            "start_char": 422,
+            "end_char": 540
+          },
+          {
+            "content": "Shyam Sankar defines heretics as founder figures in US history.",
+            "source_text": "Well, I think they're really founders. They're founder figures.",
+            "start_char": 707,
+            "end_char": 770
+          }
+        ],
+        "claims": [
+          {
+            "content": "Hyman Rickover and Andrew Higgins designed 90% of the boats at Normandy.",
+            "source_text": "You refer to them as heretics, people like Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+            "start_char": 289,
+            "end_char": 421
+          },
+          {
+            "content": "The OODA loop was invented by John Boyd.",
+            "source_text": "John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read.",
+            "start_char": 422,
+            "end_char": 540
+          },
+          {
+            "content": "Shyam Sankar is interested in heretics in US history.",
+            "source_text": "Talk to us a little bit about how you would define a heretic in your use of that term, and why you're so interested in that group of people in US history.",
+            "start_char": 541,
+            "end_char": 695
+          }
+        ],
+        "phrases": [
+          {
+            "content": "Shyam Sankar",
+            "source_text": "Please enjoy my conversation with Shyam Sankar.",
+            "start_char": 0,
+            "end_char": 47
+          },
+          {
+            "content": "heretics",
+            "source_text": "who you call heretics.",
+            "start_char": 266,
+            "end_char": 288
+          },
+          {
+            "content": "Hyman Rickover",
+            "source_text": " people like Hyman Rickover",
+            "start_char": 319,
+            "end_char": 346
+          },
+          {
+            "content": "Andrew Higgins",
+            "source_text": " people like Hyman Rickover and Andrew Higgins",
+            "start_char": 319,
+            "end_char": 365
+          },
+          {
+            "content": "OODA loop",
+            "source_text": " who invented the OODA loop",
+            "start_char": 432,
+            "end_char": 459
+          },
+          {
+            "content": "founders",
+            "source_text": "I think they're really founders.",
+            "start_char": 713,
+            "end_char": 745
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 3,
+          "phrases": 6
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "Shyam Sankar refers to certain figures in American military lore as heretics, including Hyman Rickover, Andrew Higgins, and John Boyd, and considers them founder figures.",
+            "source_text": " Shyam, I think the most fun place for me to begin, because it's an area that you're interested in that I'm fascinated by, is a history of people in American military lore who you call heretics. You refer to them as heretics, people like Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy. John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read. Talk to us a little bit about how you would define a heretic in your use of that term, and why you're so interested in that group of people in US history. **Shyam:** Well, I think they're really founders. They're founder figures.",
+            "start_char": 94,
+            "end_char": 770
+          }
+        ],
+        "claims": [
+          {
+            "content": "Andrew Higgins designed 90% of the boats that landed at Normandy.",
+            "source_text": "Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+            "start_char": 351,
+            "end_char": 421
+          },
+          {
+            "content": "John Boyd invented the OODA loop.",
+            "source_text": "John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read.",
+            "start_char": 422,
+            "end_char": 540
+          },
+          {
+            "content": "Shyam Sankar considers the people he calls heretics as founder figures.",
+            "source_text": "Shyam:** Well, I think they're really founders. They're founder figures.",
+            "start_char": 698,
+            "end_char": 770
+          }
+        ],
+        "phrases": [
+          {
+            "content": "American military lore",
+            "source_text": "American military lore",
+            "start_char": 243,
+            "end_char": 265
+          },
+          {
+            "content": "heretics",
+            "source_text": "heretics",
+            "start_char": 279,
+            "end_char": 287
+          },
+          {
+            "content": "Hyman Rickover",
+            "source_text": "Hyman Rickover",
+            "start_char": 332,
+            "end_char": 346
+          },
+          {
+            "content": "Andrew Higgins",
+            "source_text": "Andrew Higgins",
+            "start_char": 351,
+            "end_char": 365
+          },
+          {
+            "content": "boats that landed at Normandy",
+            "source_text": "boats that landed at Normandy",
+            "start_char": 391,
+            "end_char": 420
+          },
+          {
+            "content": "John Boyd",
+            "source_text": "John Boyd",
+            "start_char": 422,
+            "end_char": 431
+          },
+          {
+            "content": "OODA loop",
+            "source_text": "OODA loop",
+            "start_char": 450,
+            "end_char": 459
+          },
+          {
+            "content": "founder figures",
+            "source_text": "founder figures",
+            "start_char": 754,
+            "end_char": 769
+          }
+        ],
+        "counts": {
+          "propositions": 1,
+          "claims": 3,
+          "phrases": 8
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 1,
+          "delta": -2,
+          "added": [
+            {
+              "content": "Shyam Sankar refers to certain figures in American military lore as heretics, including Hyman Rickover, Andrew Higgins, and John Boyd, and considers them founder figures.",
+              "source_text": " Shyam, I think the most fun place for me to begin, because it's an area that you're interested in that I'm fascinated by, is a history of people in American military lore who you call heretics. You refer to them as heretics, people like Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy. John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read. Talk to us a little bit about how you would define a heretic in your use of that term, and why you're so interested in that group of people in US history. **Shyam:** Well, I think they're really founders. They're founder figures.",
+              "start_char": 94,
+              "end_char": 770
+            }
+          ],
+          "removed": [
+            {
+              "content": "John Boyd invented the OODA loop, which is considered one of the great biographies of a military figure.",
+              "source_text": "John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read.",
+              "start_char": 422,
+              "end_char": 540
+            },
+            {
+              "content": "Shyam Sankar defines heretics as founder figures in US history.",
+              "source_text": "Well, I think they're really founders. They're founder figures.",
+              "start_char": 707,
+              "end_char": 770
+            },
+            {
+              "content": "Shyam Sankar discusses American military figures he refers to as heretics, including Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+              "source_text": "Shyam, I think the most fun place for me to begin, because it's an area that you're interested in that I'm fascinated by, is a history of people in American military lore who you call heretics. You refer to them as heretics, people like Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+              "start_char": 95,
+              "end_char": 421
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 3,
+          "delta": 0,
+          "added": [
+            {
+              "content": "Andrew Higgins designed 90% of the boats that landed at Normandy.",
+              "source_text": "Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+              "start_char": 351,
+              "end_char": 421
+            },
+            {
+              "content": "John Boyd invented the OODA loop.",
+              "source_text": "John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read.",
+              "start_char": 422,
+              "end_char": 540
+            },
+            {
+              "content": "Shyam Sankar considers the people he calls heretics as founder figures.",
+              "source_text": "Shyam:** Well, I think they're really founders. They're founder figures.",
+              "start_char": 698,
+              "end_char": 770
+            }
+          ],
+          "removed": [
+            {
+              "content": "Hyman Rickover and Andrew Higgins designed 90% of the boats at Normandy.",
+              "source_text": "You refer to them as heretics, people like Hyman Rickover and Andrew Higgins, who designed 90% of the boats that landed at Normandy.",
+              "start_char": 289,
+              "end_char": 421
+            },
+            {
+              "content": "Shyam Sankar is interested in heretics in US history.",
+              "source_text": "Talk to us a little bit about how you would define a heretic in your use of that term, and why you're so interested in that group of people in US history.",
+              "start_char": 541,
+              "end_char": 695
+            },
+            {
+              "content": "The OODA loop was invented by John Boyd.",
+              "source_text": "John Boyd, who invented the OODA loop, which is one of the great biographies of a military figure that I've ever read.",
+              "start_char": 422,
+              "end_char": 540
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 6,
+          "new_count": 8,
+          "delta": 2,
+          "added": [
+            {
+              "content": "American military lore",
+              "source_text": "American military lore",
+              "start_char": 243,
+              "end_char": 265
+            },
+            {
+              "content": "John Boyd",
+              "source_text": "John Boyd",
+              "start_char": 422,
+              "end_char": 431
+            },
+            {
+              "content": "boats that landed at Normandy",
+              "source_text": "boats that landed at Normandy",
+              "start_char": 391,
+              "end_char": 420
+            },
+            {
+              "content": "founder figures",
+              "source_text": "founder figures",
+              "start_char": 754,
+              "end_char": 769
+            }
+          ],
+          "removed": [
+            {
+              "content": "Shyam Sankar",
+              "source_text": "Please enjoy my conversation with Shyam Sankar.",
+              "start_char": 0,
+              "end_char": 47
+            },
+            {
+              "content": "founders",
+              "source_text": "I think they're really founders.",
+              "start_char": 713,
+              "end_char": 745
+            }
+          ],
+          "unchanged_count": 4,
+          "source_span_changed": [
+            {
+              "content": "Andrew Higgins",
+              "old_source_text": " people like Hyman Rickover and Andrew Higgins",
+              "new_source_text": "Andrew Higgins"
+            },
+            {
+              "content": "Hyman Rickover",
+              "old_source_text": " people like Hyman Rickover",
+              "new_source_text": "Hyman Rickover"
+            },
+            {
+              "content": "OODA loop",
+              "old_source_text": " who invented the OODA loop",
+              "new_source_text": "OODA loop"
+            },
+            {
+              "content": "heretics",
+              "old_source_text": "who you call heretics.",
+              "new_source_text": "heretics"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4040,
+      "chunk_index": 2,
+      "content_preview": "They're founder figures. They get obsessed with delivering something that, it makes no sense because they're fighting, particularly in the military context, you're like fighting the bureaucracy. Yo…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "Founder figures are obsessed with delivering something despite fighting bureaucracy, which can end their careers.",
+            "source_text": "They're founder figures. They get obsessed with delivering something that, it makes no sense because they're fighting, particularly in the military context, you're like fighting the bureaucracy. You're going to end your career.",
+            "start_char": 0,
+            "end_char": 227
+          },
+          {
+            "content": "Great founders exhibit a pathological obsession with winning, which the speaker relates to personally.",
+            "source_text": "So there's almost like a pathological obsession with winning, which I really relate to both personally, but also that's what I see in great founders.",
+            "start_char": 259,
+            "end_char": 408
+          },
+          {
+            "content": "The speaker believes that change comes from hidden heretics in the military who later become heroes.",
+            "source_text": "In the present moment, it's really important to encourage the hidden heretics who are in the military today to recognize your heresy matters.",
+            "start_char": 409,
+            "end_char": 550
+          }
+        ],
+        "claims": [
+          {
+            "content": "The speaker sees a connection between heretics and successful outcomes in wars.",
+            "source_text": "And frankly, if you look back at history, the only shit that ever worked, the things that helped us win all the wars, were the things that the heretics actually did.",
+            "start_char": 551,
+            "end_char": 716
+          },
+          {
+            "content": "Nothing that went through the bureaucracy delivered successful outcomes.",
+            "source_text": "Nothing that went through the machine delivered anything.",
+            "start_char": 717,
+            "end_char": 774
+          }
+        ],
+        "phrases": [
+          {
+            "content": "founder figures",
+            "source_text": "They're founder figures.",
+            "start_char": 0,
+            "end_char": 24
+          },
+          {
+            "content": "pathological obsession",
+            "source_text": "there's almost like a pathological obsession with winning",
+            "start_char": 262,
+            "end_char": 319
+          },
+          {
+            "content": "hidden heretics",
+            "source_text": "the hidden heretics who are in the military today",
+            "start_char": 467,
+            "end_char": 516
+          },
+          {
+            "content": "change",
+            "source_text": "I think all change comes from these heretics.",
+            "start_char": 775,
+            "end_char": 820
+          },
+          {
+            "content": "heroes",
+            "source_text": "they only later become heroes.",
+            "start_char": 825,
+            "end_char": 855
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 2,
+          "phrases": 5
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "Founder figures have a pathological obsession with winning, especially in the military context where they fight bureaucracy and risk ending their careers.",
+            "source_text": "They're founder figures. They get obsessed with delivering something that, it makes no sense because they're fighting, particularly in the military context, you're like fighting the bureaucracy. You're going to end your career. You pay extreme prices for it.",
+            "start_char": 0,
+            "end_char": 258
+          },
+          {
+            "content": "The hidden heretics in the military today should be encouraged to recognize that their heresy matters and that historically, only the actions of heretics have led to winning wars.",
+            "source_text": "In the present moment, it's really important to encourage the hidden heretics who are in the military today to recognize your heresy matters. And frankly, if you look back at history, the only shit that ever worked, the things that helped us win all the wars, were the things that the heretics actually did.",
+            "start_char": 409,
+            "end_char": 716
+          },
+          {
+            "content": "All change comes from heretics who only later become heroes, not from the bureaucratic machine.",
+            "source_text": "Nothing that went through the machine delivered anything. I think all change comes from these heretics. And they only later become heroes.",
+            "start_char": 717,
+            "end_char": 855
+          }
+        ],
+        "claims": [
+          {
+            "content": "Founder figures pay extreme prices for their obsession with winning in the military.",
+            "source_text": "You pay extreme prices for it.",
+            "start_char": 228,
+            "end_char": 258
+          },
+          {
+            "content": "The bureaucracy in the military resists change and innovation.",
+            "source_text": "particularly in the military context, you're like fighting the bureaucracy.",
+            "start_char": 119,
+            "end_char": 194
+          },
+          {
+            "content": "The heretics' actions were the only things that helped win all the wars.",
+            "source_text": "the only shit that ever worked, the things that helped us win all the wars, were the things that the heretics actually did.",
+            "start_char": 593,
+            "end_char": 716
+          },
+          {
+            "content": "Heretics become heroes only after their ideas succeed.",
+            "source_text": "they only later become heroes.",
+            "start_char": 825,
+            "end_char": 855
+          }
+        ],
+        "phrases": [
+          {
+            "content": "founder figures",
+            "source_text": "They're founder figures.",
+            "start_char": 0,
+            "end_char": 24
+          },
+          {
+            "content": "pathological obsession with winning",
+            "source_text": "there's almost like a pathological obsession with winning",
+            "start_char": 262,
+            "end_char": 319
+          },
+          {
+            "content": "military context",
+            "source_text": "particularly in the military context",
+            "start_char": 119,
+            "end_char": 155
+          },
+          {
+            "content": "fighting the bureaucracy",
+            "source_text": "you're like fighting the bureaucracy.",
+            "start_char": 157,
+            "end_char": 194
+          },
+          {
+            "content": "pay extreme prices",
+            "source_text": "You pay extreme prices for it.",
+            "start_char": 228,
+            "end_char": 258
+          },
+          {
+            "content": "hidden heretics",
+            "source_text": "encourage the hidden heretics who are in the military today",
+            "start_char": 457,
+            "end_char": 516
+          },
+          {
+            "content": "heresy matters",
+            "source_text": "recognize your heresy matters.",
+            "start_char": 520,
+            "end_char": 550
+          },
+          {
+            "content": "things that helped us win all the wars",
+            "source_text": "the things that helped us win all the wars",
+            "start_char": 625,
+            "end_char": 667
+          },
+          {
+            "content": "bureaucratic machine",
+            "source_text": "Nothing that went through the machine delivered anything.",
+            "start_char": 717,
+            "end_char": 774
+          },
+          {
+            "content": "all change comes from heretics",
+            "source_text": "I think all change comes from these heretics.",
+            "start_char": 775,
+            "end_char": 820
+          },
+          {
+            "content": "heretics become heroes",
+            "source_text": "they only later become heroes.",
+            "start_char": 825,
+            "end_char": 855
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 4,
+          "phrases": 11
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 3,
+          "delta": 0,
+          "added": [
+            {
+              "content": "All change comes from heretics who only later become heroes, not from the bureaucratic machine.",
+              "source_text": "Nothing that went through the machine delivered anything. I think all change comes from these heretics. And they only later become heroes.",
+              "start_char": 717,
+              "end_char": 855
+            },
+            {
+              "content": "Founder figures have a pathological obsession with winning, especially in the military context where they fight bureaucracy and risk ending their careers.",
+              "source_text": "They're founder figures. They get obsessed with delivering something that, it makes no sense because they're fighting, particularly in the military context, you're like fighting the bureaucracy. You're going to end your career. You pay extreme prices for it.",
+              "start_char": 0,
+              "end_char": 258
+            },
+            {
+              "content": "The hidden heretics in the military today should be encouraged to recognize that their heresy matters and that historically, only the actions of heretics have led to winning wars.",
+              "source_text": "In the present moment, it's really important to encourage the hidden heretics who are in the military today to recognize your heresy matters. And frankly, if you look back at history, the only shit that ever worked, the things that helped us win all the wars, were the things that the heretics actually did.",
+              "start_char": 409,
+              "end_char": 716
+            }
+          ],
+          "removed": [
+            {
+              "content": "Founder figures are obsessed with delivering something despite fighting bureaucracy, which can end their careers.",
+              "source_text": "They're founder figures. They get obsessed with delivering something that, it makes no sense because they're fighting, particularly in the military context, you're like fighting the bureaucracy. You're going to end your career.",
+              "start_char": 0,
+              "end_char": 227
+            },
+            {
+              "content": "Great founders exhibit a pathological obsession with winning, which the speaker relates to personally.",
+              "source_text": "So there's almost like a pathological obsession with winning, which I really relate to both personally, but also that's what I see in great founders.",
+              "start_char": 259,
+              "end_char": 408
+            },
+            {
+              "content": "The speaker believes that change comes from hidden heretics in the military who later become heroes.",
+              "source_text": "In the present moment, it's really important to encourage the hidden heretics who are in the military today to recognize your heresy matters.",
+              "start_char": 409,
+              "end_char": 550
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 2,
+          "new_count": 4,
+          "delta": 2,
+          "added": [
+            {
+              "content": "Founder figures pay extreme prices for their obsession with winning in the military.",
+              "source_text": "You pay extreme prices for it.",
+              "start_char": 228,
+              "end_char": 258
+            },
+            {
+              "content": "Heretics become heroes only after their ideas succeed.",
+              "source_text": "they only later become heroes.",
+              "start_char": 825,
+              "end_char": 855
+            },
+            {
+              "content": "The bureaucracy in the military resists change and innovation.",
+              "source_text": "particularly in the military context, you're like fighting the bureaucracy.",
+              "start_char": 119,
+              "end_char": 194
+            },
+            {
+              "content": "The heretics' actions were the only things that helped win all the wars.",
+              "source_text": "the only shit that ever worked, the things that helped us win all the wars, were the things that the heretics actually did.",
+              "start_char": 593,
+              "end_char": 716
+            }
+          ],
+          "removed": [
+            {
+              "content": "Nothing that went through the bureaucracy delivered successful outcomes.",
+              "source_text": "Nothing that went through the machine delivered anything.",
+              "start_char": 717,
+              "end_char": 774
+            },
+            {
+              "content": "The speaker sees a connection between heretics and successful outcomes in wars.",
+              "source_text": "And frankly, if you look back at history, the only shit that ever worked, the things that helped us win all the wars, were the things that the heretics actually did.",
+              "start_char": 551,
+              "end_char": 716
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 5,
+          "new_count": 11,
+          "delta": 6,
+          "added": [
+            {
+              "content": "all change comes from heretics",
+              "source_text": "I think all change comes from these heretics.",
+              "start_char": 775,
+              "end_char": 820
+            },
+            {
+              "content": "bureaucratic machine",
+              "source_text": "Nothing that went through the machine delivered anything.",
+              "start_char": 717,
+              "end_char": 774
+            },
+            {
+              "content": "fighting the bureaucracy",
+              "source_text": "you're like fighting the bureaucracy.",
+              "start_char": 157,
+              "end_char": 194
+            },
+            {
+              "content": "heresy matters",
+              "source_text": "recognize your heresy matters.",
+              "start_char": 520,
+              "end_char": 550
+            },
+            {
+              "content": "heretics become heroes",
+              "source_text": "they only later become heroes.",
+              "start_char": 825,
+              "end_char": 855
+            },
+            {
+              "content": "military context",
+              "source_text": "particularly in the military context",
+              "start_char": 119,
+              "end_char": 155
+            },
+            {
+              "content": "pathological obsession with winning",
+              "source_text": "there's almost like a pathological obsession with winning",
+              "start_char": 262,
+              "end_char": 319
+            },
+            {
+              "content": "pay extreme prices",
+              "source_text": "You pay extreme prices for it.",
+              "start_char": 228,
+              "end_char": 258
+            },
+            {
+              "content": "things that helped us win all the wars",
+              "source_text": "the things that helped us win all the wars",
+              "start_char": 625,
+              "end_char": 667
+            }
+          ],
+          "removed": [
+            {
+              "content": "change",
+              "source_text": "I think all change comes from these heretics.",
+              "start_char": 775,
+              "end_char": 820
+            },
+            {
+              "content": "heroes",
+              "source_text": "they only later become heroes.",
+              "start_char": 825,
+              "end_char": 855
+            },
+            {
+              "content": "pathological obsession",
+              "source_text": "there's almost like a pathological obsession with winning",
+              "start_char": 262,
+              "end_char": 319
+            }
+          ],
+          "unchanged_count": 2,
+          "source_span_changed": [
+            {
+              "content": "hidden heretics",
+              "old_source_text": "the hidden heretics who are in the military today",
+              "new_source_text": "encourage the hidden heretics who are in the military today"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4041,
+      "chunk_index": 3,
+      "content_preview": "And they only later become heroes. If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed. And only after his death did we invent the…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "Billy Mitchell invented the Air Force, was court-martialed, and died penniless and depressed.",
+            "source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed.",
+            "start_char": 35,
+            "end_char": 154
+          },
+          {
+            "content": "The Air Force was invented based on Billy Mitchell's original heresy after his death.",
+            "source_text": "And only after his death did we invent the Air Force based on his original heresy.",
+            "start_char": 155,
+            "end_char": 237
+          },
+          {
+            "content": "Hyman Rickover was born in a shtetl in Poland and later came to the U. S.",
+            "source_text": "So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+            "start_char": 643,
+            "end_char": 707
+          }
+        ],
+        "claims": [
+          {
+            "content": "Billy Mitchell's story illustrates the theme of posthumous recognition.",
+            "source_text": "And only after his death did we invent the Air Force based on his original heresy.",
+            "start_char": 155,
+            "end_char": 237
+          },
+          {
+            "content": "Patrick asks about studying heretic stories to understand a general idea.",
+            "source_text": "If you could have people study any one heretic story to understand this general idea, is it his story?",
+            "start_char": 451,
+            "end_char": 553
+          },
+          {
+            "content": "Shyam suggests Hyman Rickover's story as a significant heretic story.",
+            "source_text": "I'd probably pick Rickover’s.",
+            "start_char": 613,
+            "end_char": 642
+          }
+        ],
+        "phrases": [
+          {
+            "content": "Billy Mitchell",
+            "source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed.",
+            "start_char": 35,
+            "end_char": 154
+          },
+          {
+            "content": "Air Force",
+            "source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed.",
+            "start_char": 35,
+            "end_char": 154
+          },
+          {
+            "content": "Hyman Rickover",
+            "source_text": "So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+            "start_char": 643,
+            "end_char": 707
+          },
+          {
+            "content": "shtetl",
+            "source_text": "So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+            "start_char": 643,
+            "end_char": 707
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 3,
+          "phrases": 4
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "Billy Mitchell invented the Air Force but was court-martialed and died penniless and depressed, and only after his death was the Air Force invented based on his original heresy.",
+            "source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed. And only after his death did we invent the Air Force based on his original heresy.",
+            "start_char": 35,
+            "end_char": 237
+          },
+          {
+            "content": "Shyam Sankar is fascinated by what motivates heretics to keep rebelling and relishes the victory that their rebellion brings about.",
+            "source_text": "I'm just fascinated with what motivates these folks to keep doing this. And I guess I relish a little bit in their rebellion and the victory that the rebellion brings about.",
+            "start_char": 238,
+            "end_char": 411
+          },
+          {
+            "content": "Shyam Sankar would probably pick Hyman Rickover’s story as the one to study to understand the general idea of heretics.",
+            "source_text": "I'd probably pick Rickover’s. So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+            "start_char": 613,
+            "end_char": 707
+          }
+        ],
+        "claims": [
+          {
+            "content": "Billy Mitchell was court-martialed.",
+            "source_text": "he was court-martialed",
+            "start_char": 98,
+            "end_char": 120
+          },
+          {
+            "content": "Billy Mitchell died penniless and depressed.",
+            "source_text": "died penniless and depressed",
+            "start_char": 125,
+            "end_char": 153
+          },
+          {
+            "content": "The Air Force was invented after Billy Mitchell's death.",
+            "source_text": "only after his death did we invent the Air Force",
+            "start_char": 159,
+            "end_char": 207
+          },
+          {
+            "content": "Hyman Rickover was born in a shtetl in Poland.",
+            "source_text": "Hyman Rickover, born in a shtetl in Poland",
+            "start_char": 646,
+            "end_char": 688
+          },
+          {
+            "content": "Hyman Rickover came to the U.S.",
+            "source_text": "came to the U. S.",
+            "start_char": 690,
+            "end_char": 707
+          }
+        ],
+        "phrases": [
+          {
+            "content": "Billy Mitchell",
+            "source_text": "Billy Mitchell",
+            "start_char": 54,
+            "end_char": 68
+          },
+          {
+            "content": "invented the Air Force",
+            "source_text": "who invented the Air Force",
+            "start_char": 70,
+            "end_char": 96
+          },
+          {
+            "content": "court-martialed",
+            "source_text": "court-martialed",
+            "start_char": 105,
+            "end_char": 120
+          },
+          {
+            "content": "died penniless and depressed",
+            "source_text": "died penniless and depressed",
+            "start_char": 125,
+            "end_char": 153
+          },
+          {
+            "content": "original heresy",
+            "source_text": "his original heresy",
+            "start_char": 217,
+            "end_char": 236
+          },
+          {
+            "content": "motivates these folks",
+            "source_text": "what motivates these folks",
+            "start_char": 263,
+            "end_char": 289
+          },
+          {
+            "content": "rebellion and the victory",
+            "source_text": "their rebellion and the victory",
+            "start_char": 347,
+            "end_char": 378
+          },
+          {
+            "content": "Hyman Rickover",
+            "source_text": "Hyman Rickover",
+            "start_char": 415,
+            "end_char": 429
+          },
+          {
+            "content": "born in a shtetl in Poland",
+            "source_text": "born in a shtetl in Poland",
+            "start_char": 662,
+            "end_char": 688
+          },
+          {
+            "content": "came to the U. S.",
+            "source_text": "came to the U. S.",
+            "start_char": 690,
+            "end_char": 707
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 5,
+          "phrases": 10
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 3,
+          "delta": 0,
+          "added": [
+            {
+              "content": "Billy Mitchell invented the Air Force but was court-martialed and died penniless and depressed, and only after his death was the Air Force invented based on his original heresy.",
+              "source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed. And only after his death did we invent the Air Force based on his original heresy.",
+              "start_char": 35,
+              "end_char": 237
+            },
+            {
+              "content": "Shyam Sankar is fascinated by what motivates heretics to keep rebelling and relishes the victory that their rebellion brings about.",
+              "source_text": "I'm just fascinated with what motivates these folks to keep doing this. And I guess I relish a little bit in their rebellion and the victory that the rebellion brings about.",
+              "start_char": 238,
+              "end_char": 411
+            },
+            {
+              "content": "Shyam Sankar would probably pick Hyman Rickover’s story as the one to study to understand the general idea of heretics.",
+              "source_text": "I'd probably pick Rickover’s. So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+              "start_char": 613,
+              "end_char": 707
+            }
+          ],
+          "removed": [
+            {
+              "content": "Billy Mitchell invented the Air Force, was court-martialed, and died penniless and depressed.",
+              "source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed.",
+              "start_char": 35,
+              "end_char": 154
+            },
+            {
+              "content": "Hyman Rickover was born in a shtetl in Poland and later came to the U. S.",
+              "source_text": "So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+              "start_char": 643,
+              "end_char": 707
+            },
+            {
+              "content": "The Air Force was invented based on Billy Mitchell's original heresy after his death.",
+              "source_text": "And only after his death did we invent the Air Force based on his original heresy.",
+              "start_char": 155,
+              "end_char": 237
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 5,
+          "delta": 2,
+          "added": [
+            {
+              "content": "Billy Mitchell died penniless and depressed.",
+              "source_text": "died penniless and depressed",
+              "start_char": 125,
+              "end_char": 153
+            },
+            {
+              "content": "Billy Mitchell was court-martialed.",
+              "source_text": "he was court-martialed",
+              "start_char": 98,
+              "end_char": 120
+            },
+            {
+              "content": "Hyman Rickover came to the U.S.",
+              "source_text": "came to the U. S.",
+              "start_char": 690,
+              "end_char": 707
+            },
+            {
+              "content": "Hyman Rickover was born in a shtetl in Poland.",
+              "source_text": "Hyman Rickover, born in a shtetl in Poland",
+              "start_char": 646,
+              "end_char": 688
+            },
+            {
+              "content": "The Air Force was invented after Billy Mitchell's death.",
+              "source_text": "only after his death did we invent the Air Force",
+              "start_char": 159,
+              "end_char": 207
+            }
+          ],
+          "removed": [
+            {
+              "content": "Billy Mitchell's story illustrates the theme of posthumous recognition.",
+              "source_text": "And only after his death did we invent the Air Force based on his original heresy.",
+              "start_char": 155,
+              "end_char": 237
+            },
+            {
+              "content": "Patrick asks about studying heretic stories to understand a general idea.",
+              "source_text": "If you could have people study any one heretic story to understand this general idea, is it his story?",
+              "start_char": 451,
+              "end_char": 553
+            },
+            {
+              "content": "Shyam suggests Hyman Rickover's story as a significant heretic story.",
+              "source_text": "I'd probably pick Rickover’s.",
+              "start_char": 613,
+              "end_char": 642
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 4,
+          "new_count": 10,
+          "delta": 6,
+          "added": [
+            {
+              "content": "born in a shtetl in Poland",
+              "source_text": "born in a shtetl in Poland",
+              "start_char": 662,
+              "end_char": 688
+            },
+            {
+              "content": "came to the U. S.",
+              "source_text": "came to the U. S.",
+              "start_char": 690,
+              "end_char": 707
+            },
+            {
+              "content": "court-martialed",
+              "source_text": "court-martialed",
+              "start_char": 105,
+              "end_char": 120
+            },
+            {
+              "content": "died penniless and depressed",
+              "source_text": "died penniless and depressed",
+              "start_char": 125,
+              "end_char": 153
+            },
+            {
+              "content": "invented the Air Force",
+              "source_text": "who invented the Air Force",
+              "start_char": 70,
+              "end_char": 96
+            },
+            {
+              "content": "motivates these folks",
+              "source_text": "what motivates these folks",
+              "start_char": 263,
+              "end_char": 289
+            },
+            {
+              "content": "original heresy",
+              "source_text": "his original heresy",
+              "start_char": 217,
+              "end_char": 236
+            },
+            {
+              "content": "rebellion and the victory",
+              "source_text": "their rebellion and the victory",
+              "start_char": 347,
+              "end_char": 378
+            }
+          ],
+          "removed": [
+            {
+              "content": "Air Force",
+              "source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed.",
+              "start_char": 35,
+              "end_char": 154
+            },
+            {
+              "content": "shtetl",
+              "source_text": "So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+              "start_char": 643,
+              "end_char": 707
+            }
+          ],
+          "unchanged_count": 2,
+          "source_span_changed": [
+            {
+              "content": "Billy Mitchell",
+              "old_source_text": "If you think about Billy Mitchell, who invented the Air Force, he was court-martialed and died penniless and depressed.",
+              "new_source_text": "Billy Mitchell"
+            },
+            {
+              "content": "Hyman Rickover",
+              "old_source_text": "So Hyman Rickover, born in a shtetl in Poland, came to the U. S.",
+              "new_source_text": "Hyman Rickover"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4042,
+      "chunk_index": 4,
+      "content_preview": "S. when he was six, had one of these near-miss moments where, in those days when you landed at Ellis Island, you had 10 days for someone to come pick you up. His mother gave someone money to go sen…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "S. had a near-miss moment when he was six years old at Ellis Island, where he had 10 days for someone to come pick him up.",
+            "source_text": "S. when he was six, had one of these near-miss moments where, in those days when you landed at Ellis Island, you had 10 days for someone to come pick you up.",
+            "start_char": 0,
+            "end_char": 157
+          },
+          {
+            "content": "S.'s mother gave someone money to send a telegram to his father, who had already been in the United States.",
+            "source_text": "His mother gave someone money to go send a telegram to the father who'd already been here.",
+            "start_char": 158,
+            "end_char": 248
+          },
+          {
+            "content": "On the 10th day, another man arrived at Ellis Island and helped S. by buying them one more day and retrieving his father.",
+            "source_text": "On the 10th day, there was another guy who arrived at Ellis Island who bought them one more day, who knew them.",
+            "start_char": 287,
+            "end_char": 398
+          },
+          {
+            "content": "S. was a feisty character who was five foot two and attended the Naval Academy.",
+            "source_text": "But he was this feisty character. I think he was five foot two, very short. He went to the Naval Academy.",
+            "start_char": 553,
+            "end_char": 658
+          },
+          {
+            "content": "S. was so unlikable at the Naval Academy that they tore out his picture from the yearbook.",
+            "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+            "start_char": 659,
+            "end_char": 752
+          }
+        ],
+        "claims": [
+          {
+            "content": "S. would have been sent back to Poland if not for the help he received.",
+            "source_text": "And then he ran out, got the father, because it was this near-miss where this guy almost didn't even end up here, he would have been sent back to Poland.",
+            "start_char": 399,
+            "end_char": 552
+          },
+          {
+            "content": "The man who helped S. on the 10th day knew S. and his family.",
+            "source_text": "who bought them one more day, who knew them.",
+            "start_char": 354,
+            "end_char": 398
+          },
+          {
+            "content": "S. was described as very short at five foot two.",
+            "source_text": "I think he was five foot two, very short.",
+            "start_char": 587,
+            "end_char": 628
+          },
+          {
+            "content": "S.'s picture was removed from the Naval Academy yearbook due to his unlikable nature.",
+            "source_text": "they had torn out his picture.",
+            "start_char": 722,
+            "end_char": 752
+          }
+        ],
+        "phrases": [
+          {
+            "content": "near-miss moments",
+            "source_text": "one of these near-miss moments",
+            "start_char": 24,
+            "end_char": 54
+          },
+          {
+            "content": "Ellis Island",
+            "source_text": "when you landed at Ellis Island",
+            "start_char": 76,
+            "end_char": 107
+          },
+          {
+            "content": "telegram",
+            "source_text": "send a telegram",
+            "start_char": 194,
+            "end_char": 209
+          },
+          {
+            "content": "Naval Academy",
+            "source_text": "Naval Academy",
+            "start_char": 644,
+            "end_char": 657
+          },
+          {
+            "content": "yearbook",
+            "source_text": "in the yearbook",
+            "start_char": 684,
+            "end_char": 699
+          },
+          {
+            "content": "five foot two",
+            "source_text": "I think he was five foot two",
+            "start_char": 587,
+            "end_char": 615
+          },
+          {
+            "content": "unlikable",
+            "source_text": "e was so unlikable",
+            "start_char": 660,
+            "end_char": 678
+          }
+        ],
+        "counts": {
+          "propositions": 5,
+          "claims": 4,
+          "phrases": 7
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "When Shyam Sankar was six, he had a near-miss moment at Ellis Island where he almost got sent back to Poland because a man pocketed the money meant to send a telegram to his father, but another man who knew them bought one more day and brought the father to Ellis Island.",
+            "source_text": "S. when he was six, had one of these near-miss moments where, in those days when you landed at Ellis Island, you had 10 days for someone to come pick you up. His mother gave someone money to go send a telegram to the father who'd already been here. And that guy just pocketed the money. On the 10th day, there was another guy who arrived at Ellis Island who bought them one more day, who knew them. And then he ran out, got the father, because it was this near-miss where this guy almost didn't even end up here, he would have been sent back to Poland.",
+            "start_char": 0,
+            "end_char": 552
+          },
+          {
+            "content": "Shyam Sankar's father was a feisty character, about five foot two, who went to the Naval Academy and was so unlikable that his picture was torn out of the Naval Academy yearbook.",
+            "source_text": "But he was this feisty character. I think he was five foot two, very short. He went to the Naval Academy. He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+            "start_char": 553,
+            "end_char": 752
+          }
+        ],
+        "claims": [
+          {
+            "content": "Ellis Island allowed 10 days for someone to pick up new arrivals.",
+            "source_text": "in those days when you landed at Ellis Island, you had 10 days for someone to come pick you up.",
+            "start_char": 62,
+            "end_char": 157
+          },
+          {
+            "content": "Shyam Sankar's mother gave money to a man to send a telegram to the father.",
+            "source_text": "His mother gave someone money to go send a telegram to the father who'd already been here.",
+            "start_char": 158,
+            "end_char": 248
+          },
+          {
+            "content": "A man pocketed the money meant for sending the telegram.",
+            "source_text": "And that guy just pocketed the money.",
+            "start_char": 249,
+            "end_char": 286
+          },
+          {
+            "content": "Another man who knew Shyam Sankar's family bought one more day at Ellis Island on the 10th day.",
+            "source_text": "On the 10th day, there was another guy who arrived at Ellis Island who bought them one more day, who knew them.",
+            "start_char": 287,
+            "end_char": 398
+          },
+          {
+            "content": "Shyam Sankar's father was very short, about five foot two.",
+            "source_text": "I think he was five foot two, very short.",
+            "start_char": 587,
+            "end_char": 628
+          },
+          {
+            "content": "Shyam Sankar's father attended the Naval Academy.",
+            "source_text": "He went to the Naval Academy.",
+            "start_char": 629,
+            "end_char": 658
+          },
+          {
+            "content": "Shyam Sankar's father was so unlikable that his picture was torn out of the Naval Academy yearbook.",
+            "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+            "start_char": 659,
+            "end_char": 752
+          }
+        ],
+        "phrases": [
+          {
+            "content": "near-miss moments",
+            "source_text": "had one of these near-miss moments",
+            "start_char": 20,
+            "end_char": 54
+          },
+          {
+            "content": "Ellis Island",
+            "source_text": "when you landed at Ellis Island",
+            "start_char": 76,
+            "end_char": 107
+          },
+          {
+            "content": "10 days for someone to come pick you up",
+            "source_text": "you had 10 days for someone to come pick you up",
+            "start_char": 109,
+            "end_char": 156
+          },
+          {
+            "content": "telegram to the father",
+            "source_text": "go send a telegram to the father",
+            "start_char": 191,
+            "end_char": 223
+          },
+          {
+            "content": "pocketed the money",
+            "source_text": "that guy just pocketed the money",
+            "start_char": 253,
+            "end_char": 285
+          },
+          {
+            "content": "bought them one more day",
+            "source_text": "who bought them one more day",
+            "start_char": 354,
+            "end_char": 382
+          },
+          {
+            "content": "feisty character",
+            "source_text": "he was this feisty character",
+            "start_char": 557,
+            "end_char": 585
+          },
+          {
+            "content": "five foot two",
+            "source_text": "I think he was five foot two",
+            "start_char": 587,
+            "end_char": 615
+          },
+          {
+            "content": "Naval Academy",
+            "source_text": "He went to the Naval Academy",
+            "start_char": 629,
+            "end_char": 657
+          },
+          {
+            "content": "torn out his picture",
+            "source_text": "they had torn out his picture",
+            "start_char": 722,
+            "end_char": 751
+          }
+        ],
+        "counts": {
+          "propositions": 2,
+          "claims": 7,
+          "phrases": 10
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 5,
+          "new_count": 2,
+          "delta": -3,
+          "added": [
+            {
+              "content": "Shyam Sankar's father was a feisty character, about five foot two, who went to the Naval Academy and was so unlikable that his picture was torn out of the Naval Academy yearbook.",
+              "source_text": "But he was this feisty character. I think he was five foot two, very short. He went to the Naval Academy. He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+              "start_char": 553,
+              "end_char": 752
+            },
+            {
+              "content": "When Shyam Sankar was six, he had a near-miss moment at Ellis Island where he almost got sent back to Poland because a man pocketed the money meant to send a telegram to his father, but another man who knew them bought one more day and brought the father to Ellis Island.",
+              "source_text": "S. when he was six, had one of these near-miss moments where, in those days when you landed at Ellis Island, you had 10 days for someone to come pick you up. His mother gave someone money to go send a telegram to the father who'd already been here. And that guy just pocketed the money. On the 10th day, there was another guy who arrived at Ellis Island who bought them one more day, who knew them. And then he ran out, got the father, because it was this near-miss where this guy almost didn't even end up here, he would have been sent back to Poland.",
+              "start_char": 0,
+              "end_char": 552
+            }
+          ],
+          "removed": [
+            {
+              "content": "On the 10th day, another man arrived at Ellis Island and helped S. by buying them one more day and retrieving his father.",
+              "source_text": "On the 10th day, there was another guy who arrived at Ellis Island who bought them one more day, who knew them.",
+              "start_char": 287,
+              "end_char": 398
+            },
+            {
+              "content": "S. had a near-miss moment when he was six years old at Ellis Island, where he had 10 days for someone to come pick him up.",
+              "source_text": "S. when he was six, had one of these near-miss moments where, in those days when you landed at Ellis Island, you had 10 days for someone to come pick you up.",
+              "start_char": 0,
+              "end_char": 157
+            },
+            {
+              "content": "S. was a feisty character who was five foot two and attended the Naval Academy.",
+              "source_text": "But he was this feisty character. I think he was five foot two, very short. He went to the Naval Academy.",
+              "start_char": 553,
+              "end_char": 658
+            },
+            {
+              "content": "S. was so unlikable at the Naval Academy that they tore out his picture from the yearbook.",
+              "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+              "start_char": 659,
+              "end_char": 752
+            },
+            {
+              "content": "S.'s mother gave someone money to send a telegram to his father, who had already been in the United States.",
+              "source_text": "His mother gave someone money to go send a telegram to the father who'd already been here.",
+              "start_char": 158,
+              "end_char": 248
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 4,
+          "new_count": 7,
+          "delta": 3,
+          "added": [
+            {
+              "content": "A man pocketed the money meant for sending the telegram.",
+              "source_text": "And that guy just pocketed the money.",
+              "start_char": 249,
+              "end_char": 286
+            },
+            {
+              "content": "Another man who knew Shyam Sankar's family bought one more day at Ellis Island on the 10th day.",
+              "source_text": "On the 10th day, there was another guy who arrived at Ellis Island who bought them one more day, who knew them.",
+              "start_char": 287,
+              "end_char": 398
+            },
+            {
+              "content": "Ellis Island allowed 10 days for someone to pick up new arrivals.",
+              "source_text": "in those days when you landed at Ellis Island, you had 10 days for someone to come pick you up.",
+              "start_char": 62,
+              "end_char": 157
+            },
+            {
+              "content": "Shyam Sankar's father attended the Naval Academy.",
+              "source_text": "He went to the Naval Academy.",
+              "start_char": 629,
+              "end_char": 658
+            },
+            {
+              "content": "Shyam Sankar's father was so unlikable that his picture was torn out of the Naval Academy yearbook.",
+              "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+              "start_char": 659,
+              "end_char": 752
+            },
+            {
+              "content": "Shyam Sankar's father was very short, about five foot two.",
+              "source_text": "I think he was five foot two, very short.",
+              "start_char": 587,
+              "end_char": 628
+            },
+            {
+              "content": "Shyam Sankar's mother gave money to a man to send a telegram to the father.",
+              "source_text": "His mother gave someone money to go send a telegram to the father who'd already been here.",
+              "start_char": 158,
+              "end_char": 248
+            }
+          ],
+          "removed": [
+            {
+              "content": "S. was described as very short at five foot two.",
+              "source_text": "I think he was five foot two, very short.",
+              "start_char": 587,
+              "end_char": 628
+            },
+            {
+              "content": "S. would have been sent back to Poland if not for the help he received.",
+              "source_text": "And then he ran out, got the father, because it was this near-miss where this guy almost didn't even end up here, he would have been sent back to Poland.",
+              "start_char": 399,
+              "end_char": 552
+            },
+            {
+              "content": "S.'s picture was removed from the Naval Academy yearbook due to his unlikable nature.",
+              "source_text": "they had torn out his picture.",
+              "start_char": 722,
+              "end_char": 752
+            },
+            {
+              "content": "The man who helped S. on the 10th day knew S. and his family.",
+              "source_text": "who bought them one more day, who knew them.",
+              "start_char": 354,
+              "end_char": 398
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 7,
+          "new_count": 10,
+          "delta": 3,
+          "added": [
+            {
+              "content": "10 days for someone to come pick you up",
+              "source_text": "you had 10 days for someone to come pick you up",
+              "start_char": 109,
+              "end_char": 156
+            },
+            {
+              "content": "bought them one more day",
+              "source_text": "who bought them one more day",
+              "start_char": 354,
+              "end_char": 382
+            },
+            {
+              "content": "feisty character",
+              "source_text": "he was this feisty character",
+              "start_char": 557,
+              "end_char": 585
+            },
+            {
+              "content": "pocketed the money",
+              "source_text": "that guy just pocketed the money",
+              "start_char": 253,
+              "end_char": 285
+            },
+            {
+              "content": "telegram to the father",
+              "source_text": "go send a telegram to the father",
+              "start_char": 191,
+              "end_char": 223
+            },
+            {
+              "content": "torn out his picture",
+              "source_text": "they had torn out his picture",
+              "start_char": 722,
+              "end_char": 751
+            }
+          ],
+          "removed": [
+            {
+              "content": "telegram",
+              "source_text": "send a telegram",
+              "start_char": 194,
+              "end_char": 209
+            },
+            {
+              "content": "unlikable",
+              "source_text": "e was so unlikable",
+              "start_char": 660,
+              "end_char": 678
+            },
+            {
+              "content": "yearbook",
+              "source_text": "in the yearbook",
+              "start_char": 684,
+              "end_char": 699
+            }
+          ],
+          "unchanged_count": 4,
+          "source_span_changed": [
+            {
+              "content": "Naval Academy",
+              "old_source_text": "Naval Academy",
+              "new_source_text": "He went to the Naval Academy"
+            },
+            {
+              "content": "near-miss moments",
+              "old_source_text": "one of these near-miss moments",
+              "new_source_text": "had one of these near-miss moments"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4043,
+      "chunk_index": 5,
+      "content_preview": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture. He's just one of these difficult people. In World War II, he drove a coal ship. He was not some excepti…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+            "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+            "start_char": 0,
+            "end_char": 93
+          },
+          {
+            "content": "In World War II, he drove a coal ship and was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier.",
+            "source_text": "In World War II, he drove a coal ship. He was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier or anything like that.",
+            "start_char": 135,
+            "end_char": 302
+          },
+          {
+            "content": "After World War II, he went to Oak Ridge and observed the vestiges of the Manhattan Project, leading to his idea of building nuclear-powered submarines.",
+            "source_text": "But after the war, he went to Oak Ridge, and he observed the vestiges of the Manhattan Project. And he had this idea. We could build nuclear-powered submarines.",
+            "start_char": 303,
+            "end_char": 463
+          },
+          {
+            "content": "He had experience on diesel-powered submarines, which he considered inferior to nuclear-powered submarines.",
+            "source_text": "And he'd had this experience on diesel-powered submarines, which suck.",
+            "start_char": 464,
+            "end_char": 534
+          },
+          {
+            "content": "Oppenheimer himself thought this idea of nuclear-powered submarines was going to fail.",
+            "source_text": "Oppenheimer himself thought this idea was going to fail.",
+            "start_char": 680,
+            "end_char": 736
+          }
+        ],
+        "claims": [
+          {
+            "content": "He was considered a difficult person.",
+            "source_text": "He's just one of these difficult people.",
+            "start_char": 94,
+            "end_char": 134
+          },
+          {
+            "content": "He was obsessed with the idea of nuclear-powered submarines.",
+            "source_text": "This became this thing he was obsessed with.",
+            "start_char": 614,
+            "end_char": 658
+          },
+          {
+            "content": "Oppenheimer told him that his idea was stupid and wouldn't work.",
+            "source_text": " So you have Oppie telling you you're stupid and this isn't going to work",
+            "start_char": 736,
+            "end_char": 809
+          }
+        ],
+        "phrases": [
+          {
+            "content": "Naval Academy yearbook",
+            "source_text": "in the yearbook in the Naval Academy",
+            "start_char": 25,
+            "end_char": 61
+          },
+          {
+            "content": "World War II",
+            "source_text": "In World War II",
+            "start_char": 135,
+            "end_char": 150
+          },
+          {
+            "content": "Oak Ridge",
+            "source_text": "he went to Oak Ridge",
+            "start_char": 322,
+            "end_char": 342
+          },
+          {
+            "content": "Manhattan Project",
+            "source_text": "the vestiges of the Manhattan Project",
+            "start_char": 360,
+            "end_char": 397
+          },
+          {
+            "content": "nuclear-powered submarines",
+            "source_text": "We could build nuclear-powered submarines",
+            "start_char": 421,
+            "end_char": 462
+          },
+          {
+            "content": "diesel-powered submarines",
+            "source_text": "diesel-powered submarines",
+            "start_char": 496,
+            "end_char": 521
+          },
+          {
+            "content": "Oppenheimer",
+            "source_text": "Oppenheimer himself",
+            "start_char": 680,
+            "end_char": 699
+          }
+        ],
+        "counts": {
+          "propositions": 5,
+          "claims": 3,
+          "phrases": 7
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "The man was so unlikable that in the Naval Academy yearbook, they tore out his picture, and he was considered a difficult person.",
+            "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture. He's just one of these difficult people.",
+            "start_char": 0,
+            "end_char": 134
+          },
+          {
+            "content": "During World War II, the man drove a coal ship and was not a high-performing senior military officer commanding major vessels.",
+            "source_text": "In World War II, he drove a coal ship. He was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier or anything like that.",
+            "start_char": 135,
+            "end_char": 302
+          },
+          {
+            "content": "After World War II, the man went to Oak Ridge, observed the remnants of the Manhattan Project, and conceived the idea of building nuclear-powered submarines.",
+            "source_text": "But after the war, he went to Oak Ridge, and he observed the vestiges of the Manhattan Project. And he had this idea. We could build nuclear-powered submarines.",
+            "start_char": 303,
+            "end_char": 463
+          },
+          {
+            "content": "The man had experience on diesel-powered submarines, which he considered inferior because they are basically surface ships that can only stay underwater for about an hour.",
+            "source_text": "And he'd had this experience on diesel-powered submarines, which suck. They're basically surface ships that happen to go underwater for like an hour.",
+            "start_char": 464,
+            "end_char": 613
+          },
+          {
+            "content": "Oppenheimer thought the idea of nuclear-powered submarines was going to fail, but the man pursued it despite this skepticism.",
+            "source_text": "Oppenheimer himself thought this idea was going to fail. So you have Oppie telling you you're stupid and this isn't going to work, and you're just going to go for it.",
+            "start_char": 680,
+            "end_char": 846
+          }
+        ],
+        "claims": [
+          {
+            "content": "The Naval Academy yearbook had the man's picture torn out.",
+            "source_text": "in the yearbook in the Naval Academy, they had torn out his picture.",
+            "start_char": 25,
+            "end_char": 93
+          },
+          {
+            "content": "The man drove a coal ship during World War II.",
+            "source_text": "In World War II, he drove a coal ship.",
+            "start_char": 135,
+            "end_char": 173
+          },
+          {
+            "content": "The man was not a senior military officer commanding a destroyer or carrier.",
+            "source_text": "He was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier or anything like that.",
+            "start_char": 174,
+            "end_char": 302
+          },
+          {
+            "content": "The man observed the vestiges of the Manhattan Project at Oak Ridge after the war.",
+            "source_text": "he went to Oak Ridge, and he observed the vestiges of the Manhattan Project.",
+            "start_char": 322,
+            "end_char": 398
+          },
+          {
+            "content": "The man was obsessed with the idea of nuclear-powered submarines.",
+            "source_text": "This became this thing he was obsessed with.",
+            "start_char": 614,
+            "end_char": 658
+          },
+          {
+            "content": "Diesel-powered submarines can only stay underwater for about an hour.",
+            "source_text": "They're basically surface ships that happen to go underwater for like an hour.",
+            "start_char": 535,
+            "end_char": 613
+          },
+          {
+            "content": "Oppenheimer was skeptical about the success of nuclear-powered submarines.",
+            "source_text": "Oppenheimer himself thought this idea was going to fail.",
+            "start_char": 680,
+            "end_char": 736
+          }
+        ],
+        "phrases": [
+          {
+            "content": "yearbook in the Naval Academy",
+            "source_text": "in the yearbook in the Naval Academy",
+            "start_char": 25,
+            "end_char": 61
+          },
+          {
+            "content": "drove a coal ship",
+            "source_text": "he drove a coal ship",
+            "start_char": 152,
+            "end_char": 172
+          },
+          {
+            "content": "senior military officer",
+            "source_text": "senior military officer",
+            "start_char": 220,
+            "end_char": 243
+          },
+          {
+            "content": "Oak Ridge",
+            "source_text": "he went to Oak Ridge",
+            "start_char": 322,
+            "end_char": 342
+          },
+          {
+            "content": "vestiges of the Manhattan Project",
+            "source_text": "he observed the vestiges of the Manhattan Project",
+            "start_char": 348,
+            "end_char": 397
+          },
+          {
+            "content": "nuclear-powered submarines",
+            "source_text": "We could build nuclear-powered submarines",
+            "start_char": 421,
+            "end_char": 462
+          },
+          {
+            "content": "diesel-powered submarines",
+            "source_text": "diesel-powered submarines",
+            "start_char": 496,
+            "end_char": 521
+          },
+          {
+            "content": "Oppenheimer",
+            "source_text": "Oppenheimer himself",
+            "start_char": 680,
+            "end_char": 699
+          },
+          {
+            "content": "Oppie",
+            "source_text": "Oppie telling you you're stupid",
+            "start_char": 749,
+            "end_char": 780
+          }
+        ],
+        "counts": {
+          "propositions": 5,
+          "claims": 7,
+          "phrases": 9
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 5,
+          "new_count": 5,
+          "delta": 0,
+          "added": [
+            {
+              "content": "After World War II, the man went to Oak Ridge, observed the remnants of the Manhattan Project, and conceived the idea of building nuclear-powered submarines.",
+              "source_text": "But after the war, he went to Oak Ridge, and he observed the vestiges of the Manhattan Project. And he had this idea. We could build nuclear-powered submarines.",
+              "start_char": 303,
+              "end_char": 463
+            },
+            {
+              "content": "During World War II, the man drove a coal ship and was not a high-performing senior military officer commanding major vessels.",
+              "source_text": "In World War II, he drove a coal ship. He was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier or anything like that.",
+              "start_char": 135,
+              "end_char": 302
+            },
+            {
+              "content": "Oppenheimer thought the idea of nuclear-powered submarines was going to fail, but the man pursued it despite this skepticism.",
+              "source_text": "Oppenheimer himself thought this idea was going to fail. So you have Oppie telling you you're stupid and this isn't going to work, and you're just going to go for it.",
+              "start_char": 680,
+              "end_char": 846
+            },
+            {
+              "content": "The man had experience on diesel-powered submarines, which he considered inferior because they are basically surface ships that can only stay underwater for about an hour.",
+              "source_text": "And he'd had this experience on diesel-powered submarines, which suck. They're basically surface ships that happen to go underwater for like an hour.",
+              "start_char": 464,
+              "end_char": 613
+            },
+            {
+              "content": "The man was so unlikable that in the Naval Academy yearbook, they tore out his picture, and he was considered a difficult person.",
+              "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture. He's just one of these difficult people.",
+              "start_char": 0,
+              "end_char": 134
+            }
+          ],
+          "removed": [
+            {
+              "content": "After World War II, he went to Oak Ridge and observed the vestiges of the Manhattan Project, leading to his idea of building nuclear-powered submarines.",
+              "source_text": "But after the war, he went to Oak Ridge, and he observed the vestiges of the Manhattan Project. And he had this idea. We could build nuclear-powered submarines.",
+              "start_char": 303,
+              "end_char": 463
+            },
+            {
+              "content": "He had experience on diesel-powered submarines, which he considered inferior to nuclear-powered submarines.",
+              "source_text": "And he'd had this experience on diesel-powered submarines, which suck.",
+              "start_char": 464,
+              "end_char": 534
+            },
+            {
+              "content": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+              "source_text": "He was so unlikable that in the yearbook in the Naval Academy, they had torn out his picture.",
+              "start_char": 0,
+              "end_char": 93
+            },
+            {
+              "content": "In World War II, he drove a coal ship and was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier.",
+              "source_text": "In World War II, he drove a coal ship. He was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier or anything like that.",
+              "start_char": 135,
+              "end_char": 302
+            },
+            {
+              "content": "Oppenheimer himself thought this idea of nuclear-powered submarines was going to fail.",
+              "source_text": "Oppenheimer himself thought this idea was going to fail.",
+              "start_char": 680,
+              "end_char": 736
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 7,
+          "delta": 4,
+          "added": [
+            {
+              "content": "Diesel-powered submarines can only stay underwater for about an hour.",
+              "source_text": "They're basically surface ships that happen to go underwater for like an hour.",
+              "start_char": 535,
+              "end_char": 613
+            },
+            {
+              "content": "Oppenheimer was skeptical about the success of nuclear-powered submarines.",
+              "source_text": "Oppenheimer himself thought this idea was going to fail.",
+              "start_char": 680,
+              "end_char": 736
+            },
+            {
+              "content": "The Naval Academy yearbook had the man's picture torn out.",
+              "source_text": "in the yearbook in the Naval Academy, they had torn out his picture.",
+              "start_char": 25,
+              "end_char": 93
+            },
+            {
+              "content": "The man drove a coal ship during World War II.",
+              "source_text": "In World War II, he drove a coal ship.",
+              "start_char": 135,
+              "end_char": 173
+            },
+            {
+              "content": "The man observed the vestiges of the Manhattan Project at Oak Ridge after the war.",
+              "source_text": "he went to Oak Ridge, and he observed the vestiges of the Manhattan Project.",
+              "start_char": 322,
+              "end_char": 398
+            },
+            {
+              "content": "The man was not a senior military officer commanding a destroyer or carrier.",
+              "source_text": "He was not some exceptionally high-performing senior military officer commanding a destroyer or a carrier or anything like that.",
+              "start_char": 174,
+              "end_char": 302
+            },
+            {
+              "content": "The man was obsessed with the idea of nuclear-powered submarines.",
+              "source_text": "This became this thing he was obsessed with.",
+              "start_char": 614,
+              "end_char": 658
+            }
+          ],
+          "removed": [
+            {
+              "content": "He was considered a difficult person.",
+              "source_text": "He's just one of these difficult people.",
+              "start_char": 94,
+              "end_char": 134
+            },
+            {
+              "content": "He was obsessed with the idea of nuclear-powered submarines.",
+              "source_text": "This became this thing he was obsessed with.",
+              "start_char": 614,
+              "end_char": 658
+            },
+            {
+              "content": "Oppenheimer told him that his idea was stupid and wouldn't work.",
+              "source_text": " So you have Oppie telling you you're stupid and this isn't going to work",
+              "start_char": 736,
+              "end_char": 809
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 7,
+          "new_count": 9,
+          "delta": 2,
+          "added": [
+            {
+              "content": "Oppie",
+              "source_text": "Oppie telling you you're stupid",
+              "start_char": 749,
+              "end_char": 780
+            },
+            {
+              "content": "drove a coal ship",
+              "source_text": "he drove a coal ship",
+              "start_char": 152,
+              "end_char": 172
+            },
+            {
+              "content": "senior military officer",
+              "source_text": "senior military officer",
+              "start_char": 220,
+              "end_char": 243
+            },
+            {
+              "content": "vestiges of the Manhattan Project",
+              "source_text": "he observed the vestiges of the Manhattan Project",
+              "start_char": 348,
+              "end_char": 397
+            },
+            {
+              "content": "yearbook in the Naval Academy",
+              "source_text": "in the yearbook in the Naval Academy",
+              "start_char": 25,
+              "end_char": 61
+            }
+          ],
+          "removed": [
+            {
+              "content": "Manhattan Project",
+              "source_text": "the vestiges of the Manhattan Project",
+              "start_char": 360,
+              "end_char": 397
+            },
+            {
+              "content": "Naval Academy yearbook",
+              "source_text": "in the yearbook in the Naval Academy",
+              "start_char": 25,
+              "end_char": 61
+            },
+            {
+              "content": "World War II",
+              "source_text": "In World War II",
+              "start_char": 135,
+              "end_char": 150
+            }
+          ],
+          "unchanged_count": 4,
+          "source_span_changed": []
+        }
+      }
+    },
+    {
+      "chunk_id": 4044,
+      "chunk_index": 6,
+      "content_preview": "So you have Oppie telling you you're stupid and this isn't going to work, and you're just going to go for it. So he started on this project. And he built the first nuclear submarine in seven years,…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "Oppie was told he was stupid and that his project wasn't going to work, but he decided to proceed with it.",
+            "source_text": "So you have Oppie telling you you're stupid and this isn't going to work, and you're just going to go for it.",
+            "start_char": 0,
+            "end_char": 109
+          },
+          {
+            "content": "Oppie built the first nuclear submarine in seven years, from start to finish.",
+            "source_text": "So he started on this project. And he built the first nuclear submarine in seven years, start to finish.",
+            "start_char": 110,
+            "end_char": 214
+          },
+          {
+            "content": "The Navy disliked Oppie so much that his first office for the project was in the women's restroom.",
+            "source_text": "The Navy hated him so much that his first office for this project was literally the women's restroom.",
+            "start_char": 215,
+            "end_char": 316
+          }
+        ],
+        "claims": [
+          {
+            "content": "The Navy attempted to humiliate Oppie to make him quit.",
+            "source_text": "They're like, what can we do to humiliate this guy into quitting?",
+            "start_char": 317,
+            "end_char": 382
+          },
+          {
+            "content": "Oppie's personal memoirs reveal that humiliation affected him but also motivated him.",
+            "source_text": "if you actually look at his personal memoirs, you can see that the humiliation got to him, but in a way that he could channel it to be motivating.",
+            "start_char": 411,
+            "end_char": 557
+          },
+          {
+            "content": "Oppie was not immune to the pain of humiliation but managed to push through it.",
+            "source_text": "It wasn't like he was somehow inured to the pain of it all, but he could push through it.",
+            "start_char": 558,
+            "end_char": 647
+          }
+        ],
+        "phrases": [
+          {
+            "content": "nuclear submarine",
+            "source_text": "And he built the first nuclear submarine in seven years, start to finish.",
+            "start_char": 141,
+            "end_char": 214
+          },
+          {
+            "content": "personal memoirs",
+            "source_text": "if you actually look at his personal memoirs, you can see that the humiliation got to him",
+            "start_char": 411,
+            "end_char": 500
+          },
+          {
+            "content": "major project",
+            "source_text": "recognizing every major project you do is going to push you in these sorts of ways.",
+            "start_char": 660,
+            "end_char": 743
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 3,
+          "phrases": 3
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "Oppie built the first nuclear submarine in seven years from start to finish despite strong opposition and humiliation from the Navy.",
+            "source_text": "So he started on this project. And he built the first nuclear submarine in seven years, start to finish. The Navy hated him so much that his first office for this project was literally the women's restroom.",
+            "start_char": 110,
+            "end_char": 316
+          },
+          {
+            "content": "Oppie was humiliated by the Navy by being assigned an office in the women's restroom to try to make him quit, but he used the humiliation as motivation to keep going.",
+            "source_text": "The Navy hated him so much that his first office for this project was literally the women's restroom. They're like, what can we do to humiliate this guy into quitting? But he just kept going.",
+            "start_char": 215,
+            "end_char": 406
+          },
+          {
+            "content": "Oppie was affected by the humiliation but was able to channel it into motivation to push through challenges.",
+            "source_text": "f you actually look at his personal memoirs, you can see that the humiliation got to him, but in a way that he could channel it to be motivating.",
+            "start_char": 412,
+            "end_char": 557
+          }
+        ],
+        "claims": [
+          {
+            "content": "Oppie built the first nuclear submarine in seven years.",
+            "source_text": "And he built the first nuclear submarine in seven years, start to finish.",
+            "start_char": 141,
+            "end_char": 214
+          },
+          {
+            "content": "Oppie's first office for the project was the women's restroom.",
+            "source_text": "The Navy hated him so much that his first office for this project was literally the women's restroom.",
+            "start_char": 215,
+            "end_char": 316
+          },
+          {
+            "content": "The Navy tried to humiliate Oppie to make him quit.",
+            "source_text": "They're like, what can we do to humiliate this guy into quitting?",
+            "start_char": 317,
+            "end_char": 382
+          },
+          {
+            "content": "Oppie was not inured to the pain of humiliation but could push through it.",
+            "source_text": "It wasn't like he was somehow inured to the pain of it all, but he could push through it.",
+            "start_char": 558,
+            "end_char": 647
+          },
+          {
+            "content": "Major projects push people in challenging ways that require digging deep.",
+            "source_text": "I think recognizing every major project you do is going to push you in these sorts of ways. How do you dig deep?",
+            "start_char": 652,
+            "end_char": 764
+          }
+        ],
+        "phrases": [
+          {
+            "content": "Oppie telling you you're stupid",
+            "source_text": "So you have Oppie telling you you're stupid",
+            "start_char": 0,
+            "end_char": 43
+          },
+          {
+            "content": "first nuclear submarine",
+            "source_text": "he built the first nuclear submarine in seven years",
+            "start_char": 145,
+            "end_char": 196
+          },
+          {
+            "content": "seven years, start to finish",
+            "source_text": "And he built the first nuclear submarine in seven years, start to finish.",
+            "start_char": 141,
+            "end_char": 214
+          },
+          {
+            "content": "Navy hated him",
+            "source_text": "The Navy hated him so much",
+            "start_char": 215,
+            "end_char": 241
+          },
+          {
+            "content": "first office was the women's restroom",
+            "source_text": "his first office for this project was literally the women's restroom",
+            "start_char": 247,
+            "end_char": 315
+          },
+          {
+            "content": "humiliate this guy into quitting",
+            "source_text": "what can we do to humiliate this guy into quitting?",
+            "start_char": 331,
+            "end_char": 382
+          },
+          {
+            "content": "personal memoirs",
+            "source_text": "if you actually look at his personal memoirs",
+            "start_char": 411,
+            "end_char": 455
+          },
+          {
+            "content": "humiliation got to him",
+            "source_text": "the humiliation got to him",
+            "start_char": 474,
+            "end_char": 500
+          },
+          {
+            "content": "channel it to be motivating",
+            "source_text": "in a way that he could channel it to be motivating",
+            "start_char": 506,
+            "end_char": 556
+          },
+          {
+            "content": "push through it",
+            "source_text": "but he could push through it",
+            "start_char": 618,
+            "end_char": 646
+          },
+          {
+            "content": "major project push you",
+            "source_text": "every major project you do is going to push you in these sorts of ways",
+            "start_char": 672,
+            "end_char": 742
+          },
+          {
+            "content": "dig deep",
+            "source_text": "How do you dig deep?",
+            "start_char": 744,
+            "end_char": 764
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 5,
+          "phrases": 12
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 3,
+          "delta": 0,
+          "added": [
+            {
+              "content": "Oppie built the first nuclear submarine in seven years from start to finish despite strong opposition and humiliation from the Navy.",
+              "source_text": "So he started on this project. And he built the first nuclear submarine in seven years, start to finish. The Navy hated him so much that his first office for this project was literally the women's restroom.",
+              "start_char": 110,
+              "end_char": 316
+            },
+            {
+              "content": "Oppie was affected by the humiliation but was able to channel it into motivation to push through challenges.",
+              "source_text": "f you actually look at his personal memoirs, you can see that the humiliation got to him, but in a way that he could channel it to be motivating.",
+              "start_char": 412,
+              "end_char": 557
+            },
+            {
+              "content": "Oppie was humiliated by the Navy by being assigned an office in the women's restroom to try to make him quit, but he used the humiliation as motivation to keep going.",
+              "source_text": "The Navy hated him so much that his first office for this project was literally the women's restroom. They're like, what can we do to humiliate this guy into quitting? But he just kept going.",
+              "start_char": 215,
+              "end_char": 406
+            }
+          ],
+          "removed": [
+            {
+              "content": "Oppie built the first nuclear submarine in seven years, from start to finish.",
+              "source_text": "So he started on this project. And he built the first nuclear submarine in seven years, start to finish.",
+              "start_char": 110,
+              "end_char": 214
+            },
+            {
+              "content": "Oppie was told he was stupid and that his project wasn't going to work, but he decided to proceed with it.",
+              "source_text": "So you have Oppie telling you you're stupid and this isn't going to work, and you're just going to go for it.",
+              "start_char": 0,
+              "end_char": 109
+            },
+            {
+              "content": "The Navy disliked Oppie so much that his first office for the project was in the women's restroom.",
+              "source_text": "The Navy hated him so much that his first office for this project was literally the women's restroom.",
+              "start_char": 215,
+              "end_char": 316
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 5,
+          "delta": 2,
+          "added": [
+            {
+              "content": "Major projects push people in challenging ways that require digging deep.",
+              "source_text": "I think recognizing every major project you do is going to push you in these sorts of ways. How do you dig deep?",
+              "start_char": 652,
+              "end_char": 764
+            },
+            {
+              "content": "Oppie built the first nuclear submarine in seven years.",
+              "source_text": "And he built the first nuclear submarine in seven years, start to finish.",
+              "start_char": 141,
+              "end_char": 214
+            },
+            {
+              "content": "Oppie was not inured to the pain of humiliation but could push through it.",
+              "source_text": "It wasn't like he was somehow inured to the pain of it all, but he could push through it.",
+              "start_char": 558,
+              "end_char": 647
+            },
+            {
+              "content": "Oppie's first office for the project was the women's restroom.",
+              "source_text": "The Navy hated him so much that his first office for this project was literally the women's restroom.",
+              "start_char": 215,
+              "end_char": 316
+            },
+            {
+              "content": "The Navy tried to humiliate Oppie to make him quit.",
+              "source_text": "They're like, what can we do to humiliate this guy into quitting?",
+              "start_char": 317,
+              "end_char": 382
+            }
+          ],
+          "removed": [
+            {
+              "content": "Oppie was not immune to the pain of humiliation but managed to push through it.",
+              "source_text": "It wasn't like he was somehow inured to the pain of it all, but he could push through it.",
+              "start_char": 558,
+              "end_char": 647
+            },
+            {
+              "content": "Oppie's personal memoirs reveal that humiliation affected him but also motivated him.",
+              "source_text": "if you actually look at his personal memoirs, you can see that the humiliation got to him, but in a way that he could channel it to be motivating.",
+              "start_char": 411,
+              "end_char": 557
+            },
+            {
+              "content": "The Navy attempted to humiliate Oppie to make him quit.",
+              "source_text": "They're like, what can we do to humiliate this guy into quitting?",
+              "start_char": 317,
+              "end_char": 382
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 3,
+          "new_count": 12,
+          "delta": 9,
+          "added": [
+            {
+              "content": "Navy hated him",
+              "source_text": "The Navy hated him so much",
+              "start_char": 215,
+              "end_char": 241
+            },
+            {
+              "content": "Oppie telling you you're stupid",
+              "source_text": "So you have Oppie telling you you're stupid",
+              "start_char": 0,
+              "end_char": 43
+            },
+            {
+              "content": "channel it to be motivating",
+              "source_text": "in a way that he could channel it to be motivating",
+              "start_char": 506,
+              "end_char": 556
+            },
+            {
+              "content": "dig deep",
+              "source_text": "How do you dig deep?",
+              "start_char": 744,
+              "end_char": 764
+            },
+            {
+              "content": "first nuclear submarine",
+              "source_text": "he built the first nuclear submarine in seven years",
+              "start_char": 145,
+              "end_char": 196
+            },
+            {
+              "content": "first office was the women's restroom",
+              "source_text": "his first office for this project was literally the women's restroom",
+              "start_char": 247,
+              "end_char": 315
+            },
+            {
+              "content": "humiliate this guy into quitting",
+              "source_text": "what can we do to humiliate this guy into quitting?",
+              "start_char": 331,
+              "end_char": 382
+            },
+            {
+              "content": "humiliation got to him",
+              "source_text": "the humiliation got to him",
+              "start_char": 474,
+              "end_char": 500
+            },
+            {
+              "content": "major project push you",
+              "source_text": "every major project you do is going to push you in these sorts of ways",
+              "start_char": 672,
+              "end_char": 742
+            },
+            {
+              "content": "push through it",
+              "source_text": "but he could push through it",
+              "start_char": 618,
+              "end_char": 646
+            },
+            {
+              "content": "seven years, start to finish",
+              "source_text": "And he built the first nuclear submarine in seven years, start to finish.",
+              "start_char": 141,
+              "end_char": 214
+            }
+          ],
+          "removed": [
+            {
+              "content": "major project",
+              "source_text": "recognizing every major project you do is going to push you in these sorts of ways.",
+              "start_char": 660,
+              "end_char": 743
+            },
+            {
+              "content": "nuclear submarine",
+              "source_text": "And he built the first nuclear submarine in seven years, start to finish.",
+              "start_char": 141,
+              "end_char": 214
+            }
+          ],
+          "unchanged_count": 1,
+          "source_span_changed": [
+            {
+              "content": "personal memoirs",
+              "old_source_text": "if you actually look at his personal memoirs, you can see that the humiliation got to him",
+              "new_source_text": "if you actually look at his personal memoirs"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4045,
+      "chunk_index": 7,
+      "content_preview": "How do you dig deep? How do you grind through the pain? And he created a really unique culture in naval reactors, which is alive today. So I think part of what's really cool is that our nuclear sub…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "A unique culture was created in naval reactors, which is alive today.",
+            "source_text": "And he created a really unique culture in naval reactors, which is alive today.",
+            "start_char": 56,
+            "end_char": 135
+          },
+          {
+            "content": "The nuclear submarine force is one of the last remaining asymmetric advantages against China, built in the fifties.",
+            "source_text": "So I think part of what's really cool is that our nuclear submarine force is one of our last remaining asymmetric advantages against the Chinese, and we built it in the fifties.",
+            "start_char": 136,
+            "end_char": 313
+          },
+          {
+            "content": "There have been no deaths due to nuclear incidents in the submarine force.",
+            "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+            "start_char": 753,
+            "end_char": 821
+          }
+        ],
+        "claims": [
+          {
+            "content": "The nuclear submarine force was built in the fifties.",
+            "source_text": "and we built it in the fifties.",
+            "start_char": 282,
+            "end_char": 313
+          },
+          {
+            "content": "The engineering culture was influenced by a human who invented the technology.",
+            "source_text": "he was in this unique role of both being a human who would invent the technology and therefore was qualified to think about how to regulate it.",
+            "start_char": 406,
+            "end_char": 549
+          },
+          {
+            "content": "Russian submariners spend six months at sea and six months recovering in Sochi.",
+            "source_text": "they would spend roughly six months at sea and then six months in Sochi recovering so their white blood cells could regenerate because the radiation shielding sucked.",
+            "start_char": 586,
+            "end_char": 752
+          }
+        ],
+        "phrases": [
+          {
+            "content": "unique culture",
+            "source_text": "a really unique culture",
+            "start_char": 71,
+            "end_char": 94
+          },
+          {
+            "content": "naval reactors",
+            "source_text": "in naval reactors",
+            "start_char": 95,
+            "end_char": 112
+          },
+          {
+            "content": "asymmetric advantages",
+            "source_text": "last remaining asymmetric advantages",
+            "start_char": 224,
+            "end_char": 260
+          },
+          {
+            "content": "nuclear submarine force",
+            "source_text": "our nuclear submarine force",
+            "start_char": 182,
+            "end_char": 209
+          },
+          {
+            "content": "engineering culture",
+            "source_text": "the engineering culture",
+            "start_char": 365,
+            "end_char": 388
+          },
+          {
+            "content": "Russian submariners",
+            "source_text": "the Russian submariners",
+            "start_char": 561,
+            "end_char": 584
+          },
+          {
+            "content": "radiation shielding",
+            "source_text": "because the radiation shielding sucked",
+            "start_char": 713,
+            "end_char": 751
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 3,
+          "phrases": 7
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "The nuclear submarine force is one of the United States' last remaining asymmetric advantages against China and was built in the 1950s.",
+            "source_text": "our nuclear submarine force is one of our last remaining asymmetric advantages against the Chinese, and we built it in the fifties",
+            "start_char": 182,
+            "end_char": 312
+          },
+          {
+            "content": "The United States submarine force has had no deaths due to nuclear incidents, unlike the Russian submariners who had to spend six months recovering due to poor radiation shielding.",
+            "source_text": "whereas the Russian submariners, they would spend roughly six months at sea and then six months in Sochi recovering so their white blood cells could regenerate because the radiation shielding sucked. We've had no deaths due to nuclear incidents in our submarine force.",
+            "start_char": 553,
+            "end_char": 821
+          }
+        ],
+        "claims": [
+          {
+            "content": "The nuclear submarine force was built in the 1950s.",
+            "source_text": "we built it in the fifties",
+            "start_char": 286,
+            "end_char": 312
+          },
+          {
+            "content": "Russian submariners spent six months at sea and six months recovering in Sochi.",
+            "source_text": "the Russian submariners, they would spend roughly six months at sea and then six months in Sochi recovering",
+            "start_char": 561,
+            "end_char": 668
+          },
+          {
+            "content": "Radiation shielding on Russian submarines was poor.",
+            "source_text": "because the radiation shielding sucked",
+            "start_char": 713,
+            "end_char": 751
+          },
+          {
+            "content": "No deaths have occurred due to nuclear incidents in the U.S. submarine force.",
+            "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+            "start_char": 753,
+            "end_char": 821
+          }
+        ],
+        "phrases": [
+          {
+            "content": "unique culture in naval reactors",
+            "source_text": "a really unique culture in naval reactors",
+            "start_char": 71,
+            "end_char": 112
+          },
+          {
+            "content": "nuclear submarine force",
+            "source_text": "our nuclear submarine force",
+            "start_char": 182,
+            "end_char": 209
+          },
+          {
+            "content": "asymmetric advantages against the Chinese",
+            "source_text": "last remaining asymmetric advantages against the Chinese",
+            "start_char": 224,
+            "end_char": 280
+          },
+          {
+            "content": "engineering culture",
+            "source_text": "the engineering culture that he created",
+            "start_char": 365,
+            "end_char": 404
+          },
+          {
+            "content": "radiation shielding",
+            "source_text": "the radiation shielding",
+            "start_char": 721,
+            "end_char": 744
+          },
+          {
+            "content": "white blood cells regeneration",
+            "source_text": "so their white blood cells could regenerate",
+            "start_char": 669,
+            "end_char": 712
+          },
+          {
+            "content": "six months at sea",
+            "source_text": "roughly six months at sea",
+            "start_char": 603,
+            "end_char": 628
+          },
+          {
+            "content": "six months in Sochi recovering",
+            "source_text": "then six months in Sochi recovering",
+            "start_char": 633,
+            "end_char": 668
+          }
+        ],
+        "counts": {
+          "propositions": 2,
+          "claims": 4,
+          "phrases": 8
+        },
+        "dropped_span_items": 1
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 2,
+          "delta": -1,
+          "added": [
+            {
+              "content": "The United States submarine force has had no deaths due to nuclear incidents, unlike the Russian submariners who had to spend six months recovering due to poor radiation shielding.",
+              "source_text": "whereas the Russian submariners, they would spend roughly six months at sea and then six months in Sochi recovering so their white blood cells could regenerate because the radiation shielding sucked. We've had no deaths due to nuclear incidents in our submarine force.",
+              "start_char": 553,
+              "end_char": 821
+            },
+            {
+              "content": "The nuclear submarine force is one of the United States' last remaining asymmetric advantages against China and was built in the 1950s.",
+              "source_text": "our nuclear submarine force is one of our last remaining asymmetric advantages against the Chinese, and we built it in the fifties",
+              "start_char": 182,
+              "end_char": 312
+            }
+          ],
+          "removed": [
+            {
+              "content": "A unique culture was created in naval reactors, which is alive today.",
+              "source_text": "And he created a really unique culture in naval reactors, which is alive today.",
+              "start_char": 56,
+              "end_char": 135
+            },
+            {
+              "content": "The nuclear submarine force is one of the last remaining asymmetric advantages against China, built in the fifties.",
+              "source_text": "So I think part of what's really cool is that our nuclear submarine force is one of our last remaining asymmetric advantages against the Chinese, and we built it in the fifties.",
+              "start_char": 136,
+              "end_char": 313
+            },
+            {
+              "content": "There have been no deaths due to nuclear incidents in the submarine force.",
+              "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+              "start_char": 753,
+              "end_char": 821
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 4,
+          "delta": 1,
+          "added": [
+            {
+              "content": "No deaths have occurred due to nuclear incidents in the U.S. submarine force.",
+              "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+              "start_char": 753,
+              "end_char": 821
+            },
+            {
+              "content": "Radiation shielding on Russian submarines was poor.",
+              "source_text": "because the radiation shielding sucked",
+              "start_char": 713,
+              "end_char": 751
+            },
+            {
+              "content": "Russian submariners spent six months at sea and six months recovering in Sochi.",
+              "source_text": "the Russian submariners, they would spend roughly six months at sea and then six months in Sochi recovering",
+              "start_char": 561,
+              "end_char": 668
+            },
+            {
+              "content": "The nuclear submarine force was built in the 1950s.",
+              "source_text": "we built it in the fifties",
+              "start_char": 286,
+              "end_char": 312
+            }
+          ],
+          "removed": [
+            {
+              "content": "Russian submariners spend six months at sea and six months recovering in Sochi.",
+              "source_text": "they would spend roughly six months at sea and then six months in Sochi recovering so their white blood cells could regenerate because the radiation shielding sucked.",
+              "start_char": 586,
+              "end_char": 752
+            },
+            {
+              "content": "The engineering culture was influenced by a human who invented the technology.",
+              "source_text": "he was in this unique role of both being a human who would invent the technology and therefore was qualified to think about how to regulate it.",
+              "start_char": 406,
+              "end_char": 549
+            },
+            {
+              "content": "The nuclear submarine force was built in the fifties.",
+              "source_text": "and we built it in the fifties.",
+              "start_char": 282,
+              "end_char": 313
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 7,
+          "new_count": 8,
+          "delta": 1,
+          "added": [
+            {
+              "content": "asymmetric advantages against the Chinese",
+              "source_text": "last remaining asymmetric advantages against the Chinese",
+              "start_char": 224,
+              "end_char": 280
+            },
+            {
+              "content": "six months at sea",
+              "source_text": "roughly six months at sea",
+              "start_char": 603,
+              "end_char": 628
+            },
+            {
+              "content": "six months in Sochi recovering",
+              "source_text": "then six months in Sochi recovering",
+              "start_char": 633,
+              "end_char": 668
+            },
+            {
+              "content": "unique culture in naval reactors",
+              "source_text": "a really unique culture in naval reactors",
+              "start_char": 71,
+              "end_char": 112
+            },
+            {
+              "content": "white blood cells regeneration",
+              "source_text": "so their white blood cells could regenerate",
+              "start_char": 669,
+              "end_char": 712
+            }
+          ],
+          "removed": [
+            {
+              "content": "Russian submariners",
+              "source_text": "the Russian submariners",
+              "start_char": 561,
+              "end_char": 584
+            },
+            {
+              "content": "asymmetric advantages",
+              "source_text": "last remaining asymmetric advantages",
+              "start_char": 224,
+              "end_char": 260
+            },
+            {
+              "content": "naval reactors",
+              "source_text": "in naval reactors",
+              "start_char": 95,
+              "end_char": 112
+            },
+            {
+              "content": "unique culture",
+              "source_text": "a really unique culture",
+              "start_char": 71,
+              "end_char": 94
+            }
+          ],
+          "unchanged_count": 3,
+          "source_span_changed": [
+            {
+              "content": "engineering culture",
+              "old_source_text": "the engineering culture",
+              "new_source_text": "the engineering culture that he created"
+            },
+            {
+              "content": "radiation shielding",
+              "old_source_text": "because the radiation shielding sucked",
+              "new_source_text": "the radiation shielding"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4046,
+      "chunk_index": 8,
+      "content_preview": "We've had no deaths due to nuclear incidents in our submarine force. And he designed it to a standard. He's like, I'm designing this thing so my son could be in it. It's a hundred times safer than …",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "There have been no deaths due to nuclear incidents in the submarine force.",
+            "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+            "start_char": 0,
+            "end_char": 68
+          },
+          {
+            "content": "The designer of the submarine created it to a high safety standard, believing it to be a hundred times safer than the minimum standard.",
+            "source_text": "And he designed it to a standard. He's like, I'm designing this thing so my son could be in it. It's a hundred times safer than what we believe the minimum standard to be.",
+            "start_char": 69,
+            "end_char": 240
+          },
+          {
+            "content": "Hyman Rickover was considered one of the Navy's three enemies by Zumwalt, who was the chief of naval operations.",
+            "source_text": " Zumwalt, who was the chief of naval operations for a while, he said \"The Navy has three enemies, the Soviet Union, the Air Force, and Hyman Rickover. \"",
+            "start_char": 438,
+            "end_char": 590
+          }
+        ],
+        "claims": [
+          {
+            "content": "The submarine designer had a personal motivation for safety.",
+            "source_text": "He's like, I'm designing this thing so my son could be in it.",
+            "start_char": 103,
+            "end_char": 164
+          },
+          {
+            "content": "Hyman Rickover served as an admiral for 30 years.",
+            "source_text": "one of his legacies, he was an admiral for 30 years.",
+            "start_char": 339,
+            "end_char": 391
+          },
+          {
+            "content": "John Boyd was recognized as the best fighter pilot three times.",
+            "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot.",
+            "start_char": 635,
+            "end_char": 729
+          }
+        ],
+        "phrases": [
+          {
+            "content": "nuclear incidents",
+            "source_text": "no deaths due to nuclear incidents",
+            "start_char": 10,
+            "end_char": 44
+          },
+          {
+            "content": "safety standard",
+            "source_text": "designed it to a standard",
+            "start_char": 76,
+            "end_char": 101
+          },
+          {
+            "content": "Hyman Rickover",
+            "source_text": "Hyman Rickover",
+            "start_char": 573,
+            "end_char": 587
+          },
+          {
+            "content": "best fighter pilot",
+            "source_text": "the best fighter pilot",
+            "start_char": 706,
+            "end_char": 728
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 3,
+          "phrases": 4
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "The submarine force has had no deaths due to nuclear incidents.",
+            "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+            "start_char": 0,
+            "end_char": 68
+          },
+          {
+            "content": "Hyman Rickover designed the submarine force to a standard that is a hundred times safer than the believed minimum standard.",
+            "source_text": "He's like, I'm designing this thing so my son could be in it. It's a hundred times safer than what we believe the minimum standard to be.",
+            "start_char": 103,
+            "end_char": 240
+          },
+          {
+            "content": "Hyman Rickover's approach was that of a founder rather than a manager, and he was an admiral for 30 years.",
+            "source_text": "And that obsession, it's not a manager's view of the world. It is a founder's view of the world – one of his legacies, he was an admiral for 30 years.",
+            "start_char": 241,
+            "end_char": 391
+          },
+          {
+            "content": "Admiral Zumwalt said the Navy has three enemies: the Soviet Union, the Air Force, and Hyman Rickover.",
+            "source_text": " Zumwalt, who was the chief of naval operations for a while, he said \"The Navy has three enemies, the Soviet Union, the Air Force, and Hyman Rickover. \"",
+            "start_char": 438,
+            "end_char": 590
+          }
+        ],
+        "claims": [
+          {
+            "content": "Hyman Rickover designed the submarine force with his son's safety in mind.",
+            "source_text": "He's like, I'm designing this thing so my son could be in it.",
+            "start_char": 103,
+            "end_char": 164
+          },
+          {
+            "content": "Hyman Rickover was considered very difficult even as an admiral.",
+            "source_text": "And even as an admiral, he was very difficult.",
+            "start_char": 392,
+            "end_char": 438
+          },
+          {
+            "content": "Zumwalt was the chief of naval operations for a while.",
+            "source_text": "Zumwalt, who was the chief of naval operations for a while,",
+            "start_char": 439,
+            "end_char": 498
+          },
+          {
+            "content": "John Boyd was the best fighter pilot three times.",
+            "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot.",
+            "start_char": 635,
+            "end_char": 729
+          }
+        ],
+        "phrases": [
+          {
+            "content": "nuclear incidents",
+            "source_text": "no deaths due to nuclear incidents",
+            "start_char": 10,
+            "end_char": 44
+          },
+          {
+            "content": "submarine force",
+            "source_text": "in our submarine force",
+            "start_char": 45,
+            "end_char": 67
+          },
+          {
+            "content": "minimum standard",
+            "source_text": "minimum standard to be",
+            "start_char": 217,
+            "end_char": 239
+          },
+          {
+            "content": "founder's view of the world",
+            "source_text": "It is a founder's view of the world",
+            "start_char": 301,
+            "end_char": 336
+          },
+          {
+            "content": "admiral for 30 years",
+            "source_text": "he was an admiral for 30 years",
+            "start_char": 360,
+            "end_char": 390
+          },
+          {
+            "content": "chief of naval operations",
+            "source_text": "Zumwalt, who was the chief of naval operations",
+            "start_char": 439,
+            "end_char": 485
+          },
+          {
+            "content": "Navy's three enemies",
+            "source_text": " \"The Navy has three enemies, the Soviet Union, the Air Force, and Hyman Rickover. \"",
+            "start_char": 506,
+            "end_char": 590
+          },
+          {
+            "content": "John Boyd",
+            "source_text": "the book about John Boyd",
+            "start_char": 654,
+            "end_char": 678
+          },
+          {
+            "content": "best fighter pilot",
+            "source_text": "he was the best fighter pilot",
+            "start_char": 699,
+            "end_char": 728
+          }
+        ],
+        "counts": {
+          "propositions": 4,
+          "claims": 4,
+          "phrases": 9
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 4,
+          "delta": 1,
+          "added": [
+            {
+              "content": "Admiral Zumwalt said the Navy has three enemies: the Soviet Union, the Air Force, and Hyman Rickover.",
+              "source_text": " Zumwalt, who was the chief of naval operations for a while, he said \"The Navy has three enemies, the Soviet Union, the Air Force, and Hyman Rickover. \"",
+              "start_char": 438,
+              "end_char": 590
+            },
+            {
+              "content": "Hyman Rickover designed the submarine force to a standard that is a hundred times safer than the believed minimum standard.",
+              "source_text": "He's like, I'm designing this thing so my son could be in it. It's a hundred times safer than what we believe the minimum standard to be.",
+              "start_char": 103,
+              "end_char": 240
+            },
+            {
+              "content": "Hyman Rickover's approach was that of a founder rather than a manager, and he was an admiral for 30 years.",
+              "source_text": "And that obsession, it's not a manager's view of the world. It is a founder's view of the world – one of his legacies, he was an admiral for 30 years.",
+              "start_char": 241,
+              "end_char": 391
+            },
+            {
+              "content": "The submarine force has had no deaths due to nuclear incidents.",
+              "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+              "start_char": 0,
+              "end_char": 68
+            }
+          ],
+          "removed": [
+            {
+              "content": "Hyman Rickover was considered one of the Navy's three enemies by Zumwalt, who was the chief of naval operations.",
+              "source_text": " Zumwalt, who was the chief of naval operations for a while, he said \"The Navy has three enemies, the Soviet Union, the Air Force, and Hyman Rickover. \"",
+              "start_char": 438,
+              "end_char": 590
+            },
+            {
+              "content": "The designer of the submarine created it to a high safety standard, believing it to be a hundred times safer than the minimum standard.",
+              "source_text": "And he designed it to a standard. He's like, I'm designing this thing so my son could be in it. It's a hundred times safer than what we believe the minimum standard to be.",
+              "start_char": 69,
+              "end_char": 240
+            },
+            {
+              "content": "There have been no deaths due to nuclear incidents in the submarine force.",
+              "source_text": "We've had no deaths due to nuclear incidents in our submarine force.",
+              "start_char": 0,
+              "end_char": 68
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 4,
+          "delta": 1,
+          "added": [
+            {
+              "content": "Hyman Rickover designed the submarine force with his son's safety in mind.",
+              "source_text": "He's like, I'm designing this thing so my son could be in it.",
+              "start_char": 103,
+              "end_char": 164
+            },
+            {
+              "content": "Hyman Rickover was considered very difficult even as an admiral.",
+              "source_text": "And even as an admiral, he was very difficult.",
+              "start_char": 392,
+              "end_char": 438
+            },
+            {
+              "content": "John Boyd was the best fighter pilot three times.",
+              "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot.",
+              "start_char": 635,
+              "end_char": 729
+            },
+            {
+              "content": "Zumwalt was the chief of naval operations for a while.",
+              "source_text": "Zumwalt, who was the chief of naval operations for a while,",
+              "start_char": 439,
+              "end_char": 498
+            }
+          ],
+          "removed": [
+            {
+              "content": "Hyman Rickover served as an admiral for 30 years.",
+              "source_text": "one of his legacies, he was an admiral for 30 years.",
+              "start_char": 339,
+              "end_char": 391
+            },
+            {
+              "content": "John Boyd was recognized as the best fighter pilot three times.",
+              "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot.",
+              "start_char": 635,
+              "end_char": 729
+            },
+            {
+              "content": "The submarine designer had a personal motivation for safety.",
+              "source_text": "He's like, I'm designing this thing so my son could be in it.",
+              "start_char": 103,
+              "end_char": 164
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 4,
+          "new_count": 9,
+          "delta": 5,
+          "added": [
+            {
+              "content": "John Boyd",
+              "source_text": "the book about John Boyd",
+              "start_char": 654,
+              "end_char": 678
+            },
+            {
+              "content": "Navy's three enemies",
+              "source_text": " \"The Navy has three enemies, the Soviet Union, the Air Force, and Hyman Rickover. \"",
+              "start_char": 506,
+              "end_char": 590
+            },
+            {
+              "content": "admiral for 30 years",
+              "source_text": "he was an admiral for 30 years",
+              "start_char": 360,
+              "end_char": 390
+            },
+            {
+              "content": "chief of naval operations",
+              "source_text": "Zumwalt, who was the chief of naval operations",
+              "start_char": 439,
+              "end_char": 485
+            },
+            {
+              "content": "founder's view of the world",
+              "source_text": "It is a founder's view of the world",
+              "start_char": 301,
+              "end_char": 336
+            },
+            {
+              "content": "minimum standard",
+              "source_text": "minimum standard to be",
+              "start_char": 217,
+              "end_char": 239
+            },
+            {
+              "content": "submarine force",
+              "source_text": "in our submarine force",
+              "start_char": 45,
+              "end_char": 67
+            }
+          ],
+          "removed": [
+            {
+              "content": "Hyman Rickover",
+              "source_text": "Hyman Rickover",
+              "start_char": 573,
+              "end_char": 587
+            },
+            {
+              "content": "safety standard",
+              "source_text": "designed it to a standard",
+              "start_char": 76,
+              "end_char": 101
+            }
+          ],
+          "unchanged_count": 2,
+          "source_span_changed": [
+            {
+              "content": "best fighter pilot",
+              "old_source_text": "the best fighter pilot",
+              "new_source_text": "he was the best fighter pilot"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "chunk_id": 4047,
+      "chunk_index": 9,
+      "content_preview": "\" ## Channeling Disagreeableness **Patrick:** I remember reading the book about John Boyd, who – three times, he was the best fighter pilot. Then he helped develop the F-16, and then he came up wit…",
+      "old": {
+        "extraction_model": "gpt-4o-mini",
+        "propositions": [
+          {
+            "content": "John Boyd was the best fighter pilot three times, helped develop the F-16, and created a military strategy concept that was instrumental in some U.S. wars in the nineties.",
+            "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot. Then he helped develop the F-16, and then he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties.",
+            "start_char": 46,
+            "end_char": 293
+          },
+          {
+            "content": "John Boyd was highly disliked, a really bad father, and highly disagreeable, but incredibly important in U.S. military history.",
+            "source_text": "And he was sort of a bastard as well. Highly disliked, really bad father, highly disagreeable, but incredibly important in U. S. military history.",
+            "start_char": 294,
+            "end_char": 440
+          },
+          {
+            "content": "The speaker is perceived as very likable within Palantir and outside of Palantir.",
+            "source_text": "You seem, by all accounts, very likable within Palantir and outside of Palantir.",
+            "start_char": 490,
+            "end_char": 570
+          }
+        ],
+        "claims": [
+          {
+            "content": "John Boyd's military strategy concept was instrumental in U.S. wars in the nineties.",
+            "source_text": "hen he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties.",
+            "start_char": 179,
+            "end_char": 293
+          },
+          {
+            "content": "The speaker's personality contrasts with John Boyd's disagreeableness.",
+            "source_text": "You don't seem to have that kind of personality.",
+            "start_char": 441,
+            "end_char": 489
+          },
+          {
+            "content": "The speaker is asked to discuss their own disagreeableness.",
+            "source_text": "Say a bit about your own disagreeableness.",
+            "start_char": 571,
+            "end_char": 613
+          }
+        ],
+        "phrases": [
+          {
+            "content": "John Boyd",
+            "source_text": "I remember reading the book about John Boyd",
+            "start_char": 46,
+            "end_char": 89
+          },
+          {
+            "content": "F-16",
+            "source_text": "Then he helped develop the F-16",
+            "start_char": 141,
+            "end_char": 172
+          },
+          {
+            "content": "military strategy concept",
+            "source_text": "he came up with the military strategy concept",
+            "start_char": 183,
+            "end_char": 228
+          },
+          {
+            "content": "U.S. wars in the nineties",
+            "source_text": "instrumental in some of the U. S. wars in the nineties",
+            "start_char": 238,
+            "end_char": 292
+          },
+          {
+            "content": "highly disagreeable",
+            "source_text": "highly disagreeable",
+            "start_char": 368,
+            "end_char": 387
+          },
+          {
+            "content": "Palantir",
+            "source_text": "within Palantir and outside of Palantir",
+            "start_char": 530,
+            "end_char": 569
+          },
+          {
+            "content": "disagreeableness",
+            "source_text": "your own disagreeableness",
+            "start_char": 587,
+            "end_char": 612
+          }
+        ],
+        "counts": {
+          "propositions": 3,
+          "claims": 3,
+          "phrases": 7
+        }
+      },
+      "new": {
+        "propositions": [
+          {
+            "content": "John Boyd was the best fighter pilot three times, helped develop the F-16, and created a military strategy concept instrumental in some U.S. wars in the nineties, despite being highly disliked and disagreeable.",
+            "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot. Then he helped develop the F-16, and then he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties. And he was sort of a bastard as well. Highly disliked, really bad father, highly disagreeable, but incredibly important in U. S. military history.",
+            "start_char": 46,
+            "end_char": 440
+          },
+          {
+            "content": "Patrick perceives Shyam Sankar as very likable within Palantir and outside of Palantir.",
+            "source_text": "You don't seem to have that kind of personality. You seem, by all accounts, very likable within Palantir and outside of Palantir.",
+            "start_char": 441,
+            "end_char": 570
+          },
+          {
+            "content": "Patrick asks Shyam Sankar about his own disagreeableness and where it surfaces in his personality.",
+            "source_text": "Say a bit about your own disagreeableness. Where does it surface?",
+            "start_char": 571,
+            "end_char": 636
+          },
+          {
+            "content": "Patrick suggests that the field they are discussing requires having a very clear view of how things should be.",
+            "source_text": "It seems like this is a field in which you have to have a very clear view of how things should be, which we'll talk a lot about in a few minutes.",
+            "start_char": 637,
+            "end_char": 782
+          }
+        ],
+        "claims": [
+          {
+            "content": "John Boyd was highly disliked and considered a bad father.",
+            "source_text": "And he was sort of a bastard as well. Highly disliked, really bad father, highly disagreeable, but incredibly important in U. S. military history.",
+            "start_char": 294,
+            "end_char": 440
+          },
+          {
+            "content": "John Boyd's military strategy concept was instrumental in some U.S. wars in the nineties.",
+            "source_text": "then he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties.",
+            "start_char": 178,
+            "end_char": 293
+          },
+          {
+            "content": "Patrick contrasts John Boyd's disagreeableness with Shyam Sankar's likability.",
+            "source_text": "You don't seem to have that kind of personality. You seem, by all accounts, very likable within Palantir and outside of Palantir.",
+            "start_char": 441,
+            "end_char": 570
+          }
+        ],
+        "phrases": [
+          {
+            "content": "John Boyd",
+            "source_text": "John Boyd",
+            "start_char": 80,
+            "end_char": 89
+          },
+          {
+            "content": "best fighter pilot",
+            "source_text": "he was the best fighter pilot",
+            "start_char": 110,
+            "end_char": 139
+          },
+          {
+            "content": "develop the F-16",
+            "source_text": "he helped develop the F-16",
+            "start_char": 146,
+            "end_char": 172
+          },
+          {
+            "content": "military strategy concept",
+            "source_text": "military strategy concept",
+            "start_char": 203,
+            "end_char": 228
+          },
+          {
+            "content": "U. S. wars in the nineties",
+            "source_text": "some of the U. S. wars in the nineties",
+            "start_char": 254,
+            "end_char": 292
+          },
+          {
+            "content": "highly disagreeable",
+            "source_text": "highly disagreeable",
+            "start_char": 368,
+            "end_char": 387
+          },
+          {
+            "content": "very likable within Palantir",
+            "source_text": "very likable within Palantir",
+            "start_char": 517,
+            "end_char": 545
+          },
+          {
+            "content": "field in which you have to have a very clear view",
+            "source_text": "this is a field in which you have to have a very clear view of how things should be",
+            "start_char": 651,
+            "end_char": 734
+          }
+        ],
+        "counts": {
+          "propositions": 4,
+          "claims": 3,
+          "phrases": 8
+        },
+        "dropped_span_items": 0
+      },
+      "diff": {
+        "propositions": {
+          "old_count": 3,
+          "new_count": 4,
+          "delta": 1,
+          "added": [
+            {
+              "content": "John Boyd was the best fighter pilot three times, helped develop the F-16, and created a military strategy concept instrumental in some U.S. wars in the nineties, despite being highly disliked and disagreeable.",
+              "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot. Then he helped develop the F-16, and then he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties. And he was sort of a bastard as well. Highly disliked, really bad father, highly disagreeable, but incredibly important in U. S. military history.",
+              "start_char": 46,
+              "end_char": 440
+            },
+            {
+              "content": "Patrick asks Shyam Sankar about his own disagreeableness and where it surfaces in his personality.",
+              "source_text": "Say a bit about your own disagreeableness. Where does it surface?",
+              "start_char": 571,
+              "end_char": 636
+            },
+            {
+              "content": "Patrick perceives Shyam Sankar as very likable within Palantir and outside of Palantir.",
+              "source_text": "You don't seem to have that kind of personality. You seem, by all accounts, very likable within Palantir and outside of Palantir.",
+              "start_char": 441,
+              "end_char": 570
+            },
+            {
+              "content": "Patrick suggests that the field they are discussing requires having a very clear view of how things should be.",
+              "source_text": "It seems like this is a field in which you have to have a very clear view of how things should be, which we'll talk a lot about in a few minutes.",
+              "start_char": 637,
+              "end_char": 782
+            }
+          ],
+          "removed": [
+            {
+              "content": "John Boyd was highly disliked, a really bad father, and highly disagreeable, but incredibly important in U.S. military history.",
+              "source_text": "And he was sort of a bastard as well. Highly disliked, really bad father, highly disagreeable, but incredibly important in U. S. military history.",
+              "start_char": 294,
+              "end_char": 440
+            },
+            {
+              "content": "John Boyd was the best fighter pilot three times, helped develop the F-16, and created a military strategy concept that was instrumental in some U.S. wars in the nineties.",
+              "source_text": "I remember reading the book about John Boyd, who – three times, he was the best fighter pilot. Then he helped develop the F-16, and then he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties.",
+              "start_char": 46,
+              "end_char": 293
+            },
+            {
+              "content": "The speaker is perceived as very likable within Palantir and outside of Palantir.",
+              "source_text": "You seem, by all accounts, very likable within Palantir and outside of Palantir.",
+              "start_char": 490,
+              "end_char": 570
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "claims": {
+          "old_count": 3,
+          "new_count": 3,
+          "delta": 0,
+          "added": [
+            {
+              "content": "John Boyd was highly disliked and considered a bad father.",
+              "source_text": "And he was sort of a bastard as well. Highly disliked, really bad father, highly disagreeable, but incredibly important in U. S. military history.",
+              "start_char": 294,
+              "end_char": 440
+            },
+            {
+              "content": "John Boyd's military strategy concept was instrumental in some U.S. wars in the nineties.",
+              "source_text": "then he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties.",
+              "start_char": 178,
+              "end_char": 293
+            },
+            {
+              "content": "Patrick contrasts John Boyd's disagreeableness with Shyam Sankar's likability.",
+              "source_text": "You don't seem to have that kind of personality. You seem, by all accounts, very likable within Palantir and outside of Palantir.",
+              "start_char": 441,
+              "end_char": 570
+            }
+          ],
+          "removed": [
+            {
+              "content": "John Boyd's military strategy concept was instrumental in U.S. wars in the nineties.",
+              "source_text": "hen he came up with the military strategy concept that was instrumental in some of the U. S. wars in the nineties.",
+              "start_char": 179,
+              "end_char": 293
+            },
+            {
+              "content": "The speaker is asked to discuss their own disagreeableness.",
+              "source_text": "Say a bit about your own disagreeableness.",
+              "start_char": 571,
+              "end_char": 613
+            },
+            {
+              "content": "The speaker's personality contrasts with John Boyd's disagreeableness.",
+              "source_text": "You don't seem to have that kind of personality.",
+              "start_char": 441,
+              "end_char": 489
+            }
+          ],
+          "unchanged_count": 0,
+          "source_span_changed": []
+        },
+        "phrases": {
+          "old_count": 7,
+          "new_count": 8,
+          "delta": 1,
+          "added": [
+            {
+              "content": "U. S. wars in the nineties",
+              "source_text": "some of the U. S. wars in the nineties",
+              "start_char": 254,
+              "end_char": 292
+            },
+            {
+              "content": "best fighter pilot",
+              "source_text": "he was the best fighter pilot",
+              "start_char": 110,
+              "end_char": 139
+            },
+            {
+              "content": "develop the F-16",
+              "source_text": "he helped develop the F-16",
+              "start_char": 146,
+              "end_char": 172
+            },
+            {
+              "content": "field in which you have to have a very clear view",
+              "source_text": "this is a field in which you have to have a very clear view of how things should be",
+              "start_char": 651,
+              "end_char": 734
+            },
+            {
+              "content": "very likable within Palantir",
+              "source_text": "very likable within Palantir",
+              "start_char": 517,
+              "end_char": 545
+            }
+          ],
+          "removed": [
+            {
+              "content": "F-16",
+              "source_text": "Then he helped develop the F-16",
+              "start_char": 141,
+              "end_char": 172
+            },
+            {
+              "content": "Palantir",
+              "source_text": "within Palantir and outside of Palantir",
+              "start_char": 530,
+              "end_char": 569
+            },
+            {
+              "content": "U.S. wars in the nineties",
+              "source_text": "instrumental in some of the U. S. wars in the nineties",
+              "start_char": 238,
+              "end_char": 292
+            },
+            {
+              "content": "disagreeableness",
+              "source_text": "your own disagreeableness",
+              "start_char": 587,
+              "end_char": 612
+            }
+          ],
+          "unchanged_count": 3,
+          "source_span_changed": [
+            {
+              "content": "John Boyd",
+              "old_source_text": "I remember reading the book about John Boyd",
+              "new_source_text": "John Boyd"
+            },
+            {
+              "content": "military strategy concept",
+              "old_source_text": "he came up with the military strategy concept",
+              "new_source_text": "military strategy concept"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

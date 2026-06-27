@@ -246,5 +246,6 @@ def retrieve_similar_chunks(query_text, embed_fn):
             len(results) - len(deduped_results),
         )
 
+    deduped_results = deduped_results[:top_k]
     logger.info("retrieval complete — %s/%s chunks returned", len(deduped_results), top_k)
     return deduped_results

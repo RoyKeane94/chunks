@@ -12,7 +12,8 @@ from django.utils import timezone
 from openai import OpenAI
 
 from apps.transcripts.models import AtomicPhrase, Chunk, Claim, Proposition
-from extraction.prompts import EXTRACTION_PROMPT
+from extraction.lookback_pass import find_flagged_items, LookbackSummary, run_lookback_pass
+from extraction.prompts import EXTRACTION_SYSTEM_PROMPT, EXTRACTION_USER_TEMPLATE
 
 logger = logging.getLogger(__name__)
 
@@ -96,17 +97,20 @@ def _find_source_span(chunk_text: str, source_text: str) -> tuple[int, int] | No
 
 def extract_layers_for_chunk(chunk: Chunk) -> tuple[dict, int]:
     """
-    Calls the extraction model, returns validated items with character spans into chunk.content.
+    Calls the extraction model, returns validated items with character spans.
     Retries on JSON parse failure only.
     """
-    prompt = EXTRACTION_PROMPT.replace("{chunk_text}", chunk.content)
+    user_content = EXTRACTION_USER_TEMPLATE.format(chunk_text=chunk.content)
     extraction_model = settings.EXTRACTION_MODEL
     client = _openai_client()
 
     for attempt in range(MAX_RETRIES + 1):
         response = client.chat.completions.create(
             model=extraction_model,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": EXTRACTION_SYSTEM_PROMPT},
+                {"role": "user", "content": user_content},
+            ],
             temperature=0.2,
             response_format={"type": "json_object"},
         )
@@ -135,6 +139,34 @@ def extract_layers_for_chunk(chunk: Chunk) -> tuple[dict, int]:
     )
 
 
+def _normalize_layer_items(raw_items) -> list[dict]:
+    """Accept model output whether items are dicts or bare strings."""
+    if not raw_items:
+        return []
+    if isinstance(raw_items, dict):
+        raw_items = list(raw_items.values())
+    if not isinstance(raw_items, list):
+        return []
+
+    normalized = []
+    for item in raw_items:
+        if isinstance(item, str):
+            text = item.strip()
+            if text:
+                normalized.append({"content": text, "source_text": text})
+        elif isinstance(item, dict):
+            content = (item.get("content") or "").strip()
+            source_text = (item.get("source_text") or content or "").strip()
+            if content:
+                normalized_item = {"content": content, "source_text": source_text}
+                if item.get("needs_lookback"):
+                    normalized_item["needs_lookback"] = True
+                normalized.append(normalized_item)
+        else:
+            logger.warning("Skipping unexpected layer item type: %s", type(item).__name__)
+    return normalized
+
+
 def _resolve_source_spans(parsed: dict, chunk_text: str) -> tuple[dict, int]:
     """
     Resolve each item's source_text to start_char/end_char in chunk_text.
@@ -144,11 +176,11 @@ def _resolve_source_spans(parsed: dict, chunk_text: str) -> tuple[dict, int]:
     cleaned = {}
 
     for layer in ("propositions", "claims", "phrases"):
-        items = parsed.get(layer, [])
+        items = _normalize_layer_items(parsed.get(layer, []))
         kept = []
         for item in items:
-            content = (item.get("content") or "").strip()
-            source_text = (item.get("source_text") or "").strip()
+            content = item["content"]
+            source_text = item["source_text"]
 
             if not content or not source_text:
                 dropped += 1
@@ -160,12 +192,15 @@ def _resolve_source_spans(parsed: dict, chunk_text: str) -> tuple[dict, int]:
                 continue
 
             start_char, end_char = span
-            kept.append({
+            kept_item = {
                 "content": content,
                 "source_text": chunk_text[start_char:end_char],
                 "start_char": start_char,
                 "end_char": end_char,
-            })
+            }
+            if layer != "phrases" and item.get("needs_lookback"):
+                kept_item["needs_lookback"] = True
+            kept.append(kept_item)
 
         cleaned[layer] = kept
 
@@ -373,3 +408,111 @@ def save_extraction(chunk: Chunk, extracted: dict, embed_fn) -> tuple[dict, int]
     )
     persist_extraction(chunk, extracted, embeddings)
     return extracted, redundant_dropped
+
+
+def _call_lookback_llm(system_prompt: str, user_prompt: str) -> dict:
+    client = _openai_client()
+    response = client.chat.completions.create(
+        model=settings.LOOKBACK_MODEL,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_prompt},
+        ],
+        temperature=0.1,
+        response_format={"type": "json_object"},
+    )
+    raw = response.choices[0].message.content
+    return json.loads(raw)
+
+
+def build_prior_chunks_text(chunks_by_index: dict[int, Chunk], chunk_index: int, n: int) -> str:
+    """Concatenate raw text from the n chunks immediately before chunk_index."""
+    prior_indices = sorted(i for i in chunks_by_index if i < chunk_index)
+    prior_indices = prior_indices[-n:]
+    return "\n\n".join(chunks_by_index[i].content for i in prior_indices)
+
+
+def run_episode_lookback(
+    pending: list[dict],
+    chunks_by_index: dict[int, Chunk],
+    max_lookback_chunks: int | None = None,
+    guest_name: str | None = None,
+) -> LookbackSummary:
+    """
+    Run deferred lookback for one episode's in-memory extractions.
+
+    pending: list of {"chunk": Chunk, "extracted": dict} entries from the main pass.
+    chunks_by_index: all episode chunks keyed by chunk_index (for prior-chunk text).
+    guest_name: optional episode guest name for resolving bare "you"/"your".
+    Mutates extracted dicts in place.
+
+    Returns LookbackSummary with initiated=True only when flagged items triggered
+    lookback LLM calls; initiated=False when nothing needed lookback.
+    """
+    extracted_chunks = [
+        {
+            "chunk_index": entry["chunk"].chunk_index,
+            "chunk_id": entry["chunk"].id,
+            "propositions": entry["extracted"]["propositions"],
+            "claims": entry["extracted"]["claims"],
+        }
+        for entry in pending
+    ]
+
+    flagged_count = len(find_flagged_items(extracted_chunks))
+    if not flagged_count:
+        logger.info("Lookback pass: not initiated (0 flagged items)")
+        return LookbackSummary(initiated=False, flagged_count=0)
+
+    max_chunks = max_lookback_chunks or settings.LOOKBACK_MAX_CHUNKS
+    guest = (guest_name or "").strip() or None
+    if guest:
+        logger.info(
+            "Lookback pass: initiated — resolving %s flagged item(s) (guest: %s)",
+            flagged_count,
+            guest,
+        )
+    else:
+        logger.info("Lookback pass: initiated — resolving %s flagged item(s)", flagged_count)
+
+    def get_prior_chunks_text(chunk_index, n):
+        return build_prior_chunks_text(chunks_by_index, chunk_index, n)
+
+    summary = run_lookback_pass(
+        extracted_chunks,
+        _call_lookback_llm,
+        get_prior_chunks_text,
+        guest_name=guest,
+        max_lookback_chunks=max_chunks,
+    )
+
+    if summary.still_unresolved:
+        logger.warning(
+            "Lookback pass: %s item(s) still unresolved: %s",
+            len(summary.still_unresolved),
+            summary.still_unresolved,
+        )
+    else:
+        logger.info(
+            "Lookback pass: resolved %s/%s flagged item(s) in %s LLM call(s)",
+            summary.resolved_count,
+            summary.flagged_count,
+            summary.llm_calls,
+        )
+
+    return summary
+
+
+def format_lookback_summary(summary: LookbackSummary) -> str:
+    """Human-readable one-line status for CLI logging."""
+    if not summary.initiated:
+        return "Lookback: not initiated (0 items flagged with needs_lookback)"
+    parts = [
+        "Lookback: initiated",
+        f"{summary.flagged_count} flagged",
+        f"{summary.llm_calls} LLM call(s)",
+        f"{summary.resolved_count} resolved",
+    ]
+    if summary.still_unresolved:
+        parts.append(f"{len(summary.still_unresolved)} still unresolved")
+    return " — ".join(parts)

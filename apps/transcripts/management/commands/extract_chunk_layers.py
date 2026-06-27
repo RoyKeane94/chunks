@@ -1,4 +1,5 @@
 import time
+from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from django.conf import settings
@@ -7,9 +8,14 @@ from django.db import close_old_connections, connection
 from django.db.models import Count, Q
 from django.db.utils import OperationalError
 
-from apps.transcripts.models import Chunk
+from apps.transcripts.models import Chunk, Episode
 from apps.transcripts.services import embed_texts_as_lists
-from extraction.service import extract_layers_for_chunk, save_extraction
+from extraction.service import (
+    extract_layers_for_chunk,
+    format_lookback_summary,
+    run_episode_lookback,
+    save_extraction,
+)
 
 MAX_CHUNK_RETRIES = 3
 
@@ -63,8 +69,9 @@ class Command(BaseCommand):
             type=int,
             default=None,
             help=(
-                "Parallel chunk workers (default: EXTRACT_CHUNK_WORKERS env or 4). "
-                "Use 1 for sequential processing."
+                "Parallel episode workers (default: EXTRACT_CHUNK_WORKERS env or 4). "
+                "Chunks within each episode run sequentially so lookback can use "
+                "prior chunk text in order."
             ),
         )
 
@@ -91,43 +98,96 @@ class Command(BaseCommand):
             self._print_status(options["episode_id"])
             return
 
+        episode_chunk_ids = defaultdict(list)
+        for row in (
+            Chunk.objects.filter(id__in=chunk_ids)
+            .order_by("episode_id", "chunk_index")
+            .values_list("id", "episode_id")
+        ):
+            chunk_id, episode_id = row
+            episode_chunk_ids[episode_id].append(chunk_id)
+
         self._write_line(
-            f"Processing {total} chunk(s) with {workers} worker(s)..."
+            f"Processing {total} chunk(s) across {len(episode_chunk_ids)} episode(s) "
+            f"with {workers} worker(s)..."
         )
 
         processed = 0
         skipped = 0
 
         if workers == 1:
-            for index, chunk_id in enumerate(chunk_ids, start=1):
-                result = self._run_chunk_with_retries(chunk_id, index, total, options)
-                if result == "processed":
-                    processed += 1
-                elif result == "skipped":
-                    skipped += 1
+            for episode_id, ids in sorted(episode_chunk_ids.items()):
+                ep_processed, ep_skipped = self._process_episode(
+                    episode_id, ids, options, total
+                )
+                processed += ep_processed
+                skipped += ep_skipped
         else:
             with ThreadPoolExecutor(max_workers=workers) as executor:
                 futures = {
                     executor.submit(
-                        self._run_chunk_with_retries,
-                        chunk_id,
-                        index,
-                        total,
+                        self._process_episode,
+                        episode_id,
+                        ids,
                         options,
-                    ): chunk_id
-                    for index, chunk_id in enumerate(chunk_ids, start=1)
+                        total,
+                    ): episode_id
+                    for episode_id, ids in episode_chunk_ids.items()
                 }
                 for future in as_completed(futures):
-                    result = future.result()
-                    if result == "processed":
-                        processed += 1
-                    elif result == "skipped":
-                        skipped += 1
+                    ep_processed, ep_skipped = future.result()
+                    processed += ep_processed
+                    skipped += ep_skipped
 
         self._write_line(
             f"Done — processed {processed} chunk(s), skipped {skipped} already extracted.",
             style=self.style.SUCCESS,
         )
+
+    def _process_episode(self, episode_id, chunk_ids, options, total_chunks):
+        close_old_connections()
+        episode = Episode.objects.get(pk=episode_id)
+        self._write_line(
+            f"Episode {episode_id} «{episode.title}»"
+        )
+
+        chunks_by_index = {
+            c.chunk_index: c
+            for c in Chunk.objects.filter(episode_id=episode_id).only(
+                "id", "chunk_index", "content"
+            )
+        }
+
+        processed = 0
+        skipped = 0
+        pending = []
+
+        for index, chunk_id in enumerate(chunk_ids, start=1):
+            entry, outcome = self._run_chunk_with_retries(
+                chunk_id,
+                index,
+                len(chunk_ids),
+                options,
+            )
+            if outcome == "processed" and entry:
+                pending.append(entry)
+                processed += 1
+            elif outcome == "skipped":
+                skipped += 1
+
+        if pending:
+            lookback = run_episode_lookback(
+                pending, chunks_by_index, guest_name=episode.guest
+            )
+            self._write_line(
+                f"Episode {episode_id}: {format_lookback_summary(lookback)}",
+                style=self.style.WARNING if lookback.still_unresolved else None,
+            )
+
+            for entry in pending:
+                self._save_and_log_chunk(entry)
+
+        return processed, skipped
 
     def _run_chunk_with_retries(self, chunk_id, index, total, options):
         chunk = Chunk.objects.select_related("episode").get(pk=chunk_id)
@@ -140,9 +200,10 @@ class Command(BaseCommand):
             close_old_connections()
             connection.close()
             try:
-                if self._process_chunk(chunk, options):
-                    return "processed"
-                return "skipped"
+                entry = self._extract_chunk(chunk, options)
+                if entry is None:
+                    return None, "skipped"
+                return entry, "processed"
             except OperationalError as exc:
                 if chunk_attempt >= MAX_CHUNK_RETRIES - 1:
                     raise
@@ -155,7 +216,7 @@ class Command(BaseCommand):
                 )
                 time.sleep(wait)
 
-        return "skipped"
+        return None, "skipped"
 
     def _is_already_extracted(self, chunk):
         if chunk.extracted_at is not None:
@@ -173,17 +234,17 @@ class Command(BaseCommand):
             or chunk.atomic_phrases.filter(start_char=0, end_char=0).exists()
         )
 
-    def _process_chunk(self, chunk, options):
+    def _extract_chunk(self, chunk, options):
         chunk = Chunk.objects.select_related("episode").get(pk=chunk.pk)
 
         if options["reextract_zero_spans"]:
             if not self._needs_span_reextract(chunk):
                 self._write_line(f"  chunk {chunk.id}: skipped (char spans already set)")
-                return False
+                return None
         elif not options["force"]:
             if self._is_already_extracted(chunk):
                 self._write_line(f"  chunk {chunk.id}: skipped (already extracted)")
-                return False
+                return None
 
         if options["force"] or options["reextract_zero_spans"]:
             deleted = (
@@ -198,6 +259,29 @@ class Command(BaseCommand):
                 self._write_line(f"  chunk {chunk.id}: cleared {deleted} existing layer row(s)")
 
         extracted, dropped = extract_layers_for_chunk(chunk)
+
+        flagged = sum(
+            1
+            for layer in ("propositions", "claims")
+            for item in extracted[layer]
+            if item.get("needs_lookback")
+        )
+        if flagged:
+            self._write_line(
+                f"  chunk {chunk.id}: {flagged} item(s) flagged for lookback"
+            )
+
+        return {
+            "chunk": chunk,
+            "extracted": extracted,
+            "dropped": dropped,
+        }
+
+    def _save_and_log_chunk(self, entry):
+        chunk = entry["chunk"]
+        extracted = entry["extracted"]
+        dropped = entry["dropped"]
+
         extracted, redundant_dropped = save_extraction(
             chunk, extracted, embed_texts_as_lists
         )
@@ -218,8 +302,6 @@ class Command(BaseCommand):
             self._write_line(
                 f"  chunk {chunk.id}: dropped {redundant_dropped} redundant claim(s)"
             )
-
-        return True
 
     def _base_chunks(self, episode_id):
         chunks = Chunk.objects.select_related("episode")
