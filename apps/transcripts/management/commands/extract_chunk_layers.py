@@ -8,12 +8,16 @@ from django.db import close_old_connections, connection
 from django.db.models import Count, Q
 from django.db.utils import OperationalError
 
+from apps.transcripts.layer_status import get_extraction_summary
 from apps.transcripts.models import Chunk, Episode
 from apps.transcripts.services import embed_texts_as_lists
 from extraction.service import (
+    clear_chunk_lookback_completed,
     extract_layers_for_chunk,
     format_lookback_summary,
-    run_episode_lookback,
+    mark_chunk_lookback_completed,
+    register_finalised_predecessor,
+    run_incremental_lookback,
     save_extraction,
 )
 
@@ -70,8 +74,17 @@ class Command(BaseCommand):
             default=None,
             help=(
                 "Parallel episode workers (default: EXTRACT_CHUNK_WORKERS env or 4). "
-                "Chunks within each episode run sequentially so lookback can use "
-                "prior chunk text in order."
+                "Each episode runs extract → lookback → save independently."
+            ),
+        )
+        parser.add_argument(
+            "--chunk-workers",
+            type=int,
+            default=None,
+            help=(
+                "Parallel extraction workers within each episode (default: "
+                "EXTRACT_CHUNK_PARALLEL env or 4). Lookback still runs sequentially "
+                "in chunk_index order after all extractions finish."
             ),
         )
 
@@ -82,6 +95,9 @@ class Command(BaseCommand):
 
         workers = options["workers"] or settings.EXTRACT_CHUNK_WORKERS
         workers = max(1, workers)
+        chunk_workers = options["chunk_workers"] or settings.EXTRACT_CHUNK_PARALLEL
+        chunk_workers = max(1, chunk_workers)
+        options["chunk_workers"] = chunk_workers
 
         chunks = self._chunks_queryset(
             episode_id=options["episode_id"],
@@ -109,7 +125,7 @@ class Command(BaseCommand):
 
         self._write_line(
             f"Processing {total} chunk(s) across {len(episode_chunk_ids)} episode(s) "
-            f"with {workers} worker(s)..."
+            f"with {workers} episode worker(s), {chunk_workers} extract worker(s) per episode..."
         )
 
         processed = 0
@@ -147,6 +163,7 @@ class Command(BaseCommand):
     def _process_episode(self, episode_id, chunk_ids, options, total_chunks):
         close_old_connections()
         episode = Episode.objects.get(pk=episode_id)
+        chunk_workers = options["chunk_workers"]
         self._write_line(
             f"Episode {episode_id} «{episode.title}»"
         )
@@ -158,42 +175,113 @@ class Command(BaseCommand):
             )
         }
 
-        processed = 0
+        finalized_by_index: dict[int, dict] = {}
+        extract_queue: list[tuple[int, int]] = []
         skipped = 0
-        pending = []
 
         for index, chunk_id in enumerate(chunk_ids, start=1):
-            entry, outcome = self._run_chunk_with_retries(
-                chunk_id,
-                index,
-                len(chunk_ids),
-                options,
-            )
-            if outcome == "processed" and entry:
-                pending.append(entry)
-                processed += 1
-            elif outcome == "skipped":
+            chunk = Chunk.objects.get(pk=chunk_id)
+            if self._should_skip_chunk(chunk, options):
+                self._write_line(
+                    f"[{index}/{len(chunk_ids)}] chunk {chunk.id} "
+                    f"(index {chunk.chunk_index}) — skipped"
+                )
+                register_finalised_predecessor(chunk, finalized_by_index)
                 skipped += 1
+            else:
+                extract_queue.append((index, chunk_id))
 
-        if pending:
-            lookback = run_episode_lookback(
-                pending, chunks_by_index, guest_name=episode.guest
-            )
+        pending: list[dict] = []
+        if extract_queue:
             self._write_line(
-                f"Episode {episode_id}: {format_lookback_summary(lookback)}",
-                style=self.style.WARNING if lookback.still_unresolved else None,
+                f"  extracting {len(extract_queue)} chunk(s) "
+                f"with {min(chunk_workers, len(extract_queue))} worker(s)..."
+            )
+            pending = self._parallel_extract(extract_queue, options, len(chunk_ids))
+
+        lookback_summary = None
+        if pending:
+            pending.sort(key=lambda e: e["chunk"].chunk_index)
+            self._write_line(
+                f"  lookback + save for {len(pending)} chunk(s) (sequential)..."
+            )
+            for entry in pending:
+                chunk_summary = run_incremental_lookback(
+                    entry,
+                    finalized_by_index,
+                    chunks_by_index,
+                    episode_id,
+                )
+                if lookback_summary is None:
+                    lookback_summary = chunk_summary
+                else:
+                    lookback_summary = lookback_summary.merge(chunk_summary)
+
+                self._save_and_log_chunk(entry)
+                mark_chunk_lookback_completed(entry["chunk"])
+
+        if lookback_summary and lookback_summary.initiated:
+            self._write_line(
+                f"Episode {episode_id}: {format_lookback_summary(lookback_summary)}",
+                style=self.style.WARNING if lookback_summary.still_unresolved else None,
             )
 
-            for entry in pending:
-                self._save_and_log_chunk(entry)
+        return len(pending), skipped
 
-        return processed, skipped
+    def _parallel_extract(
+        self,
+        extract_queue: list[tuple[int, int]],
+        options: dict,
+        total_in_episode: int,
+    ) -> list[dict]:
+        chunk_workers = min(options["chunk_workers"], len(extract_queue))
+        pending: list[dict] = []
 
-    def _run_chunk_with_retries(self, chunk_id, index, total, options):
+        if chunk_workers == 1:
+            for index, chunk_id in extract_queue:
+                entry = self._extract_with_retries(chunk_id, index, total_in_episode, options)
+                if entry:
+                    pending.append(entry)
+            return pending
+
+        with ThreadPoolExecutor(max_workers=chunk_workers) as executor:
+            futures = {
+                executor.submit(
+                    self._extract_with_retries,
+                    chunk_id,
+                    index,
+                    total_in_episode,
+                    options,
+                ): chunk_id
+                for index, chunk_id in extract_queue
+            }
+            for future in as_completed(futures):
+                chunk_id = futures[future]
+                try:
+                    entry = future.result()
+                    if entry:
+                        pending.append(entry)
+                except Exception:
+                    self._write_line(
+                        f"  chunk {chunk_id}: extraction failed",
+                        style=self.style.ERROR,
+                    )
+                    raise
+
+        return pending
+
+    def _should_skip_chunk(self, chunk, options):
+        if options["reextract_zero_spans"]:
+            return not self._needs_span_reextract(chunk)
+        if not options["force"]:
+            return self._is_already_extracted(chunk)
+        return False
+
+    def _extract_with_retries(self, chunk_id, index, total, options):
         chunk = Chunk.objects.select_related("episode").get(pk=chunk_id)
         self._write_line(
             f"[{index}/{total}] chunk {chunk.id} "
-            f"(episode {chunk.episode_id}, index {chunk.chunk_index})"
+            f"(episode {chunk.episode_id}, index {chunk.chunk_index}) — extracting"
         )
 
         for chunk_attempt in range(MAX_CHUNK_RETRIES):
@@ -201,9 +289,22 @@ class Command(BaseCommand):
             connection.close()
             try:
                 entry = self._extract_chunk(chunk, options)
-                if entry is None:
-                    return None, "skipped"
-                return entry, "processed"
+                if entry:
+                    extracted = entry["extracted"]
+                    flagged = sum(
+                        1
+                        for layer in ("propositions", "claims")
+                        for item in extracted[layer]
+                        if item.get("needs_lookback")
+                    )
+                    flag_note = f", lookback {flagged}" if flagged else ""
+                    self._write_line(
+                        f"  ✓ chunk {chunk.id}: "
+                        f"{len(extracted['propositions'])} prop / "
+                        f"{len(extracted['claims'])} claim / "
+                        f"{len(extracted['phrases'])} phrase{flag_note}"
+                    )
+                return entry
             except OperationalError as exc:
                 if chunk_attempt >= MAX_CHUNK_RETRIES - 1:
                     raise
@@ -216,7 +317,7 @@ class Command(BaseCommand):
                 )
                 time.sleep(wait)
 
-        return None, "skipped"
+        return None
 
     def _is_already_extracted(self, chunk):
         if chunk.extracted_at is not None:
@@ -237,15 +338,6 @@ class Command(BaseCommand):
     def _extract_chunk(self, chunk, options):
         chunk = Chunk.objects.select_related("episode").get(pk=chunk.pk)
 
-        if options["reextract_zero_spans"]:
-            if not self._needs_span_reextract(chunk):
-                self._write_line(f"  chunk {chunk.id}: skipped (char spans already set)")
-                return None
-        elif not options["force"]:
-            if self._is_already_extracted(chunk):
-                self._write_line(f"  chunk {chunk.id}: skipped (already extracted)")
-                return None
-
         if options["force"] or options["reextract_zero_spans"]:
             deleted = (
                 chunk.propositions.count()
@@ -256,6 +348,7 @@ class Command(BaseCommand):
                 chunk.propositions.all().delete()
                 chunk.claims.all().delete()
                 chunk.atomic_phrases.all().delete()
+                clear_chunk_lookback_completed(chunk)
                 self._write_line(f"  chunk {chunk.id}: cleared {deleted} existing layer row(s)")
 
         extracted, dropped = extract_layers_for_chunk(chunk)
@@ -333,44 +426,47 @@ class Command(BaseCommand):
         )
 
     def _print_status(self, episode_id):
+        summary = get_extraction_summary()
         chunks = self._with_layer_counts(self._base_chunks(episode_id))
         total = chunks.count()
-
-        done = chunks.filter(
-            Q(extracted_at__isnull=False)
-            | Q(proposition_count__gt=0)
-            | Q(claim_count__gt=0)
-            | Q(phrase_count__gt=0)
-        )
-        done_count = done.count()
-
-        pending = chunks.filter(
-            extracted_at__isnull=True,
-            proposition_count=0,
-            claim_count=0,
-            phrase_count=0,
-        )
-        pending_count = pending.count()
 
         bad_spans = chunks.filter(self._bad_span_q()).distinct()
         bad_count = bad_spans.count()
 
-        self.stdout.write(f"Total chunks:     {total}")
-        self.stdout.write(f"Extracted:        {done_count}")
-        self.stdout.write(f"Pending:          {pending_count}")
-        self.stdout.write(
-            f"Need re-extract:  {bad_count} (layer rows with start_char=0 and end_char=0)"
-        )
-        self.stdout.write(f"Default workers:  {settings.EXTRACT_CHUNK_WORKERS}")
+        if episode_id:
+            ep = Episode.objects.filter(pk=episode_id).first()
+            ep_label = f"episode {episode_id} «{ep.title}»" if ep else f"episode {episode_id}"
+            self.stdout.write(f"Scope: {ep_label}")
+            done_count = chunks.filter(
+                Q(extracted_at__isnull=False)
+                | Q(proposition_count__gt=0)
+                | Q(claim_count__gt=0)
+                | Q(phrase_count__gt=0)
+            ).count()
+            pending_count = total - done_count
+            self.stdout.write(f"Chunks in scope:  {total}")
+            self.stdout.write(f"  layered:        {done_count}")
+            self.stdout.write(f"  pending:        {pending_count}")
+        else:
+            self.stdout.write("Library-wide extraction status")
+            self.stdout.write(f"Episodes fully layered:   {summary['episodes_fully_layered']}")
+            self.stdout.write(
+                f"Episodes partially layered: {summary['episodes_partially_layered']}"
+            )
+            self.stdout.write(f"Episodes not started:     {summary['episodes_not_started']}")
+            self.stdout.write(f"Chunks layered:         {summary['chunks_layered']}")
+            self.stdout.write(f"Chunks pending:         {summary['chunks_pending']}")
+            self.stdout.write(
+                f"Unresolved lookback:      {summary['unresolved_total']} "
+                f"({summary['episodes_with_unresolved']} episodes)"
+            )
 
-        if done_count:
-            last = done.order_by("-extracted_at", "-id").first()
-            if last:
-                self.stdout.write(
-                    f"Last extracted:   chunk {last.id} "
-                    f"(episode {last.episode_id} «{last.episode.title}», "
-                    f"index {last.chunk_index})"
-                )
+        self.stdout.write(
+            f"Need re-extract (bad spans): {bad_count} "
+            "(layer rows with start_char=0 and end_char=0)"
+        )
+        self.stdout.write(f"Episode workers:        {settings.EXTRACT_CHUNK_WORKERS}")
+        self.stdout.write(f"Extract parallel:       {settings.EXTRACT_CHUNK_PARALLEL}")
 
         if bad_count:
             sample = bad_spans.order_by("id")[:10]
@@ -379,6 +475,7 @@ class Command(BaseCommand):
 
         self.stdout.write("")
         self.stdout.write("Continue pending:  python manage.py extract_chunk_layers")
+        self.stdout.write("Full status:       /library/status/")
         if bad_count:
             self.stdout.write(
                 "Fix bad spans:     python manage.py extract_chunk_layers --reextract-zero-spans"

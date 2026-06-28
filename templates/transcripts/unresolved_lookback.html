@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+{% load transcript_extras %}
+
+{% block title %}unresolved lookback — Chunks{% endblock %}
+
+{% block content_class %}page-section content-wide{% endblock %}
+
+{% block content %}
+    <div class="detail-top">
+        <a href="{% url 'extraction_status' %}" class="detail-back">← layer status</a>
+        <div class="detail-header-row" style="margin-top: var(--space-sm);">
+            <div>
+                <h1>Unresolved lookback</h1>
+                <p class="detail-meta">
+                    {{ export.unresolved_total }} item(s) across {{ export.episode_count }} episode(s)
+                    · prior {{ export.lookback_max_chunks }} chunk(s) for context
+                </p>
+            </div>
+            {% if export.unresolved_total %}
+                <a
+                    href="{% url 'unresolved_lookback_download' %}{% if episode_id %}?episode_id={{ episode_id }}{% endif %}"
+                    class="detail-download"
+                >
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+                        <path d="M7 2v7M4.5 6.5 7 9l2.5-2.5M3 11h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    json
+                </a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if messages %}
+        <div class="unresolved-messages">
+            {% for message in messages %}
+                <p class="unresolved-message unresolved-message--{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if episode_options %}
+        <form method="get" class="unresolved-filter">
+            <label for="episode_id" class="muted">Episode</label>
+            <select name="episode_id" id="episode_id" class="search-input" onchange="this.form.submit()">
+                <option value="">All episodes with unresolved items</option>
+                {% for ep in episode_options %}
+                    <option value="{{ ep.episode_id }}"{% if episode_id == ep.episode_id %} selected{% endif %}>
+                        #{{ ep.episode_id }} — {{ ep.guest }} — {{ ep.title|truncatechars:40 }} ({{ ep.unresolved_count }})
+                    </option>
+                {% endfor %}
+            </select>
+        </form>
+    {% endif %}
+
+    {% if export.unresolved_total %}
+        {% for ep in export.episodes %}
+            <section class="unresolved-episode">
+                <header class="unresolved-episode-header">
+                    <p class="unresolved-episode-guest">{{ ep.guest }}</p>
+                    <h2 class="unresolved-episode-title">
+                        <a href="{% url 'episode_detail' ep.episode_id %}">#{{ ep.episode_id }} {{ ep.episode_title }}</a>
+                        <span class="library-badge">{{ ep.unresolved_count }} unresolved</span>
+                    </h2>
+                    {% if ep.date %}
+                        <p class="unresolved-episode-meta muted">{{ ep.date }}</p>
+                    {% endif %}
+                </header>
+
+                {% for item in ep.items %}
+                    <article class="unresolved-item" id="item-{{ item.item_id }}">
+                        <header class="unresolved-item-header">
+                            <span class="library-badge">{{ item.layer }}</span>
+                            <span class="muted">#{{ item.item_id }}</span>
+                        </header>
+
+                        <form method="post" class="unresolved-resolve-form">
+                            {% csrf_token %}
+                            <input type="hidden" name="layer" value="{{ item.layer }}">
+                            <input type="hidden" name="item_id" value="{{ item.item_id }}">
+                            {% if episode_id %}
+                                <input type="hidden" name="episode_id" value="{{ episode_id }}">
+                            {% endif %}
+                            <label class="unresolved-edit-label" for="content-{{ item.item_id }}">
+                                Edit and mark resolved
+                            </label>
+                            <textarea
+                                id="content-{{ item.item_id }}"
+                                name="content"
+                                class="unresolved-edit-input"
+                                rows="3"
+                                required
+                            >{{ item.content }}</textarea>
+                            <p class="detail-layer-source muted">Source quote: {{ item.source_text }}</p>
+                            <div class="unresolved-resolve-actions">
+                                <button type="submit" class="btn btn-outline unresolved-resolve-btn">
+                                    Mark resolved
+                                </button>
+                                <button
+                                    type="submit"
+                                    name="action"
+                                    value="delete"
+                                    class="btn btn-outline unresolved-delete-btn"
+                                    formnovalidate
+                                    onclick="return confirm('Delete this item? This cannot be undone.')"
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </form>
+
+                        <div class="unresolved-source-chunk">
+                            <p class="unresolved-priors-label">
+                                Source chunk {{ item.chunk.chunk_index }}
+                                <span class="muted">id {{ item.chunk.chunk_id }}</span>
+                            </p>
+                            <div class="unresolved-prior-card unresolved-source-card">
+                                <div class="detail-chunk-text unresolved-prior-transcript">
+                                    {% format_chunk_highlight item.chunk.transcript item.start_char item.end_char %}
+                                </div>
+                                {% if item.chunk.propositions %}
+                                    <p class="unresolved-prior-props-label">Propositions in this chunk</p>
+                                    <ul class="unresolved-prop-list">
+                                        {% for prop in item.chunk.propositions %}
+                                            <li class="{% if prop.id == item.item_id and item.layer == 'propositions' %}is-current{% endif %}">
+                                                {{ prop.content }}
+                                                {% if prop.needs_lookback %}
+                                                    <span class="library-badge">lookback</span>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                                {% if item.chunk.claims %}
+                                    <p class="unresolved-prior-props-label">Claims in this chunk</p>
+                                    <ul class="unresolved-prop-list">
+                                        {% for claim in item.chunk.claims %}
+                                            <li class="{% if claim.id == item.item_id and item.layer == 'claims' %}is-current{% endif %}">
+                                                {{ claim.content }}
+                                                {% if claim.needs_lookback %}
+                                                    <span class="library-badge">lookback</span>
+                                                {% endif %}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="unresolved-priors">
+                            <p class="unresolved-priors-label">Prior context ({{ export.lookback_max_chunks }} chunks)</p>
+                            {% for prior in item.prior_chunks %}
+                                <div class="unresolved-prior-card">
+                                    <div class="unresolved-prior-head">
+                                        <strong>Chunk {{ prior.chunk_index }}</strong>
+                                        <span class="muted">id {{ prior.chunk_id }}</span>
+                                    </div>
+                                    <div class="detail-chunk-text unresolved-prior-transcript">{{ prior.transcript|format_chunk }}</div>
+                                    {% if prior.propositions %}
+                                        <p class="unresolved-prior-props-label">Propositions</p>
+                                        <ul class="unresolved-prop-list">
+                                            {% for prop in prior.propositions %}
+                                                <li>
+                                                    {{ prop.content }}
+                                                    {% if prop.needs_lookback %}
+                                                        <span class="library-badge">lookback</span>
+                                                    {% endif %}
+                                                </li>
+                                            {% endfor %}
+                                        </ul>
+                                    {% endif %}
+                                </div>
+                            {% empty %}
+                                <p class="muted">No prior chunks in range.</p>
+                            {% endfor %}
+                        </div>
+                    </article>
+                {% endfor %}
+            </section>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state">
+            <p>No unresolved lookback items in the database.</p>
+            <p class="muted">
+                Items are flagged when extraction saves <code>needs_lookback=true</code>
+                and lookback could not resolve them. Re-extract episodes after migrating
+                to persist this flag on older rows.
+            </p>
+        </div>
+    {% endif %}
+{% endblock %}

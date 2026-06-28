@@ -159,9 +159,7 @@ def _run_episode_extractions(episode, chunk_list, progress=None):
                 f"— elapsed {elapsed/60:.1f}m, ETA ~{eta_sec/60:.1f}m"
             )
 
-    lookback = run_episode_lookback(
-        pending, chunks_by_index, guest_name=episode.guest
-    )
+    lookback = run_episode_lookback(pending, chunks_by_index)
     if progress:
         progress(format_lookback_summary(lookback))
 
@@ -203,6 +201,32 @@ def _write_markdown(report, path):
         )
     else:
         lines.append("- **Initiated:** no (0 items flagged with needs_lookback)")
+
+    if lookback.get("calls"):
+        lines.extend(["", "### Lookback calls", ""])
+        for call in lookback["calls"]:
+            lines.append(
+                f"#### Chunk {call['chunk_index']} (id {call['chunk_id']})"
+            )
+            lines.append("")
+            flagged = call.get("flagged_items", [])
+            if flagged:
+                lines.append("**Flagged sentences:**")
+                for item in flagged:
+                    lines.append(f"- `{item['item_id']}`: {item['content']}")
+                lines.append("")
+            lines.append("**Prior context (`prior_chunks_text`):**")
+            lines.append("")
+            lines.append("```")
+            lines.append(call.get("prior_chunks_text", ""))
+            lines.append("```")
+            lines.append("")
+            lines.append(
+                f"_Resolved {call.get('resolved_count', 0)}; "
+                f"still unresolved: {len(call.get('still_unresolved', []))}_"
+            )
+            lines.append("")
+
     lines.extend([
         "",
         "## Totals",

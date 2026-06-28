@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}extraction status — Chunks{% endblock %}
+
+{% block content_class %}page-section content-wide{% endblock %}
+
+{% block content %}
+    <div class="detail-top">
+        <a href="{% url 'episode_list' %}" class="detail-back">← library</a>
+        <div class="section-head" style="margin-top: var(--space-sm);">
+            <p class="eyebrow font-display">pipeline</p>
+            <div class="font-serif text-5xl leading-110 nocase">
+                <em>Layer</em><br>STATUS
+            </div>
+        </div>
+    </div>
+
+    {% if not summary.lookback_column_available %}
+        <p class="status-migration-note muted">
+            Unresolved lookback tracking requires a pending database migration.
+            Stop runserver, run <code>python manage.py migrate</code>, then restart.
+        </p>
+    {% endif %}
+
+    <div class="status-grid">
+        <div class="status-card">
+            <span class="status-card-value">{{ summary.episodes_fully_layered }}</span>
+            <span class="status-card-label">episodes fully layered</span>
+        </div>
+        <div class="status-card">
+            <span class="status-card-value">{{ summary.episodes_partially_layered }}</span>
+            <span class="status-card-label">partially layered</span>
+        </div>
+        <div class="status-card">
+            <span class="status-card-value">{{ summary.episodes_not_started }}</span>
+            <span class="status-card-label">not started</span>
+        </div>
+        <div class="status-card">
+            <span class="status-card-value">{{ summary.chunks_layered }}</span>
+            <span class="status-card-label">chunks layered</span>
+            <span class="status-card-sub">{{ summary.chunks_pending }} pending</span>
+        </div>
+        <div class="status-card status-card--warn">
+            <span class="status-card-value">{{ summary.unresolved_total }}</span>
+            <span class="status-card-label">unresolved lookback</span>
+            <span class="status-card-sub">{{ summary.episodes_with_unresolved }} episodes</span>
+        </div>
+    </div>
+
+    <div class="status-filters">
+        <a href="{% url 'extraction_status' %}" class="status-filter{% if not filter_key %} is-active{% endif %}">all</a>
+        <a href="?filter=fully_layered" class="status-filter{% if filter_key == 'fully_layered' %} is-active{% endif %}">fully layered</a>
+        <a href="?filter=partial" class="status-filter{% if filter_key == 'partial' %} is-active{% endif %}">partial</a>
+        <a href="?filter=not_started" class="status-filter{% if filter_key == 'not_started' %} is-active{% endif %}">not started</a>
+        <a href="?filter=unresolved" class="status-filter{% if filter_key == 'unresolved' %} is-active{% endif %}">unresolved lookback</a>
+        {% if summary.unresolved_total %}
+            <a href="{% url 'unresolved_lookback' %}" class="btn btn-outline status-export-link">View unresolved →</a>
+        {% endif %}
+    </div>
+
+    {% if episodes %}
+        <div class="library-card status-table-wrap">
+            <table class="status-table">
+                <thead>
+                    <tr>
+                        <th>Episode</th>
+                        <th>Chunks</th>
+                        <th>Status</th>
+                        <th>Lookback</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ep in episodes %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'episode_detail' ep.episode_id %}" class="status-episode-link">
+                                    <span class="status-episode-guest">{{ ep.guest }}</span>
+                                    <span class="status-episode-id">#{{ ep.episode_id }}</span>
+                                    {{ ep.title }}
+                                </a>
+                            </td>
+                            <td class="muted">
+                                {{ ep.layered_chunk_count }}/{{ ep.chunk_count }}
+                            </td>
+                            <td>
+                                {% if ep.status == "fully_layered" %}
+                                    <span class="library-badge library-badge-layered is-complete">fully layered</span>
+                                {% elif ep.status == "partial" %}
+                                    <span class="library-badge library-badge-layered">partial</span>
+                                {% else %}
+                                    <span class="library-badge">not started</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if ep.unresolved_count %}
+                                    <a href="{% url 'unresolved_lookback' %}?episode_id={{ ep.episode_id }}" class="status-unresolved-link">
+                                        {{ ep.unresolved_count }} unresolved
+                                    </a>
+                                {% else %}
+                                    <span class="muted">—</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <p class="status-foot muted">{{ episodes|length }} episode(s) shown</p>
+    {% else %}
+        <div class="empty-state">
+            <p>No episodes match this filter.</p>
+        </div>
+    {% endif %}
+{% endblock %}

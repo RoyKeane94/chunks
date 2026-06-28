@@ -24,6 +24,7 @@ class Chunk(models.Model):
     embedded_at = models.DateTimeField(null=True, blank=True)
     extraction_model = models.CharField(max_length=100, blank=True)
     extracted_at = models.DateTimeField(null=True, blank=True)
+    lookback_completed_at = models.DateTimeField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -52,6 +53,7 @@ class Proposition(models.Model):
     embedding_model = models.CharField(max_length=64, default="text-embedding-3-small")
     embedded_at = models.DateTimeField(null=True, blank=True)
     extraction_model = models.CharField(max_length=64, default="gpt-4o-mini")
+    needs_lookback = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -79,6 +81,7 @@ class Claim(models.Model):
     embedding_model = models.CharField(max_length=64, default="text-embedding-3-small")
     embedded_at = models.DateTimeField(null=True, blank=True)
     extraction_model = models.CharField(max_length=64, default="gpt-4o-mini")
+    needs_lookback = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

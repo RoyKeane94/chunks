@@ -7,10 +7,12 @@ from django.core.management.base import BaseCommand, CommandError
 from apps.transcripts.models import Chunk, Episode
 from apps.transcripts.services import embed_texts_as_lists
 from extraction.prompts import EXTRACTION_USER_TEMPLATE
+from extraction.lookback_pass import LookbackSummary
 from extraction.service import (
     extract_layers_for_chunk,
     format_lookback_summary,
-    run_episode_lookback,
+    mark_chunk_lookback_completed,
+    run_incremental_lookback,
     save_extraction,
 )
 
@@ -162,19 +164,27 @@ class Command(BaseCommand):
                 "elapsed_seconds": round(elapsed, 2),
             })
 
-        lookback = run_episode_lookback(
-            pending, chunks_by_index, guest_name=episode.guest
-        )
+        lookback = LookbackSummary(initiated=False, flagged_count=0)
+        finalized_by_index: dict[int, dict] = {}
+
+        for entry in sorted(pending, key=lambda e: e["chunk"].chunk_index):
+            chunk_summary = run_incremental_lookback(
+                entry,
+                finalized_by_index,
+                chunks_by_index,
+                episode_id,
+            )
+            lookback = lookback.merge(chunk_summary)
+
+            if options["apply"]:
+                save_extraction(entry["chunk"], entry["extracted"], embed_texts_as_lists)
+                mark_chunk_lookback_completed(entry["chunk"])
+                self._line(f"Saved chunk {entry['chunk'].id} to database.")
+
         self._line(format_lookback_summary(lookback))
         if lookback.still_unresolved:
             self._line(f"Still unresolved: {lookback.still_unresolved}")
         self._line("")
-
-        if options["apply"]:
-            for entry in pending:
-                save_extraction(entry["chunk"], entry["extracted"], embed_texts_as_lists)
-                self._line(f"Saved chunk {entry['chunk'].id} to database.")
-            self._line("")
 
         total_elapsed = time.monotonic() - started
         self._line(

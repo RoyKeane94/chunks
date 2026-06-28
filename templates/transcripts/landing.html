@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Chunks — every episode has layers{% endblock %}
+
+{% block extra_head %}
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+{% endblock %}
+
+{% block page_class %} page-landing{% endblock %}
+{% block content_class %}lp{% endblock %}
+{% block nav_search_placeholder %}Search across episodes{% endblock %}
+
+{% block content %}
+<section class="lp-hero" aria-label="Introduction">
+    <div class="lp-aurora" aria-hidden="true">
+        <div class="lp-aurora-blob lp-aurora-blob--teal"></div>
+        <div class="lp-aurora-blob lp-aurora-blob--amber"></div>
+        <div class="lp-aurora-blob lp-aurora-blob--mint"></div>
+    </div>
+
+    <div class="lp-hero-center">
+        <p class="lp-eyebrow font-display lp-fade-in">semantic archive</p>
+        <h1 class="lp-title font-serif lp-fade-in lp-fade-in--2">
+            Every <em>episode</em> has layers
+        </h1>
+        <p class="lp-sub font-body lp-fade-in lp-fade-in--3">
+            Chunk transcripts into meaning-sized pieces. Extract propositions, claims,
+            and atomic phrases — then search the way listeners actually think.
+        </p>
+        <div class="lp-cta-row lp-fade-in lp-fade-in--4">
+            <a href="{% url 'retrieve' %}" class="lp-btn lp-btn-primary font-display">
+                Start searching
+            </a>
+            <a href="{% url 'upload' %}" class="lp-btn lp-btn-ghost font-display">Upload episode</a>
+        </div>
+
+        <div class="lp-mockup lp-fade-in lp-fade-in--5">
+            <div class="lp-mockup-glow" aria-hidden="true"></div>
+            <form method="get" action="{% url 'retrieve' %}" class="lp-mockup-search" role="search">
+                <input
+                    type="search"
+                    name="q"
+                    class="lp-mockup-input font-body"
+                    placeholder="Ask anything across your archive…"
+                    autocomplete="off"
+                >
+                <button type="submit" class="lp-mockup-submit" aria-label="Search">
+                    <svg width="18" height="18" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M13.6464 14.3536L10.5 11.2071M11.5 7.5C11.5 9.70914 9.70914 11.5 7.5 11.5C5.29086 11.5 3.5 9.70914 3.5 7.5C3.5 5.29086 5.29086 3.5 7.5 3.5C9.70914 3.5 11.5 5.29086 11.5 7.5Z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </form>
+            <div class="lp-mockup-pills">
+                <span class="lp-pill lp-pill--prop font-display">propositions</span>
+                <span class="lp-pill lp-pill--claim font-display">claims</span>
+                <span class="lp-pill lp-pill--phrase font-display">phrases</span>
+            </div>
+            <div class="lp-mockup-results">
+                <div class="lp-result lp-result--prop">
+                    <span class="lp-result-tag font-display">prop</span>
+                    <p class="font-body">Shyam Sankar is the CTO of Palantir Technologies.</p>
+                </div>
+                <div class="lp-result lp-result--claim">
+                    <span class="lp-result-tag font-display">claim</span>
+                    <p class="font-body">Palantir's mission centers on reindustrializing American manufacturing.</p>
+                </div>
+            </div>
+        </div>
+
+        {% if stats.episode_count %}
+            <ul class="lp-stats font-display lp-fade-in lp-fade-in--6">
+                <li><strong>{{ stats.episode_count }}</strong> episodes</li>
+                <li><strong>{{ stats.chunk_count }}</strong> chunks</li>
+                <li><strong>3</strong> layers</li>
+            </ul>
+        {% endif %}
+    </div>
+
+    <div class="lp-glass-stage" aria-label="Live extraction mosaic">
+        {% if glass_items %}
+            <p class="lp-glass-label font-display">live from your archive</p>
+            <div
+                class="lp-glass-grid"
+                style="--mosaic-count: {{ glass_items|length }}"
+            >
+                {% for item in glass_items %}
+                    <a
+                        href="{% url 'episode_detail' item.episode_id %}"
+                        class="lp-glass-cell lp-glass-cell--{{ item.layer }}"
+                        style="--cell-index: {{ forloop.counter0 }}"
+                        title="{{ item.episode_title }} · {{ item.episode_guest }}"
+                    >
+                        <span class="lp-glass-tag font-display">{{ item.layer }}</span>
+                        <span class="lp-glass-cell-text font-body">{{ item.content }}</span>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="lp-glass-grid lp-glass-grid--empty">
+                {% for i in "01234567890123456789012345678901" %}
+                    <div class="lp-glass-cell lp-glass-cell--empty"></div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>
+
+<section class="lp-bento" aria-label="How it works">
+    <div class="lp-bento-inner">
+        <header class="lp-bento-head">
+            <p class="lp-eyebrow font-display">how it works</p>
+            <h2 class="lp-bento-title font-serif">Three reads, <em>one transcript</em></h2>
+        </header>
+        <div class="lp-bento-grid">
+            <article class="lp-bento-card lp-bento-card--wide lp-bento-card--prop">
+                <span class="lp-bento-num font-display">01</span>
+                <h3 class="font-display">Propositions</h3>
+                <p class="font-body">Self-contained facts — the wide net for compound questions and narrative arcs.</p>
+            </article>
+            <article class="lp-bento-card lp-bento-card--claim">
+                <span class="lp-bento-num font-display">02</span>
+                <h3 class="font-display">Claims</h3>
+                <p class="font-body">One sub-fact each — names, numbers, dates the proposition glosses over.</p>
+            </article>
+            <article class="lp-bento-card lp-bento-card--phrase">
+                <span class="lp-bento-num font-display">03</span>
+                <h3 class="font-display">Phrases</h3>
+                <p class="font-body">Atomic terms — lexical hooks for precise matching.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+{% if featured_episodes %}
+<section class="lp-episodes" aria-label="From your library">
+    <div class="lp-episodes-inner">
+        <div class="lp-episodes-head">
+            <h2 class="font-serif"><em>Discover</em> episodes</h2>
+            <a href="{% url 'episode_list' %}" class="lp-link font-display">all episodes →</a>
+        </div>
+        <div class="lp-episodes-track">
+            {% for episode in featured_episodes %}
+                <a href="{% url 'episode_detail' episode.id %}" class="lp-episode-card">
+                    <span class="lp-episode-meta font-display">
+                        {% if episode.date %}{{ episode.date|date:"M j, Y" }}{% else %}archive{% endif %}
+                    </span>
+                    <span class="lp-episode-title font-serif">{{ episode.title }}</span>
+                    <span class="lp-episode-guest font-body">{{ episode.guest }}</span>
+                </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="lp-footer-cta">
+    <p class="lp-eyebrow font-display">ready?</p>
+    <h2 class="font-serif">Upload a transcript.<br><em>Search it tomorrow.</em></h2>
+    <a href="{% url 'upload' %}" class="lp-btn lp-btn-primary font-display">Upload and ingest →</a>
+</section>
+{% endblock %}

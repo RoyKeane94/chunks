@@ -25,9 +25,12 @@ EMBEDDING_MODEL = os.environ.get("EMBEDDING_MODEL", "text-embedding-3-small")
 EXTRACTION_MODEL = os.environ.get("EXTRACTION_MODEL", "gpt-4o-mini")
 LOOKBACK_MODEL = os.environ.get("LOOKBACK_MODEL", "") or EXTRACTION_MODEL
 LOOKBACK_MAX_CHUNKS = int(os.environ.get("LOOKBACK_MAX_CHUNKS", "2"))
+LOOKBACK_WAIT_TIMEOUT = int(os.environ.get("LOOKBACK_WAIT_TIMEOUT", "300"))
 OPENAI_TIMEOUT = int(os.environ.get("OPENAI_TIMEOUT", "120"))
 BULK_UPLOAD_MAX_FILES = int(os.environ.get("BULK_UPLOAD_MAX_FILES", "25"))
 EXTRACT_CHUNK_WORKERS = int(os.environ.get("EXTRACT_CHUNK_WORKERS", "4"))
+EXTRACT_CHUNK_PARALLEL = int(os.environ.get("EXTRACT_CHUNK_PARALLEL", "4"))
+EMBED_BATCH_SIZE = int(os.environ.get("EMBED_BATCH_SIZE", "128"))
 CLAIM_PROPOSITION_DEDUP_THRESHOLD = float(
     os.environ.get("CLAIM_PROPOSITION_DEDUP_THRESHOLD", "0.93")
 )
@@ -96,6 +99,7 @@ if database_url:
             "PASSWORD": parsed.password,
             "HOST": parsed.hostname,
             "PORT": parsed.port or "5432",
+            "CONN_MAX_AGE": 0,
         }
     }
 elif db_name:
@@ -107,6 +111,7 @@ elif db_name:
             "PASSWORD": db_password,
             "HOST": db_host,
             "PORT": db_port,
+            "CONN_MAX_AGE": 0,
         }
     }
 else:

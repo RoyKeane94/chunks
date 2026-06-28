@@ -16,7 +16,7 @@
     <header class="nav-combo" data-theme="light-fill">
         <nav class="nav" aria-label="Main">
             <div class="nav-flex">
-                <a href="{% url 'episode_list' %}" class="nav-logo">
+                <a href="{% url 'landing' %}" class="nav-logo">
                     <img src="{% static 'img/favicon-32.png' %}" alt="" class="nav-logo-icon" width="28" height="28">
                     chunks
                 </a>
@@ -48,6 +48,10 @@
                         class="btn sm-nav{% if request.resolver_match.url_name == 'episode_list' or request.resolver_match.url_name == 'episode_detail' %} active{% endif %}"
                     >library</a>
                     <a
+                        href="{% url 'extraction_status' %}"
+                        class="btn sm-nav{% if request.resolver_match.url_name == 'extraction_status' or request.resolver_match.url_name == 'unresolved_lookback' %} active{% endif %}"
+                    >status</a>
+                    <a
                         href="{% url 'upload' %}"
                         class="btn sm-nav{% if request.resolver_match.url_name == 'upload' or request.resolver_match.url_name == 'bulk_upload' or request.resolver_match.url_name == 'bulk_upload_confirm' or request.resolver_match.url_name == 'upload_confirm' %} active{% endif %}"
                     >upload</a>
@@ -56,7 +60,7 @@
         </nav>
     </header>
 
-    <main class="page">
+    <main class="page{% block page_class %}{% endblock %}">
         <div class="{% block content_class %}content{% endblock %}">
             {% block content %}{% endblock %}
         </div>

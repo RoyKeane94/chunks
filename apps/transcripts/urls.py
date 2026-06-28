@@ -3,7 +3,15 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.episode_list, name="episode_list"),
+    path("", views.landing, name="landing"),
+    path("library/", views.episode_list, name="episode_list"),
+    path("library/status/", views.extraction_status, name="extraction_status"),
+    path("library/unresolved/", views.unresolved_lookback, name="unresolved_lookback"),
+    path(
+        "library/unresolved/download/",
+        views.unresolved_lookback_download,
+        name="unresolved_lookback_download",
+    ),
     path("retrieve/", views.retrieve, name="retrieve"),
     path("episodes/<int:episode_id>/", views.episode_detail, name="episode_detail"),
     path("episodes/<int:episode_id>/download/", views.episode_download_json, name="episode_download"),
